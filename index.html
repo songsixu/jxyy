@@ -225,7 +225,7 @@
         <div class="container">
             <nav>
                 <div class="logo">
-                    <span>💖</span>我的窝<span>💖</span>
+                    <span>我的窝</span>
                 </div>
                 <ul class="nav-list">
                     <li><a href=" ">首页</a ></li>
@@ -258,7 +258,7 @@
             <h2>关于我</h2>
             <div class="about-content">
                 <div class="about-img">
-                    < img src="https://imgse.com/i/pVBN7Mq" alt="我的">
+                    < img src="https://imgse.com/i/pVBN7Mq" alt="我的照片">
                 </div>
                 <div class="about-text">
                     <p>本人，生活不轰轰烈烈，但也安稳自在。</p >
@@ -316,8 +316,8 @@
             // 随机初始位置（纵向，从屏幕外上方开始）
             star.style.top = `-${size}px`;
             
-            // 随机动画时长（5-15秒）
-            const duration = Math.random() * 10 + 5;
+            // 加快掉落速度：动画时长改为1-5秒（原5-15秒）
+            const duration = Math.random() * 4 + 1;
             star.style.animationDuration = `${duration}s`;
             
             // 随机透明度
@@ -325,14 +325,14 @@
             
             document.body.appendChild(star);
             
-            // 动画结束后移除星星，避免占用内存
+            // 动画结束后移除星星
             setTimeout(() => {
                 star.remove();
             }, duration * 1000);
         }
         
-        // 定时生成星星（每300毫秒生成一个）
-        setInterval(createStar, 300);
+        // 增加星星数量：生成间隔改为100毫秒（原300毫秒）
+        setInterval(createStar, 100);
     </script>
 </body>
 </html>
