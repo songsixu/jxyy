@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>兼煦所随青的 💕</title>
+    <title>亲爱的你 💕</title>
     <style>
         /* 基础样式 */
         * {
@@ -16,6 +16,8 @@
             background-color: #fff9f9;
             color: #5d4037;
             line-height: 1.6;
+            position: relative;
+            overflow-x: hidden; /* 防止横向滚动 */
         }
         a {
             text-decoration: none;
@@ -28,6 +30,7 @@
         }
         .section {
             padding: 60px 0;
+            position: relative; /* 让内容在星星上方显示 */
         }
         h2 {
             color: #f48fb1;
@@ -46,6 +49,7 @@
             border-radius: 30px;
             margin-top: 15px;
             transition: 0.3s;
+            position: relative;
         }
         .btn:hover {
             background-color: #f48fb1;
@@ -80,11 +84,11 @@
             gap: 25px;
         }
 
-        /* 16:9横幅图区域（用你给的图） */
+        /* 16:9横幅图区域 */
         .banner-container {
-            margin-top: 60px; /* 避开导航栏 */
+            margin-top: 60px;
             width: 100%;
-            padding-top: 56.25%; /* 16:9比例（9÷16=56.25%） */
+            padding-top: 56.25%;
             position: relative;
             overflow: hidden;
             border-radius: 0 0 20px 20px;
@@ -99,7 +103,7 @@
         .banner-img {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* 保持16:9，裁剪适配 */
+            object-fit: cover;
         }
 
         /* 个人介绍区 */
@@ -107,6 +111,7 @@
             text-align: center;
             padding: 50px 0;
             background-color: white;
+            position: relative;
         }
         .intro h1 {
             font-size: 2.2rem;
@@ -172,6 +177,7 @@
             padding: 20px;
             margin-bottom: 20px;
             box-shadow: 0 5px 10px rgba(248, 187, 208, 0.1);
+            position: relative;
         }
         .post-item h3 {
             color: #f48fb1;
@@ -184,6 +190,7 @@
             padding: 30px 0;
             text-align: center;
             color: #f48fb1;
+            position: relative;
         }
         footer p {
             margin-bottom: 10px;
@@ -191,6 +198,24 @@
         footer .icons {
             font-size: 1.2rem;
             letter-spacing: 10px;
+        }
+
+        /* 动态星星效果 */
+        .star {
+            position: absolute;
+            background-color: #fff;
+            border-radius: 50%;
+            pointer-events: none; /* 不影响点击交互 */
+            opacity: 0.8;
+            animation: fall linear infinite;
+            box-shadow: 0 0 10px 2px rgba(255, 221, 238, 0.8); /* 粉色光晕 */
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
         }
     </style>
 </head>
@@ -200,7 +225,7 @@
         <div class="container">
             <nav>
                 <div class="logo">
-                    </span>煦煦的窝<span>
+                    <span>💖</span>我的窝<span>💖</span>
                 </div>
                 <ul class="nav-list">
                     <li><a href=" ">首页</a ></li>
@@ -211,17 +236,17 @@
         </div>
     </header>
 
-    <!-- 16:9横幅图（用你提供的图） -->
+    <!-- 横幅图 -->
     <div class="banner-container" id="home">
         <div class="banner">
-            < img src="https://s21.ax1x.com/2025/08/19/pVBtyHU.jpg" alt="横幅图" class="banner-img">
+            < img src="https://imgse.com/i/pVBtyHU" alt="横幅图" class="banner-img">
         </div>
     </div>
 
     <!-- 个人介绍区 -->
     <section class="intro">
         <div class="container">
-            <h1>你好啊～ 我是<span>兼煦</span> <span>💞</span></h1>
+            <h1>你好啊，我是<span>兼煦</span> <span>💞</span></h1>
             <p>一个简单直接的人，这里没有太多复杂的东西，就是我的分享空间 🌸</p >
             <a href="#about" class="btn">认识一下</a >
         </div>
@@ -233,15 +258,15 @@
             <h2>关于我</h2>
             <div class="about-content">
                 <div class="about-img">
-                    < img src="https://s21.ax1x.com/2025/08/19/pVBN7Mq.jpg" alt="我的">
+                    < img src="https://imgse.com/i/pVBN7Mq" alt="我的">
                 </div>
                 <div class="about-text">
                     <p>本人，生活不轰轰烈烈，但也安稳自在。</p >
                     <p>平时没太多爱好。</p >
                     <p>偶尔写写东西，分享。</p >
                     <div class="simple-tags">
-                        <span>日子</span>
                         <span>等待</span>
+                        <span>日子</span>
                         <span>散步</span>
                     </div>
                 </div>
@@ -249,17 +274,17 @@
         </div>
     </section>
 
-    <!-- 最近 -->
+    <!-- 最近分享 -->
     <section class="posts section" id="posts">
         <div class="container">
             <h2>最近</h2>
             <div class="post-item">
-                <h3>又要等啦 🌱</h3>
+                <h3>等🌱</h3>
                 <p>之前好多次欸，这次依旧是无缘无故的离开了……</p >
             </div>
             <div class="post-item">
-                <h3>推荐一个网站</h3>
-                <p>节奏很慢的地方，治愈。</p >
+                <h3>推荐</h3>
+                <p>太白山，节奏很慢的地方，治愈。</p >
             </div>
         </div>
     </section>
@@ -267,10 +292,47 @@
     <!-- 页脚 -->
     <footer>
         <div class="container">
-            <p>💖 日常小窝 💖</p >
-            <div class="icons">💘 💕 💓</div>
+            <p>戈壁无垠，风过无声，唯有暖阳温抚着每一寸土地，静候春归。 💖</p >
+            <div class="icons">(•_•)</div>
             <p>© 2025 简单就好</p >
         </div>
     </footer>
+
+    <script>
+        // 生成星星的函数
+        function createStar() {
+            const star = document.createElement('div');
+            star.classList.add('star');
+            
+            // 随机大小（1-4px）
+            const size = Math.random() * 3 + 1;
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
+            
+            // 随机位置（横向）
+            const left = Math.random() * 100;
+            star.style.left = `${left}%`;
+            
+            // 随机初始位置（纵向，从屏幕外上方开始）
+            star.style.top = `-${size}px`;
+            
+            // 随机动画时长（5-15秒）
+            const duration = Math.random() * 10 + 5;
+            star.style.animationDuration = `${duration}s`;
+            
+            // 随机透明度
+            star.style.opacity = Math.random() * 0.5 + 0.3;
+            
+            document.body.appendChild(star);
+            
+            // 动画结束后移除星星，避免占用内存
+            setTimeout(() => {
+                star.remove();
+            }, duration * 1000);
+        }
+        
+        // 定时生成星星（每300毫秒生成一个）
+        setInterval(createStar, 300);
+    </script>
 </body>
 </html>
