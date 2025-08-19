@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>天天的💐</title>
+    <title>天天开心💐</title>
     <style>
+        /* 保持原有样式不变 */
         * {
             margin: 0;
             padding: 0;
@@ -20,7 +21,6 @@
             position: relative;
             overflow: hidden;
         }
-        /* 左上角按钮容器 */
         .btn-container {
             position: absolute;
             top: 20px;
@@ -45,7 +45,6 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
-        /* 视频背景 */
         .video-bg {
             position: absolute;
             top: 0;
@@ -56,32 +55,33 @@
             z-index: -1;
             opacity: 0.85;
         }
-        /* 文字容器与动画 */
         .text-container {
             text-align: center;
             padding: 30px;
             z-index: 1;
             animation: float 6s ease-in-out infinite;
-            max-width: 80%;
         }
         h1 {
             font-size: 2.5rem;
-            color: white;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            color: #ffccd5;
             margin-bottom: 20px;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
             animation: fadeIn 2s ease-out;
         }
         .time-text {
             font-size: 1.2rem;
-            color: white;
-            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-            animation: fadeIn 2s ease-out;
-            min-height: 40px; /* 防止文字切换时跳动 */
+            color: #ffccd5;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            animation: slideUp 2s ease-out;
+            min-height: 60px; /* 防止文字切换时容器跳动 */
         }
-        /* 动画定义 */
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
         @keyframes float {
             0% { transform: translateY(0px); }
@@ -89,27 +89,24 @@
             100% { transform: translateY(0px); }
         }
         /* 文字切换动画 */
-        .fade {
-            animation: fade 0.5s ease-in-out;
+        .text-transition {
+            animation: textChange 0.5s ease-out;
         }
-        @keyframes fade {
-            0% { opacity: 0; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
+        @keyframes textChange {
+            0% { opacity: 0; transform: scale(0.95); }
+            50% { opacity: 0.5; transform: scale(1.05); }
+            100% { opacity: 1; transform: scale(1); }
         }
     </style>
 </head>
 <body>
-    <!-- 左上角按钮 -->
     <div class="btn-container">
         <a href=" " class="nav-btn">返回首页</a >
         <a href="products.html" class="nav-btn">要不要点一下试试呢？</a >
     </div>
 
-    <!-- 视频背景 -->
-    <video class="video-bg" autoplay loop muted playsinline></video>
+    <video class="video-bg" autoplay loop muted playsinline preload="auto"></video>
 
-    <!-- 文字内容 -->
     <div class="text-container">
         <h1>Hi，又见面了💐</h1>
         <p class="time-text"></p >
@@ -117,7 +114,7 @@
 
     <script>
         // 定义各时段的文字内容
-        const texts = {
+        const timeTexts = {
             morning: [
                 "早安呀，新的一天带着阳光和期待向你走来，愿你被温柔接住哟",
                 "清晨的风很轻，花很香，你的笑容也该和朝阳一样灿烂呀",
@@ -228,61 +225,98 @@
             ]
         };
 
-        // 当前文字索引
+        // 视频路径
+        const videoSources = {
+            morning: "videos/zao.mp4",
+            noon: "videos/fps.mp4",
+            afternoon: "videos/pll.mp4",
+            evening: "videos/ooo.mp4"
+        };
+
+        // 记录当前文字索引和时段
         let currentIndex = 0;
-        // 定时器
-        let textTimer;
+        let currentPeriod = "";
 
-        // 更新内容（时间+视频+文字）
-        function updateContentByTime() {
-            const body = document.body;
-            const timeText = document.querySelector('.time-text');
-            const video = document.querySelector('.video-bg');
-            const hour = new Date().getHours();
-            let currentTexts;
+        // 预加载视频
+        function preloadVideos(currentVideoSrc) {
+            const currentVideo = new Video();
+            currentVideo.src = currentVideoSrc;
+            currentVideo.preload = "auto";
 
-            // 清除之前的定时器
-            clearInterval(textTimer);
+            let nextVideoSrc = "";
+            if (currentPeriod === "morning") nextVideoSrc = videoSources.noon;
+            else if (currentPeriod === "noon") nextVideoSrc = videoSources.afternoon;
+            else if (currentPeriod === "afternoon") nextVideoSrc = videoSources.evening;
+            else nextVideoSrc = videoSources.morning;
 
-            // 根据时间设置视频和文字组
-            if (hour >= 6 && hour < 10) {
-                video.src = "videos/yoo.mp4";
-                body.style.backgroundColor = '#e6f7ff';
-                currentTexts = texts.morning;
-            } else if (hour >= 10 && hour < 14) {
-                video.src = "videos/wuwuwu.mp4";
-                body.style.backgroundColor = '#fff8e6';
-                currentTexts = texts.noon;
-            } else if (hour >= 14 && hour < 18) {
-                video.src = "videos/ppp.mp4";
-                body.style.backgroundColor = '#f5f0ff';
-                currentTexts = texts.afternoon;
-            } else {
-                video.src = "videos/wan.mp4";
-                body.style.backgroundColor = '#f5f5f5';
-                currentTexts = texts.evening;
+            if (nextVideoSrc && nextVideoSrc !== currentVideoSrc) {
+                const nextVideo = new Video();
+                nextVideo.src = nextVideoSrc;
+                nextVideo.preload = "auto";
             }
-
-            video.load();
-            // 重置索引并显示第一条文字
-            currentIndex = 0;
-            timeText.textContent = currentTexts[currentIndex];
-
-            // 设置文字切换定时器（25秒一次）
-            textTimer = setInterval(() => {
-                currentIndex = (currentIndex + 1) % currentTexts.length;
-                // 添加切换动画
-                timeText.classList.remove('fade');
-                void timeText.offsetWidth; // 触发重绘
-                timeText.classList.add('fade');
-                timeText.textContent = currentTexts[currentIndex];
-            }, 25000); // 25秒 = 25000毫秒
         }
 
+        // 切换文字内容（带动画）
+        function changeText() {
+            const timeTextEl = document.querySelector('.time-text');
+            // 移除动画类（如果存在）
+            timeTextEl.classList.remove('text-transition');
+            // 强制重绘
+            void timeTextEl.offsetWidth;
+            // 添加动画类
+            timeTextEl.classList.add('text-transition');
+            
+            // 更新文字
+            timeTextEl.textContent = timeTexts[currentPeriod][currentIndex];
+            
+            // 更新索引（循环）
+            currentIndex = (currentIndex + 1) % timeTexts[currentPeriod].length;
+        }
+
+        // 更新时段内容
+        function updateContentByTime() {
+            const body = document.body;
+            const video = document.querySelector('.video-bg');
+            const hour = new Date().getHours();
+            let newPeriod = "";
+            let currentVideoSrc = "";
+
+            // 判断时段
+            if (hour >= 6 && hour < 10) {
+                newPeriod = "morning";
+                currentVideoSrc = videoSources.morning;
+                body.style.backgroundColor = '#e6f7ff';
+            } else if (hour >= 10 && hour < 14) {
+                newPeriod = "noon";
+                currentVideoSrc = videoSources.noon;
+                body.style.backgroundColor = '#fff8e6';
+            } else if (hour >= 14 && hour < 18) {
+                newPeriod = "afternoon";
+                currentVideoSrc = videoSources.afternoon;
+                body.style.backgroundColor = '#f5f0ff';
+            } else {
+                newPeriod = "evening";
+                currentVideoSrc = videoSources.evening;
+                body.style.backgroundColor = '#f5f5f5';
+            }
+
+      // 如果时段变化，重置索引
+if (newPeriod !== currentPeriod) {
+    currentPeriod = newPeriod;
+    currentIndex = 0; // 切换时段后从第一条文字开始
+}
+
+// 设置视频源并加载
+video.src = currentVideoSrc;
+video.load();
+preloadVideos(currentVideoSrc);
+
+// 立即更新一次文字
+changeText();
+}
         // 初始化
-        updateContentByTime();
-        // 每小时检查一次时间（更新时段）
-        setInterval(updateContentByTime, 3600000);
-    </script>
-</body>
-</html>
+updateContentByTime();
+// 每25秒切换一次文字
+setInterval(changeText, 25000);
+// 每小时检查一次时段
+setInterval(updateContentByTime, 3600000);
