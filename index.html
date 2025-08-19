@@ -17,7 +17,7 @@
             color: #5d4037;
             line-height: 1.6;
             position: relative;
-            overflow-x: hidden; /* 防止横向滚动 */
+            overflow-x: hidden;
         }
         a {
             text-decoration: none;
@@ -30,7 +30,7 @@
         }
         .section {
             padding: 60px 0;
-            position: relative; /* 让内容在星星上方显示 */
+            position: relative;
         }
         h2 {
             color: #f48fb1;
@@ -88,7 +88,7 @@
         .banner-container {
             margin-top: 60px;
             width: 100%;
-            padding-top: 56.25%;
+            padding-top: 56.25%; /* 16:9比例 */
             position: relative;
             overflow: hidden;
             border-radius: 0 0 20px 20px;
@@ -103,7 +103,8 @@
         .banner-img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: cover; /* 确保图片填满容器且不变形 */
+            display: block; /* 解决图片底部间隙问题 */
         }
 
         /* 个人介绍区 */
@@ -143,8 +144,10 @@
         }
         .about-img img {
             width: 100%;
+            height: auto; /* 保持图片原始比例 */
             border-radius: 15px;
             box-shadow: 0 5px 15px rgba(248, 187, 208, 0.1);
+            display: block; /* 确保图片正常显示 */
         }
         .about-text {
             flex: 2;
@@ -205,10 +208,10 @@
             position: absolute;
             background-color: #fff;
             border-radius: 50%;
-            pointer-events: none; /* 不影响点击交互 */
+            pointer-events: none;
             opacity: 0.8;
             animation: fall linear infinite;
-            box-shadow: 0 0 10px 2px rgba(255, 221, 238, 0.8); /* 粉色光晕 */
+            box-shadow: 0 0 10px 2px rgba(255, 221, 238, 0.8);
         }
 
         @keyframes fall {
@@ -238,10 +241,11 @@
 
     <!-- 横幅图 -->
     <div class="banner-container" id="home">
-    <div class="banner">
-        < img src="https://s21.ax1x.com/2025/08/19/pVBtyHU.jpg" alt="横幅图" class="banner-img">
+        <div class="banner">
+            <!-- 替换为直接可访问的图片链接 -->
+            < img src="https://s21.ax1x.com/2025/08/19/pVBtyHU.jpg" alt="横幅图" class="banner-img">
+        </div>
     </div>
-</div>
 
     <!-- 个人介绍区 -->
     <section class="intro">
@@ -258,8 +262,10 @@
             <h2>关于我</h2>
             <div class="about-content">
                 <div class="about-img">
-    < img src="https://s21.ax1x.com/2025/08/19/pVBN7Mq.jpg" alt="我的照片">
+                    <!-- 替换为直接可访问的图片链接 -->
+                    < img src="https://s21.ax1x.com/2025/08/19/pVBN7Mq.jpg" alt="我的照片">
                 </div>
+                <div class="about-text">
                     <p>本人，生活不轰轰烈烈，但也安稳自在。</p >
                     <p>平时没太多爱好。</p >
                     <p>偶尔写写东西，分享。</p >
@@ -303,34 +309,27 @@
             const star = document.createElement('div');
             star.classList.add('star');
             
-            // 随机大小（1-4px）
             const size = Math.random() * 3 + 1;
             star.style.width = `${size}px`;
             star.style.height = `${size}px`;
             
-            // 随机位置（横向）
             const left = Math.random() * 100;
             star.style.left = `${left}%`;
             
-            // 随机初始位置（纵向，从屏幕外上方开始）
             star.style.top = `-${size}px`;
             
-            // 加快掉落速度：动画时长改为1-5秒（原5-15秒）
             const duration = Math.random() * 4 + 1;
             star.style.animationDuration = `${duration}s`;
             
-            // 随机透明度
             star.style.opacity = Math.random() * 0.5 + 0.3;
             
             document.body.appendChild(star);
             
-            // 动画结束后移除星星
             setTimeout(() => {
                 star.remove();
             }, duration * 1000);
         }
         
-        // 增加星星数量：生成间隔改为100毫秒（原300毫秒）
         setInterval(createStar, 100);
     </script>
 </body>
