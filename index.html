@@ -84,33 +84,10 @@
             gap: 25px;
         }
 
-        /* 16:9横幅图区域 */
-        .banner-container {
-            margin-top: 60px;
-            width: 100%;
-            padding-top: 56.25%; /* 16:9比例 */
-            position: relative;
-            overflow: hidden;
-            border-radius: 0 0 20px 20px;
-        }
-        .banner {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-        .banner-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* 确保图片填满容器且不变形 */
-            display: block; /* 解决图片底部间隙问题 */
-        }
-
         /* 个人介绍区 */
         .intro {
             text-align: center;
-            padding: 50px 0;
+            padding: 110px 0 50px; /* 增加顶部 padding 抵消导航栏高度 */
             background-color: white;
             position: relative;
         }
@@ -144,10 +121,10 @@
         }
         .about-img img {
             width: 100%;
-            height: auto; /* 保持图片原始比例 */
+            height: auto;
             border-radius: 15px;
             box-shadow: 0 5px 15px rgba(248, 187, 208, 0.1);
-            display: block; /* 确保图片正常显示 */
+            display: block;
         }
         .about-text {
             flex: 2;
@@ -239,16 +216,8 @@
         </div>
     </header>
 
-    <!-- 横幅图 -->
-    <div class="banner-container" id="home">
-        <div class="banner">
-            <!-- 替换为直接可访问的图片链接 -->
-            < img src="https://s21.ax1x.com/2025/08/19/pVBtyHU.jpg" alt="横幅图" class="banner-img">
-        </div>
-    </div>
-
-    <!-- 个人介绍区 -->
-    <section class="intro">
+    <!-- 个人介绍区（原横幅图位置已删除） -->
+    <section class="intro" id="home">
         <div class="container">
             <h1>你好啊，我是<span>兼煦</span> <span>💞</span></h1>
             <p>一个简单直接的人，这里没有太多复杂的东西，就是我的分享空间 🌸</p >
@@ -262,7 +231,6 @@
             <h2>关于我</h2>
             <div class="about-content">
                 <div class="about-img">
-                    <!-- 替换为直接可访问的图片链接 -->
                     < img src="https://s21.ax1x.com/2025/08/19/pVBN7Mq.jpg" alt="我的照片">
                 </div>
                 <div class="about-text">
