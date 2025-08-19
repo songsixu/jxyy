@@ -1,1 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>兼煦所随青的 💕</title>
+    <style>
+        /* 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        body {
+            background-color: #fff9f9;
+            color: #5d4037;
+            line-height: 1.6;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .section {
+            padding: 60px 0;
+        }
+        h2 {
+            color: #f48fb1;
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+        }
+        h2::after {
+            content: '💘';
+            margin-left: 8px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #f8bbd0;
+            color: white;
+            border-radius: 30px;
+            margin-top: 15px;
+            transition: 0.3s;
+        }
+        .btn:hover {
+            background-color: #f48fb1;
+        }
 
+        /* 导航 */
+        header {
+            background: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(248, 187, 208, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 10;
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 1.3rem;
+            color: #f48fb1;
+            font-weight: bold;
+        }
+        .logo span {
+            margin: 0 3px;
+        }
+        .nav-list {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        /* 16:9横幅图区域（用你给的图） */
+        .banner-container {
+            margin-top: 60px; /* 避开导航栏 */
+            width: 100%;
+            padding-top: 56.25%; /* 16:9比例（9÷16=56.25%） */
+            position: relative;
+            overflow: hidden;
+            border-radius: 0 0 20px 20px;
+        }
+        .banner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .banner-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* 保持16:9，裁剪适配 */
+        }
+
+        /* 个人介绍区 */
+        .intro {
+            text-align: center;
+            padding: 50px 0;
+            background-color: white;
+        }
+        .intro h1 {
+            font-size: 2.2rem;
+            color: #f48fb1;
+            margin-bottom: 15px;
+        }
+        .intro h1 span {
+            margin: 0 5px;
+        }
+        .intro p {
+            max-width: 600px;
+            margin: 0 auto;
+            color: #6d4c41;
+        }
+
+        /* 关于我 */
+        .about {
+            background: #fff0f6;
+        }
+        .about-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            align-items: center;
+        }
+        .about-img {
+            flex: 1;
+            min-width: 250px;
+        }
+        .about-img img {
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(248, 187, 208, 0.1);
+        }
+        .about-text {
+            flex: 2;
+            min-width: 250px;
+        }
+        .about-text p {
+            margin-bottom: 15px;
+        }
+        .simple-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .simple-tags span {
+            padding: 5px 12px;
+            background: white;
+            color: #f48fb1;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        /* 最近分享 */
+        .posts {
+            background: white;
+        }
+        .post-item {
+            background: #fff0f6;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 10px rgba(248, 187, 208, 0.1);
+        }
+        .post-item h3 {
+            color: #f48fb1;
+            margin-bottom: 10px;
+        }
+
+        /* 页脚 */
+        footer {
+            background: #fce4ec;
+            padding: 30px 0;
+            text-align: center;
+            color: #f48fb1;
+        }
+        footer p {
+            margin-bottom: 10px;
+        }
+        footer .icons {
+            font-size: 1.2rem;
+            letter-spacing: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航 -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    </span>煦煦的窝<span>
+                </div>
+                <ul class="nav-list">
+                    <li><a href=" ">首页</a ></li>
+                    <li><a href="#about">关于我</a ></li>
+                    <li><a href="#posts">分享</a ></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 16:9横幅图（用你提供的图） -->
+    <div class="banner-container" id="home">
+        <div class="banner">
+            < img src="https://s21.ax1x.com/2025/08/19/pVBtyHU.jpg" alt="横幅图" class="banner-img">
+        </div>
+    </div>
+
+    <!-- 个人介绍区 -->
+    <section class="intro">
+        <div class="container">
+            <h1>你好啊～ 我是<span>兼煦</span> <span>💞</span></h1>
+            <p>一个简单直接的人，这里没有太多复杂的东西，就是我的分享空间 🌸</p >
+            <a href="#about" class="btn">认识一下</a >
+        </div>
+    </section>
+
+    <!-- 关于我 -->
+    <section class="about section" id="about">
+        <div class="container">
+            <h2>关于我</h2>
+            <div class="about-content">
+                <div class="about-img">
+                    < img src="https://s21.ax1x.com/2025/08/19/pVBN7Mq.jpg" alt="我的">
+                </div>
+                <div class="about-text">
+                    <p>本人，生活不轰轰烈烈，但也安稳自在。</p >
+                    <p>平时没太多爱好。</p >
+                    <p>偶尔写写东西，分享。</p >
+                    <div class="simple-tags">
+                        <span>日子</span>
+                        <span>等待</span>
+                        <span>散步</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 最近 -->
+    <section class="posts section" id="posts">
+        <div class="container">
+            <h2>最近</h2>
+            <div class="post-item">
+                <h3>又要等啦 🌱</h3>
+                <p>之前好多次欸，这次依旧是无缘无故的离开了……</p >
+            </div>
+            <div class="post-item">
+                <h3>推荐一个网站</h3>
+                <p>节奏很慢的地方，治愈。</p >
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="container">
+            <p>💖 日常小窝 💖</p >
+            <div class="icons">💘 💕 💓</div>
+            <p>© 2025 简单就好</p >
+        </div>
+    </footer>
+</body>
+</html>
