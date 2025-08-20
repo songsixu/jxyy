@@ -3,47 +3,233 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>可爱碎片</title>
+    <title>记得今天要过得开心哦</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .bg-lightGreen { background-color: #E8F5E9; } /* 浅绿色背景 */
-        .text-lightPink { color: #F8BBD0; } /* 浅粉色文字 */
-        .card { background: white; border-radius: 12px; padding: 1rem; margin-bottom: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        body {
+            transition: background-color 1s ease;
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding-bottom: 100px; /* 预留按钮位置 */
+        }
+        .card {
+            transform: rotate(-3deg);
+            transition: all 0.8s ease;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            z-index: 0;
+        }
+        .card:hover {
+            transform: rotate(-3deg) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+        .toggle-btn, .next-btn {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .toggle-btn:hover, .next-btn:hover {
+            transform: translateY(-2px);
+        }
+        .icon-large {
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
+        }
+        .bg-morning {
+            background: linear-gradient(135deg, #FFE0B2, #FFCC80);
+        }
+        .bg-night {
+            background: linear-gradient(135deg, #1A237E, #283593);
+        }
+        .card-morning {
+            background: linear-gradient(135deg, #FFF9E6, #FFEFD5);
+        }
+        .card-night {
+            background: linear-gradient(135deg, #E3F2FD, #BBDEFB);
+        }
+        .star {
+            position: absolute;
+            color: #fff;
+            opacity: 0;
+            animation: twinkle 3s infinite;
+        }
+        .corner-decoration {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            z-index: 1;
+        }
+        .next-btn {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 500;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
     </style>
 </head>
-<body class="bg-lightGreen text-lightPink min-h-screen font-sans">
-    <div class="container mx-auto px-4 py-12 max-w-3xl">
-        <header class="text-center mb-8">
-            <h1 class="text-[clamp(1.5rem,4vw,2rem)] font-bold mb-2">
-                攒可爱的小角落 💐
-            </h1>
-            <a href=" " class="hover:underline">← 回首页</a >
-        </header>
+<body class="bg-morning relative">
+    <!-- 动态星星（夜晚模式显示） -->
+    <div id="stars-container" class="fixed inset-0 pointer-events-none z-0"></div>
+
+    <!-- 右上角图标和切换按钮 -->
+    <div class="absolute top-6 right-6 z-20 flex items-center gap-6">
+        <!-- 切换按钮 -->
+        <button id="toggle-btn" class="toggle-btn bg-white/80 hover:bg-white text-gray-700 px-4 py-2 rounded-full text-sm font-medium shadow-md">
+            切换到晚安 🌙
+        </button>
         
-        <!-- 可爱瞬间收集 -->
-        <div class="card">
-            <h2 class="font-bold text-lg mb-3">某人的可爱碎片 🍓</h2>
-            <ul class="space-y-2">
-                <li>• “不行”说成“不行嘛”，尾音轻轻的 🥰</li>
-                <li>• 懵圈的小表情，也很可爱耶 🍓</li>
-                <li>• 不是的啊、不是啊、是啊，像小企鹅一样 🐧</li>
-            </ul>
-        </div>
-        
-        <!-- 小互动：可爱值进度条 -->
-        <div class="card">
-            <h2 class="font-bold text-lg mb-3">可爱值 🎉</h2>
-            <div class="w-full bg-lightGreen rounded-full h-4 mb-2">
-                <div class="bg-lightPink h-4 rounded-full" style="width: 75%"></div>
-            </div>
-            <p class="text-sm">距离“非常可爱”还差3个新发现～</p >
-        </div>
-        
-        <!-- 碎碎念 -->
-        <div class="card">
-            <h2 class="font-bold text-lg mb-3">小想法 ✨</h2>
-            <p>今天又是等待着，但……我依旧坚持，至少，还在 🎈 原来你连离开都这么可爱哦～</p >
+        <!-- 大图标 -->
+        <div id="main-icon" class="icon-large text-6xl md:text-7xl">
+            🌞
         </div>
     </div>
+
+    <!-- 主贺卡 -->
+    <div class="container mx-auto px-4 py-20 md:py-32 relative z-10">
+        <div class="max-w-md mx-auto">
+            <div id="card-content" class="card card-morning rounded-lg p-8 md:p-10">
+                <!-- 角落装饰 -->
+                <div class="corner-decoration top-4 left-4 text-amber-200">✿</div>
+                <div class="corner-decoration top-4 right-4 text-amber-200">✿</div>
+                <div class="corner-decoration bottom-4 left-4 text-amber-200">✿</div>
+                <div class="corner-decoration bottom-4 right-4 text-amber-200">✿</div>
+
+                <div class="relative z-10">
+                    <h2 class="text-2xl md:text-3xl font-bold mb-6 text-amber-600">早安呀～</h2>
+                    <p class="text-gray-700 mb-4 leading-relaxed">
+                        清晨的风好像都在说今天会很好，所以把这份祝福也一起给你啦。
+                    </p >
+                    <p class="text-gray-700 mb-6 leading-relaxed">
+                        愿你今天的每一步都轻松自在，抬头有惊喜，低头有温柔，早安耶～
+                    </p >
+                    <div class="flex justify-center gap-4 mt-8">
+                        <span class="text-2xl">🍞</span>
+                        <span class="text-2xl">☕</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 下一页按钮 -->
+    <a href="products.html" id="next-btn" class="next-btn bg-white text-amber-600 hover:bg-amber-50">
+        Hi →
+    </a >
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleBtn = document.getElementById('toggle-btn');
+            const mainIcon = document.getElementById('main-icon');
+            const cardContent = document.getElementById('card-content');
+            const body = document.body;
+            const starsContainer = document.getElementById('stars-container');
+            const nextBtn = document.getElementById('next-btn');
+            let isMorning = true;
+
+            // 创建夜晚星星
+            function createStars() {
+                starsContainer.innerHTML = '';
+                const starCount = 30;
+                
+                for (let i = 0; i < starCount; i++) {
+                    const star = document.createElement('div');
+                    star.className = 'star';
+                    star.textContent = '⭐';
+                    star.style.left = (Math.random() * 100) + 'vw';
+                    star.style.top = (Math.random() * 100) + 'vh';
+                    star.style.fontSize = (Math.random() * 10 + 8) + 'px';
+                    star.style.animationDelay = (Math.random() * 3) + 's';
+                    starsContainer.appendChild(star);
+                }
+            }
+
+            // 切换日夜模式
+            toggleBtn.addEventListener('click', function() {
+                isMorning = !isMorning;
+                
+                if (isMorning) {
+                    // 切换到早安模式
+                    body.className = 'bg-morning relative';
+                    mainIcon.textContent = '🌞';
+                    toggleBtn.textContent = '切换到晚安 🌙';
+                    cardContent.className = 'card card-morning rounded-lg p-8 md:p-10';
+                    cardContent.innerHTML = `
+                        <div class="corner-decoration top-4 left-4 text-amber-200">✿</div>
+                        <div class="corner-decoration top-4 right-4 text-amber-200">✿</div>
+                        <div class="corner-decoration bottom-4 left-4 text-amber-200">✿</div>
+                        <div class="corner-decoration bottom-4 right-4 text-amber-200">✿</div>
+                        <div class="relative z-10">
+                            <h2 class="text-2xl md:text-3xl font-bold mb-6 text-amber-600">早安呀～</h2>
+                            <p class="text-gray-700 mb-4 leading-relaxed">
+                                清晨的风好像都在说今天会很好，所以把这份祝福也一起给你啦。
+                            </p >
+                            <p class="text-gray-700 mb-6 leading-relaxed">
+                                愿你今天的每一步都轻松自在，抬头有惊喜，低头有温柔，早安耶～
+                            </p >
+                            <div class="flex justify-center gap-4 mt-8">
+                                <span class="text-2xl">🍞</span>
+                                <span class="text-2xl">☕</span>
+                            </div>
+                        </div>
+                    `;
+                    starsContainer.style.opacity = '0';
+                    // 调整下一页按钮样式
+                    nextBtn.className = 'next-btn bg-white text-amber-600 hover:bg-amber-50';
+                    nextBtn.textContent = 'Hi →';
+                } else {
+                    // 切换到晚安模式
+                    body.className = 'bg-night relative';
+                    mainIcon.textContent = '🌙';
+                    toggleBtn.textContent = '切换到早安 🌞';
+                    cardContent.className = 'card card-night rounded-lg p-8 md:p-10';
+                    cardContent.innerHTML = `
+                        <div class="corner-decoration top-4 left-4 text-blue-300">❀</div>
+                        <div class="corner-decoration top-4 right-4 text-blue-300">❀</div>
+                        <div class="corner-decoration bottom-4 left-4 text-blue-300">❀</div>
+                        <div class="corner-decoration bottom-4 right-4 text-blue-300">❀</div>
+                        <div class="relative z-10">
+                            <h2 class="text-2xl md:text-3xl font-bold mb-6 text-indigo-800">晚安～</h2>
+                            <p class="text-indigo-900 mb-4 leading-relaxed">
+                                知道你白天可能攒了点小累，所以把这份祝福藏在晚上送给你。
+                            </p >
+                            <p class="text-indigo-900 mb-6 leading-relaxed">
+                                拆开它的时候，就当是给今天的自己一个小奖励吧～ 好好休息，明天继续闪闪发光吧～
+                            </p >
+                            <div class="flex justify-center gap-4 mt-8">
+                                <span class="text-2xl">⭐</span>
+                                <span class="text-2xl">🌙</span>
+                            </div>
+                        </div>
+                    `;
+                    createStars();
+                    starsContainer.style.opacity = '1';
+                    // 调整下一页按钮样式（适配夜晚模式）
+                    nextBtn.className = 'next-btn bg-white text-indigo-800 hover:bg-blue-50';
+                    nextBtn.textContent = 'Hi →';
+                }
+            });
+
+            // 初始化
+            createStars();
+            starsContainer.style.opacity = '0';
+        });
+    </script>
 </body>
 </html>
