@@ -3,302 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>亲爱的你 💕</title>
-    <style>
-        /* 基础样式 */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', sans-serif;
+    <title>亲爱的你(•_•)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        pink: {
+                            light: '#FFF0F3',
+                            DEFAULT: '#FFD6E0',
+                            dark: '#FFAACC'
+                        }
+                    }
+                }
+            }
         }
-        body {
-            background-color: #fff9f9;
-            color: #5d4037;
-            line-height: 1.6;
-            position: relative;
-            overflow-x: hidden;
-        }
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        .section {
-            padding: 60px 0;
-            position: relative;
-        }
-        h2 {
-            color: #f48fb1;
-            margin-bottom: 30px;
-            font-size: 1.8rem;
-        }
-        h2::after {
-            content: '💘';
-            margin-left: 8px;
-        }
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #f8bbd0;
-            color: white;
-            border-radius: 30px;
-            margin-top: 15px;
-            transition: 0.3s;
-            position: relative;
-        }
-        .btn:hover {
-            background-color: #f48fb1;
-        }
-
-        /* 导航 */
-        header {
-            background: white;
-            padding: 15px 0;
-            box-shadow: 0 2px 10px rgba(248, 187, 208, 0.1);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 10;
-        }
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .logo {
-            font-size: 1.3rem;
-            color: #f48fb1;
-            font-weight: bold;
-        }
-        .logo span {
-            margin: 0 3px;
-        }
-        .nav-list {
-            display: flex;
-            list-style: none;
-            gap: 25px;
-        }
-
-        /* 个人介绍区 */
-        .intro {
-            text-align: center;
-            padding: 110px 0 50px; /* 增加顶部 padding 抵消导航栏高度 */
-            background-color: white;
-            position: relative;
-        }
-        .intro h1 {
-            font-size: 2.2rem;
-            color: #f48fb1;
-            margin-bottom: 15px;
-        }
-        .intro h1 span {
-            margin: 0 5px;
-        }
-        .intro p {
-            max-width: 600px;
-            margin: 0 auto;
-            color: #6d4c41;
-        }
-
-        /* 关于我 */
-        .about {
-            background: #fff0f6;
-        }
-        .about-content {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 40px;
-            align-items: center;
-        }
-        .about-img {
-            flex: 1;
-            min-width: 250px;
-        }
-        .about-img img {
-            width: 100%;
-            height: auto;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(248, 187, 208, 0.1);
-            display: block;
-        }
-        .about-text {
-            flex: 2;
-            min-width: 250px;
-        }
-        .about-text p {
-            margin-bottom: 15px;
-        }
-        .simple-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        .simple-tags span {
-            padding: 5px 12px;
-            background: white;
-            color: #f48fb1;
-            border-radius: 20px;
-            font-size: 0.9rem;
-        }
-
-        /* 最近分享 */
-        .posts {
-            background: white;
-        }
-        .post-item {
-            background: #fff0f6;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 5px 10px rgba(248, 187, 208, 0.1);
-            position: relative;
-        }
-        .post-item h3 {
-            color: #f48fb1;
-            margin-bottom: 10px;
-        }
-
-        /* 页脚 */
-        footer {
-            background: #fce4ec;
-            padding: 30px 0;
-            text-align: center;
-            color: #f48fb1;
-            position: relative;
-        }
-        footer p {
-            margin-bottom: 10px;
-        }
-        footer .icons {
-            font-size: 1.2rem;
-            letter-spacing: 10px;
-        }
-
-        /* 动态星星效果 */
-        .star {
-            position: absolute;
-            background-color: #fff;
-            border-radius: 50%;
-            pointer-events: none;
-            opacity: 0.8;
-            animation: fall linear infinite;
-            box-shadow: 0 0 10px 2px rgba(255, 221, 238, 0.8);
-        }
-
-        @keyframes fall {
-            to {
-                transform: translateY(100vh) rotate(720deg);
-                opacity: 0;
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .bg-pattern {
+                background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffaccd' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
             }
         }
     </style>
 </head>
-<body>
-    <!-- 导航 -->
-    <header>
-        <div class="container">
-            <nav>
-                <div class="logo">
-                    <span>我的</span>
-                </div>
-                <ul class="nav-list">
-                    <li><a href=" ">首页</a ></li>
-                    <li><a href="#about">关于我</a ></li>
-                    <li><a href="#posts">分享</a ></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-
-    <!-- 个人介绍区（原横幅图位置已删除） -->
-    <section class="intro" id="home">
-        <div class="container">
-            <h1>你好啊，我是<span>兼煦</span> <span>💞</span></h1>
-            <p>简单直接的，这里没有太多复杂的东西，就是我的分享空间 🌸</p >
-            <a href="about.html" class="btn">认识一下</a >
-        </div>
-    </section>
-
-    <!-- 关于我 -->
-    <section class="about section" id="about">
-        <div class="container">
-            <h2>关于我</h2>
-            <div class="about-content">
-                <div class="about-img">
-                    <img src="https://s21.ax1x.com/2025/08/19/pVBN7Mq.jpg" alt="我的照片">
-                </div>
-                <div class="about-text">
-                    <p>本人，生活不轰轰烈烈，但也安稳自在。</p >
-                    <p>平时没太多爱好。</p >
-                    <p>偶尔写写东西，分享。</p >
-                    <div class="simple-tags">
-                        <span>等待</span>
-                        <span>日子</span>
-                        <span>散步</span>
-                    </div>
-                </div>
+<body class="bg-white bg-pattern min-h-screen">
+    <!-- 主内容区 -->
+    <div class="container mx-auto px-4 py-20 md:py-32 flex flex-col items-center text-center">
+        <!-- 标题 -->
+        <h1 class="text-[clamp(2rem,5vw,3rem)] font-bold text-pink-dark mb-6">一份小邀请 💌</h1>
+        
+        <!-- 装饰元素 -->
+        <div class="w-24 h-1 bg-pink mb-10 rounded-full"></div>
+        
+        <!-- 邀请文字 -->
+        <p class="text-gray-700 text-lg md:text-xl max-w-lg mb-12 leading-relaxed">
+            去看看吧～ ❤️
+        </p >
+        
+        <!-- 邀请函跳转按钮 -->
+        <a href=" " class="inline-block bg-pink hover:bg-pink-dark text-white font-medium py-3 px-8 rounded-full transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-1">
+            点击进入 ❤️
+        </a >
+        
+        <!-- 装饰图案 -->
+        <div class="mt-16 w-full max-w-md flex justify-center">
+            <div class="w-32 h-32 rounded-full bg-pink-light/50 flex items-center justify-center">
+                <span class="text-4xl text-pink-dark">💖</span>
             </div>
         </div>
-    </section>
+    </div>
 
-    <!-- 最近分享 -->
-    <section class="posts section" id="posts">
-        <div class="container">
-            <h2>最近</h2>
-            <div class="post-item">
-                <h3>等🌱</h3>
-                <p>依旧是无缘无故的离开了……</p >
-            </div>
-            <div class="post-item">
-                <h3>我在</h3>
-                <p>想你……</p >
-            </div>
-        </div>
-    </section>
-
-    <!-- 页脚 -->
-    <footer>
-        <div class="container">
-            <p>戈壁无垠，风过无声，唯有暖阳温抚着每一寸土地，静候春归。 💖</p >
-            <div class="icons">(•_•)</div>
-            <p>© 2025 简单就好</p >
-        </div>
+    <!-- 底部 -->
+    <footer class="py-6 text-center text-gray-500 text-sm">
+        <p>期待与你再相遇 ✨</p >
     </footer>
 
     <script>
-        // 生成星星的函数
-        function createStar() {
-            const star = document.createElement('div');
-            star.classList.add('star');
-            
-            const size = Math.random() * 3 + 1;
-            star.style.width = `${size}px`;
-            star.style.height = `${size}px`;
-            
-            const left = Math.random() * 100;
-            star.style.left = `${left}%`;
-            
-            star.style.top = `-${size}px`;
-            
-            const duration = Math.random() * 4 + 1;
-            star.style.animationDuration = `${duration}s`;
-            
-            star.style.opacity = Math.random() * 0.5 + 0.3;
-            
-            document.body.appendChild(star);
-            
-            setTimeout(() => {
-                star.remove();
-            }, duration * 1000);
-        }
-        
-        setInterval(createStar, 100);
+        // 按钮动画效果
+        const btn = document.querySelector('a[href="about.html"]');
+        btn.addEventListener('mousedown', () => {
+            btn.classList.add('scale-95');
+        });
+        btn.addEventListener('mouseup', () => {
+            btn.classList.remove('scale-95');
+        });
+        btn.addEventListener('mouseleave', () => {
+            btn.classList.remove('scale-95');
+        });
     </script>
 </body>
 </html>
