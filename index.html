@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>亲爱的你💖</title>
+    <title>康康</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -25,43 +25,133 @@
             .bg-pattern {
                 background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffaccd' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
             }
+            .star {
+                position: absolute;
+                color: #fff;
+                text-shadow: 0 0 5px #fff, 0 0 10px #fff;
+                pointer-events: none;
+                animation: fall linear infinite;
+            }
+            .confetti {
+                position: absolute;
+                width: 8px;
+                height: 8px;
+                pointer-events: none;
+                animation: fall linear infinite;
+                opacity: 0.6;
+            }
+            .float {
+                animation: float 3s ease-in-out infinite;
+            }
+            .fade-in {
+                animation: fadeIn 1.5s ease-out forwards;
+                opacity: 0;
+            }
+            .slide-up {
+                animation: slideUp 1.2s ease-out forwards;
+                transform: translateY(20px);
+                opacity: 0;
+            }
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            to { 
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
     </style>
 </head>
-<body class="bg-white bg-pattern min-h-screen">
+<body class="bg-white bg-pattern min-h-screen relative overflow-hidden">
+    <!-- 动态元素容器 -->
+    <div id="particles-container" class="fixed inset-0 z-0"></div>
+
     <!-- 主内容区 -->
-    <div class="container mx-auto px-4 py-20 md:py-32 flex flex-col items-center text-center">
-        <!-- 标题 -->
-        <h1 class="text-[clamp(2rem,5vw,3rem)] font-bold text-pink-dark mb-6">一份小邀请 💌</h1>
+    <div class="container mx-auto px-4 py-20 md:py-32 flex flex-col items-center text-center relative z-10">
+        <!-- 标题（浮动动画） -->
+        <h1 class="text-[clamp(2rem,5vw,3rem)] font-bold text-pink-dark mb-6 float fade-in" style="animation-delay: 0.3s">一份小邀请 💌</h1>
         
-        <!-- 装饰元素 -->
-        <div class="w-24 h-1 bg-pink mb-10 rounded-full"></div>
+        <!-- 装饰元素（淡入动画） -->
+        <div class="w-24 h-1 bg-pink mb-10 rounded-full fade-in" style="animation-delay: 0.6s"></div>
         
-        <!-- 邀请文字 -->
-        <p class="text-gray-700 text-lg md:text-xl max-w-lg mb-12 leading-relaxed">
+        <!-- 邀请文字（上滑动画） -->
+        <p class="text-gray-700 text-lg md:text-xl max-w-lg mb-12 leading-relaxed slide-up" style="animation-delay: 0.9s">
             去看看吧～ ❤️
         </p >
         
-        <!-- 邀请函跳转按钮 -->
-         <a href=" " class="inline-block bg-pink hover:bg-pink-dark text-white font-medium py-3 px-8 rounded-full transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-1">
-            <a href="about.html">点击进入 ❤️</a >
+        <!-- 跳转按钮（上滑+浮动动画） -->
+        <a href=" " class="inline-block bg-pink hover:bg-pink-dark text-white font-medium py-3 px-8 rounded-full transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-1 slide-up float" style="animation-delay: 1.2s">
+            点一下试试 ❤️
         </a >
         
-        <!-- 装饰图案 -->
-        <div class="mt-16 w-full max-w-md flex justify-center">
+        <!-- 装饰图案（浮动动画） -->
+        <div class="mt-16 w-full max-w-md flex justify-center float" style="animation-delay: 1.5s">
             <div class="w-32 h-32 rounded-full bg-pink-light/50 flex items-center justify-center">
                 <span class="text-4xl text-pink-dark">💖</span>
             </div>
         </div>
     </div>
 
-    <!-- 底部 -->
-    <footer class="py-6 text-center text-gray-500 text-sm">
-        <p>期待与你再相遇 ✨</p >
+    <!-- 底部（淡入动画） -->
+    <footer class="py-6 text-center text-gray-500 text-sm relative z-10 fade-in" style="animation-delay: 1.8s">
+        <p>期待与你相遇 ✨</p >
     </footer>
 
     <script>
-        // 按钮动画效果
+        // 创建飘落的星星
+        function createStars() {
+            const container = document.getElementById('particles-container');
+            const starCount = 30;
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                star.textContent = '★';
+                star.style.left = `${Math.random() * 100}vw`;
+                star.style.top = `-${Math.random() * 20}px`;
+                star.style.fontSize = `${Math.random() * 10 + 8}px`;
+                star.style.animationDuration = `${Math.random() * 10 + 10}s`;
+                star.style.animationDelay = `${Math.random() * 5}s`;
+                container.appendChild(star);
+            }
+        }
+
+        // 创建浅色彩虹碎片
+        function createConfetti() {
+            const container = document.getElementById('particles-container');
+            const confettiCount = 50;
+            const colors = [
+                '#ffb3b3', '#ffe6b3', '#b3ffcc', 
+                '#b3e6ff', '#ffcceb', '#e6ccff'
+            ];
+            
+            for (let i = 0; i < confettiCount; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.left = `${Math.random() * 100}vw`;
+                confetti.style.top = `-${Math.random() * 20}px`;
+                confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                confetti.style.animationDuration = `${Math.random() * 8 + 8}s`;
+                confetti.style.animationDelay = `${Math.random() * 5}s`;
+                container.appendChild(confetti);
+            }
+        }
+
+        // 按钮交互动画
         const btn = document.querySelector('a[href="about.html"]');
         btn.addEventListener('mousedown', () => {
             btn.classList.add('scale-95');
@@ -72,6 +162,10 @@
         btn.addEventListener('mouseleave', () => {
             btn.classList.remove('scale-95');
         });
+
+        // 初始化效果
+        createStars();
+        createConfetti();
     </script>
 </body>
 </html>
