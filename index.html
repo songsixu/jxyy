@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>康康</title>
+    <title>康康嘛</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -20,43 +20,37 @@
             }
         }
     </script>
-    <style type="text/tailwindcss">
-        @layer utilities {
-            .bg-pattern {
-                background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffaccd' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            }
-            .star {
-                position: absolute;
-                color: #fff;
-                text-shadow: 0 0 5px #fff, 0 0 10px #fff;
-                pointer-events: none;
-                animation: fall linear infinite;
-            }
-            .confetti {
-                position: absolute;
-                width: 8px;
-                height: 8px;
-                pointer-events: none;
-                animation: fall linear infinite;
-                opacity: 0.6;
-            }
-            .float {
-                animation: float 3s ease-in-out infinite;
-            }
-            .fade-in {
-                animation: fadeIn 1.5s ease-out forwards;
-                opacity: 0;
-            }
-            .slide-up {
-                animation: slideUp 1.2s ease-out forwards;
-                transform: translateY(20px);
-                opacity: 0;
-            }
+    <style>
+        .bg-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffaccd' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
-
+        .star {
+            position: absolute;
+            color: #fff;
+            text-shadow: 0 0 5px #fff, 0 0 10px #fff;
+            pointer-events: none;
+            animation: fall 15s linear infinite;
+        }
+        .confetti {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+        .flower {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0.7;
+            animation: float 6s ease-in-out infinite;
+        }
         @keyframes fall {
-            to {
-                transform: translateY(100vh);
+            0% {
+                transform: translateY(-10px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
                 opacity: 0;
             }
         }
@@ -64,8 +58,20 @@
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-10px); }
         }
+        .float {
+            animation: float 3s ease-in-out infinite;
+        }
+        .fade-in {
+            animation: fadeIn 1.5s ease-out forwards;
+            opacity: 0;
+        }
         @keyframes fadeIn {
             to { opacity: 1; }
+        }
+        .slide-up {
+            animation: slideUp 1.2s ease-out forwards;
+            transform: translateY(20px);
+            opacity: 0;
         }
         @keyframes slideUp {
             to { 
@@ -76,28 +82,49 @@
     </style>
 </head>
 <body class="bg-white bg-pattern min-h-screen relative overflow-hidden">
+    <!-- 左下角小花（椭圆形花瓣） -->
+    <div class="flower bottom-8 left-8 z-10" style="width: 60px; height: 60px; animation-delay: 0.5s;">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <!-- 椭圆形花瓣 -->
+            <ellipse cx="50" cy="20" rx="18" ry="12" fill="#FFD6E0" />
+            <ellipse cx="80" cy="50" rx="12" ry="18" fill="#FFD6E0" transform="rotate(90 80 50)" />
+            <ellipse cx="50" cy="80" rx="18" ry="12" fill="#FFD6E0" transform="rotate(180 50 80)" />
+            <ellipse cx="20" cy="50" rx="12" ry="18" fill="#FFD6E0" transform="rotate(270 20 50)" />
+            <!-- 花心 -->
+            <circle cx="50" cy="50" r="10" fill="#FFAACC" />
+        </svg>
+    </div>
+
+    <!-- 右上角小花（椭圆形花瓣） -->
+    <div class="flower top-8 right-8 z-10" style="width: 40px; height: 40px; animation-delay: 1s;">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <!-- 椭圆形花瓣 -->
+            <ellipse cx="50" cy="25" rx="15" ry="10" fill="#FFB3C8" />
+            <ellipse cx="75" cy="50" rx="10" ry="15" fill="#FFB3C8" transform="rotate(90 75 50)" />
+            <ellipse cx="50" cy="75" rx="15" ry="10" fill="#FFB3C8" transform="rotate(180 50 75)" />
+            <ellipse cx="25" cy="50" rx="10" ry="15" fill="#FFB3C8" transform="rotate(270 25 50)" />
+            <!-- 花心 -->
+            <circle cx="50" cy="50" r="8" fill="#FF85A1" />
+        </svg>
+    </div>
+
     <!-- 动态元素容器 -->
     <div id="particles-container" class="fixed inset-0 z-0"></div>
 
     <!-- 主内容区 -->
     <div class="container mx-auto px-4 py-20 md:py-32 flex flex-col items-center text-center relative z-10">
-        <!-- 标题（浮动动画） -->
         <h1 class="text-[clamp(2rem,5vw,3rem)] font-bold text-pink-dark mb-6 float fade-in" style="animation-delay: 0.3s">一份小邀请 💌</h1>
         
-        <!-- 装饰元素（淡入动画） -->
         <div class="w-24 h-1 bg-pink mb-10 rounded-full fade-in" style="animation-delay: 0.6s"></div>
         
-        <!-- 邀请文字（上滑动画） -->
         <p class="text-gray-700 text-lg md:text-xl max-w-lg mb-12 leading-relaxed slide-up" style="animation-delay: 0.9s">
-            去看看吧～ ❤️
+            点击下方按钮，去看看吧～ ❤️
         </p >
         
-        <!-- 跳转按钮（上滑+浮动动画） -->
         <a href="about.html" class="inline-block bg-pink hover:bg-pink-dark text-white font-medium py-3 px-8 rounded-full transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-1 slide-up float" style="animation-delay: 1.2s">
             点一下试试 ❤️
         </a >
         
-        <!-- 装饰图案（浮动动画） -->
         <div class="mt-16 w-full max-w-md flex justify-center float" style="animation-delay: 1.5s">
             <div class="w-32 h-32 rounded-full bg-pink-light/50 flex items-center justify-center">
                 <span class="text-4xl text-pink-dark">💖</span>
@@ -105,31 +132,12 @@
         </div>
     </div>
 
-    <!-- 底部（淡入动画） -->
     <footer class="py-6 text-center text-gray-500 text-sm relative z-10 fade-in" style="animation-delay: 1.8s">
         <p>期待与你相遇 ✨</p >
     </footer>
 
     <script>
-        // 创建飘落的星星
-        function createStars() {
-            const container = document.getElementById('particles-container');
-            const starCount = 30;
-            
-            for (let i = 0; i < starCount; i++) {
-                const star = document.createElement('div');
-                star.classList.add('star');
-                star.textContent = '★';
-                star.style.left = `${Math.random() * 100}vw`;
-                star.style.top = `-${Math.random() * 20}px`;
-                star.style.fontSize = `${Math.random() * 10 + 8}px`;
-                star.style.animationDuration = `${Math.random() * 10 + 10}s`;
-                star.style.animationDelay = `${Math.random() * 5}s`;
-                container.appendChild(star);
-            }
-        }
-
-        // 创建浅色彩虹碎片
+        // 彩虹碎片创建
         function createConfetti() {
             const container = document.getElementById('particles-container');
             const confettiCount = 50;
@@ -140,30 +148,47 @@
             
             for (let i = 0; i < confettiCount; i++) {
                 const confetti = document.createElement('div');
-                confetti.classList.add('confetti');
+                confetti.className = 'confetti';
                 confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                confetti.style.left = `${Math.random() * 100}vw`;
-                confetti.style.top = `-${Math.random() * 20}px`;
-                confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
-                confetti.style.animationDuration = `${Math.random() * 8 + 8}s`;
-                confetti.style.animationDelay = `${Math.random() * 5}s`;
+                confetti.style.left = (Math.random() * 100) + 'vw';
+                confetti.style.top = '-' + (Math.random() * 20) + 'px';
+                confetti.style.animation = 'fall ' + (Math.random() * 8 + 8) + 's linear ' + (Math.random() * 5) + 's infinite';
                 container.appendChild(confetti);
             }
         }
 
-        // 按钮交互动画
-        const btn = document.querySelector('a[href="about.html"]');
-        btn.addEventListener('mousedown', () => {
-            btn.classList.add('scale-95');
-        });
-        btn.addEventListener('mouseup', () => {
-            btn.classList.remove('scale-95');
-        });
-        btn.addEventListener('mouseleave', () => {
-            btn.classList.remove('scale-95');
-        });
+        // 星星创建
+        function createStars() {
+            const container = document.getElementById('particles-container');
+            const starCount = 30;
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.textContent = '★';
+                star.style.left = (Math.random() * 100) + 'vw';
+                star.style.top = '-' + (Math.random() * 20) + 'px';
+                star.style.fontSize = (Math.random() * 10 + 8) + 'px';
+                star.style.animationDelay = (Math.random() * 5) + 's';
+                container.appendChild(star);
+            }
+        }
 
-        // 初始化效果
+        // 按钮交互
+        const btn = document.querySelector('a[href="about.html"]');
+        if (btn) {
+            btn.addEventListener('mousedown', function() {
+                this.style.transform = 'scale(0.95) translateY(-1px)';
+            });
+            btn.addEventListener('mouseup', function() {
+                this.style.transform = 'scale(1) translateY(-1px)';
+            });
+            btn.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1) translateY(0)';
+            });
+        }
+
+        // 初始化
         createStars();
         createConfetti();
     </script>
