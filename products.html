@@ -1,1 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>等你</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #f3d9fa 0%, #d9f3e1 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            font-family: system-ui, -apple-system, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* 飘落的小花容器 */
+        .flower-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        /* 飘落的小花样式 */
+        .flower {
+            position: absolute;
+            color: #ce93d8;
+            opacity: 0.7;
+            animation: fall linear infinite;
+        }
+        
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+        
+        /* 装饰性小图标 */
+        .decor-icon {
+            position: absolute;
+            color: rgba(206, 147, 216, 0.3);
+            font-size: 24px;
+            z-index: 0;
+        }
+        
+        /* 花纹背景 */
+        .pattern-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2381c784' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            z-index: 0;
+        }
+        
+        /* 带花纹的卡片边框 */
+        .card {
+            background-color: white;
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+            border: 8px solid transparent;
+            background-clip: padding-box;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            border-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z' fill='%23ce93d8'/%3E%3Cpath d='M12 6.5c-2.48 0-4.5 2.02-4.5 4.5s2.02 4.5 4.5 4.5 4.5-2.02 4.5-4.5-2.02-4.5-4.5-4.5zm0 7c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z' fill='%2381c784'/%3E%3C/svg%3E") 24 stretch;
+        }
+        
+        /* 卡片内部装饰 */
+        .card-decoration {
+            position: absolute;
+            color: rgba(129, 199, 132, 0.2);
+        }
+        .top-left { top: 15px; left: 15px; }
+        .top-right { top: 15px; right: 15px; }
+        .bottom-left { bottom: 15px; left: 15px; }
+        .bottom-right { bottom: 15px; right: 15px; }
+        
+        .card-title {
+            color: #6a5acd;
+            font-size: 22px;
+            margin-top: 0;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .title-line {
+            height: 2px;
+            width: 80px;
+            background: linear-gradient(90deg, #81c784, #ce93d8);
+            margin: 0 auto 25px;
+        }
+        
+        /* 图片样式 */
+        .content-image {
+            width: 100%;
+            border-radius: 10px;
+            margin: 0 auto 20px;
+            display: block;
+            max-height: 200px;
+            object-fit: cover;
+        }
+        
+        .card-content {
+            color: #555;
+            line-height: 1.8;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+        
+        .green-btn {
+            background-color: #81c784;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 12px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 0 auto 20px;
+        }
+        
+        .green-btn:hover {
+            background-color: #66bb6a;
+            transform: translateY(-2px);
+        }
+        
+        .hint-text {
+            color: #ce93d8;
+            font-size: 16px;
+            text-align: center;
+            display: none;
+            margin-top: 0;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: #f9f4fc;
+        }
+        
+        /* 跳转链接样式 */
+        .cute-link {
+            color: #ce93d8;
+            font-weight: bold;
+            text-decoration: none;
+            position: relative;
+        }
+        .cute-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #81c784;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        .cute-link:hover::after {
+            transform: scaleX(1);
+        }
+        
+        .countdown {
+            text-align: center;
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #f1f9f4;
+            border-radius: 10px;
+        }
+        
+        .countdown-title {
+            color: #388e3c;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .countdown-number {
+            color: #6a5acd;
+            font-size: 24px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!-- 背景音乐（自动播放+循环） -->
+    <audio autoplay loop>
+        <source src="about/hhh.mp3" type="audio/mpeg">
+        您的浏览器不支持音频播放
+    </audio>
+    
+    <!-- 飘落的小花容器 -->
+    <div class="flower-container" id="flowerContainer"></div>
+    
+    <!-- 背景花纹 -->
+    <div class="pattern-bg"></div>
+    
+    <!-- 周围装饰小图标 -->
+    <div class="decor-icon" style="top: 15%; left: 10%;">🌸</div>
+    <div class="decor-icon" style="top: 25%; right: 12%;">🌿</div>
+    <div class="decor-icon" style="bottom: 20%; left: 15%;">💐</div>
+    <div class="decor-icon" style="bottom: 15%; right: 10%;">☘️</div>
+    <div class="decor-icon" style="top: 40%; left: 8%;">🌼</div>
+    <div class="decor-icon" style="bottom: 30%; right: 15%;">🍀</div>
+    
+    <div class="card">
+        <!-- 卡片角落装饰 -->
+        <div class="card-decoration top-left">❦</div>
+        <div class="card-decoration top-right">❦</div>
+        <div class="card-decoration bottom-left">❦</div>
+        <div class="card-decoration bottom-right">❦</div>
+        
+        <h2 class="card-title">等你等了好久哦 o_o ....</h2>
+        <div class="title-line"></div>
+        
+        <!-- 图片展示区域 -->
+        <img src="https://s21.ax1x.com/2025/08/19/pVBN7Mq.jpg" alt="配图" class="content-image">
+        
+        <div class="card-content">
+            想想你在干嘛，打工？度假？有事？猜不到…<br>
+            第一天嘛，害怕…<br>
+            第二天还不在……好～
+        </div>
+        
+        <button class="green-btn" id="guessBtn">猜猜我的想法呢？</button>
+        <p class="hint-text" id="hintText">
+            无所谓啊～毕竟你这么<a href="next.html" class="cute-link">可爱</a>欸～💘
+        </p>
+        
+        <div class="countdown">
+            <div class="countdown-title">倒计时</div>
+            <div class="countdown-number" id="countdownNumber">30</div>
+            <div class="countdown-title">天</div>
+        </div>
+    </div>
 
+    <script>
+        // 创建飘落的小花
+        function createFallingFlowers() {
+            const container = document.getElementById('flowerContainer');
+            const flowerSymbols = ['🌸', '🌼', '💮', '❀'];
+            const totalFlowers = 15;
+            
+            // 清除已有花朵
+            container.innerHTML = '';
+            
+            for (let i = 0; i < totalFlowers; i++) {
+                const flower = document.createElement('div');
+                flower.className = 'flower';
+                // 随机选择花朵符号
+                flower.textContent = flowerSymbols[Math.floor(Math.random() * flowerSymbols.length)];
+                // 随机大小
+                const size = Math.random() * 16 + 12;
+                flower.style.fontSize = `${size}px`;
+                // 随机位置
+                flower.style.left = `${Math.random() * 100}vw`;
+                flower.style.top = `-${size}px`;
+                // 随机透明度
+                flower.style.opacity = Math.random() * 0.5 + 0.3;
+                // 随机动画时长（5-15秒）
+                const duration = Math.random() * 10 + 5;
+                flower.style.animationDuration = `${duration}s`;
+                // 随机动画延迟
+                flower.style.animationDelay = `${Math.random() * 5}s`;
+                
+                container.appendChild(flower);
+            }
+        }
+        
+        // 按钮点击交互
+        const guessBtn = document.getElementById('guessBtn');
+        const hintText = document.getElementById('hintText');
+        
+        guessBtn.addEventListener('click', () => {
+            hintText.style.display = hintText.style.display === 'block' ? 'none' : 'block';
+        });
+        
+        // 30天倒计时功能
+        const countdownNumber = document.getElementById('countdownNumber');
+        let daysLeft = 30;
+        
+        function updateCountdown() {
+            daysLeft--;
+            if (daysLeft < 0) daysLeft = 0;
+            countdownNumber.textContent = daysLeft;
+        }
+        
+        setInterval(updateCountdown, 86400000); // 24小时更新一次
+
+        // 处理浏览器自动播放限制
+        document.addEventListener('click', function playMusic() {
+            const audio = document.querySelector('audio');
+            if (audio.paused) {
+                audio.play().catch(e => console.log('音频播放需要用户交互'));
+            }
+            document.removeEventListener('click', playMusic);
+        }, { once: true });
+        
+        // 初始化飘落的小花
+        createFallingFlowers();
+        // 每15秒重新生成一批花朵
+        setInterval(createFallingFlowers, 15000);
+    </script>
+</body>
+</html>
