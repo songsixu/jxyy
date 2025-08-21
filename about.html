@@ -139,7 +139,7 @@
 </head>
 <body class="bg-morning relative">
       <audio id="bgMusic" autoplay loop>
-  <source src="zao.mp3" type="audio/mpeg"> <!-- 默认加载早上音乐 -->
+  <source src="audio/zao.mp3" type="audio/mpeg"> <!-- 默认加载早上音乐 -->
 </audio>
     <!-- 阳光效果（仅早安模式显示） -->
     <div class="sunlight active" id="sunlight"></div>
@@ -228,10 +228,9 @@
             toggleBtn.addEventListener('click', function() {
                 isMorning = !isMorning;
                  const bgMusic = document.getElementById('bgMusic'); 
-                
                 if (isMorning) {
                     // 切换到早安模式
-                    bgMusic.src = 'zao.mp3'; // 替换为你的早上音乐路径
+                    bgMusic.src = 'audio/zao.mp3'; // 替换为你的早上音乐路径
                     bgMusic.play(); // 播放新音乐
                     body.className = 'bg-morning relative';
                     mainIcon.textContent = '🌞';
@@ -270,7 +269,7 @@
                     sunlight.classList.add('active');
                 } else {
                     // 切换到晚安
-    bgMusic.src = 'wan.mp3'; // 替换为你的晚上音乐路径
+    bgMusic.src = 'audio/wan.mp3'; // 替换为你的晚上音乐路径
     bgMusic.play(); // 播放新音乐
     body.className = 'bg-night relative';
                     mainIcon.textContent = '🌙';
