@@ -45,14 +45,8 @@
             animation: float 6s ease-in-out infinite;
         }
         @keyframes fall {
-            0% {
-                transform: translateY(-10px) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(100vh) rotate(360deg);
-                opacity: 0;
-            }
+            0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
         }
         @keyframes float {
             0%, 100% { transform: translateY(0); }
@@ -79,31 +73,52 @@
                 opacity: 1;
             }
         }
+        .banner-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+        }
+        .banner-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            object-position: center;
+        }
+        .banner-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60%;
+            background: linear-gradient(to top, rgba(255,255,255,1), rgba(255,255,255,0));
+        }
     </style>
 </head>
 <body class="bg-white bg-pattern min-h-screen relative overflow-hidden">
-    <!-- 左下角小花（椭圆形花瓣） -->
+    <!-- 顶部横幅图 -->
+    <div class="banner-container fade-in" style="animation-delay: 0.2s">
+        < img src="https://s21.ax1x.com/2025/08/21/pVDKauQ.jpg" alt="横幅图片" class="banner-image">
+        <div class="banner-overlay"></div>
+    </div>
+
+    <!-- 左下角小花 -->
     <div class="flower bottom-8 left-8 z-10" style="width: 60px; height: 60px; animation-delay: 0.5s;">
         <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <!-- 椭圆形花瓣 -->
             <ellipse cx="50" cy="20" rx="18" ry="12" fill="#FFD6E0" />
             <ellipse cx="80" cy="50" rx="12" ry="18" fill="#FFD6E0" transform="rotate(90 80 50)" />
             <ellipse cx="50" cy="80" rx="18" ry="12" fill="#FFD6E0" transform="rotate(180 50 80)" />
             <ellipse cx="20" cy="50" rx="12" ry="18" fill="#FFD6E0" transform="rotate(270 20 50)" />
-            <!-- 花心 -->
             <circle cx="50" cy="50" r="10" fill="#FFAACC" />
         </svg>
     </div>
 
-    <!-- 右上角小花（椭圆形花瓣） -->
+    <!-- 右上角小花 -->
     <div class="flower top-8 right-8 z-10" style="width: 40px; height: 40px; animation-delay: 1s;">
         <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <!-- 椭圆形花瓣 -->
             <ellipse cx="50" cy="25" rx="15" ry="10" fill="#FFB3C8" />
             <ellipse cx="75" cy="50" rx="10" ry="15" fill="#FFB3C8" transform="rotate(90 75 50)" />
             <ellipse cx="50" cy="75" rx="15" ry="10" fill="#FFB3C8" transform="rotate(180 50 75)" />
             <ellipse cx="25" cy="50" rx="10" ry="15" fill="#FFB3C8" transform="rotate(270 25 50)" />
-            <!-- 花心 -->
             <circle cx="50" cy="50" r="8" fill="#FF85A1" />
         </svg>
     </div>
@@ -112,31 +127,49 @@
     <div id="particles-container" class="fixed inset-0 z-0"></div>
 
     <!-- 主内容区 -->
-    <div class="container mx-auto px-4 py-20 md:py-32 flex flex-col items-center text-center relative z-10">
-        <h1 class="text-[clamp(2rem,5vw,3rem)] font-bold text-pink-dark mb-6 float fade-in" style="animation-delay: 0.3s">一份小邀请 💌</h1>
-        
-        <div class="w-24 h-1 bg-pink mb-10 rounded-full fade-in" style="animation-delay: 0.6s"></div>
-        
-        <p class="text-gray-700 text-lg md:text-xl max-w-lg mb-12 leading-relaxed slide-up" style="animation-delay: 0.9s">
-            点击下方按钮，去看看吧～ ❤️
-        </p >
-        
-        <a href="about.html" class="inline-block bg-pink hover:bg-pink-dark text-white font-medium py-3 px-8 rounded-full transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-1 slide-up float" style="animation-delay: 1.2s">
-            点一下试试 ❤️
-        </a >
-        
-        <div class="mt-16 w-full max-w-md flex justify-center float" style="animation-delay: 1.5s">
-            <div class="w-32 h-32 rounded-full bg-pink-light/50 flex items-center justify-center">
-                <span class="text-4xl text-pink-dark">💖</span>
+    <div class="container mx-auto px-4 py-8 relative z-10">
+        <div class="flex flex-col items-center text-center">
+            <h1 class="text-[clamp(2rem,5vw,3rem)] font-bold text-pink-dark mb-6 float fade-in" style="animation-delay: 0.7s">一份小邀请 💌</h1>
+            
+            <div class="w-24 h-1 bg-pink mb-10 rounded-full fade-in" style="animation-delay: 1s"></div>
+            
+            <p class="text-gray-700 text-lg md:text-xl max-w-lg mb-12 leading-relaxed slide-up" style="animation-delay: 1.3s">
+                点击下方按钮，去看看吧～ ❤️
+            </p >
+            
+            <a href="about.html" class="inline-block bg-pink hover:bg-pink-dark text-white font-medium py-3 px-8 rounded-full transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-1 slide-up float" style="animation-delay: 1.6s">
+                点一下试试 ❤️
+            </a >
+            
+            <div class="mt-16 w-full max-w-md flex justify-center float" style="animation-delay: 1.9s">
+                <div class="w-32 h-32 rounded-full bg-pink-light/50 flex items-center justify-center">
+                    <span class="text-4xl text-pink-dark">💖</span>
+                </div>
             </div>
         </div>
     </div>
 
-    <footer class="py-6 text-center text-gray-500 text-sm relative z-10 fade-in" style="animation-delay: 1.8s">
+    <footer class="py-6 text-center text-gray-500 text-sm relative z-10 fade-in" style="animation-delay: 2.2s">
         <p>期待与你再相遇✨</p >
     </footer>
 
     <script>
+        // 星星创建
+        function createStars() {
+            const container = document.getElementById('particles-container');
+            const starCount = 30;
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.textContent = '★';
+                star.style.left = (Math.random() * 100) + 'vw';
+                star.style.top = (Math.random() * 50) + 'vh';
+                star.style.fontSize = (Math.random() * 10 + 8) + 'px';
+                star.style.animationDelay = (Math.random() * 10) + 's';
+                container.appendChild(star);
+            }
+        }
+
         // 彩虹碎片创建
         function createConfetti() {
             const container = document.getElementById('particles-container');
