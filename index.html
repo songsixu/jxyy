@@ -92,10 +92,6 @@
 
     <!-- 动态粒子容器 -->
     <div id="particles" class="fixed inset-0 z-0"></div>
-    <audio autoplay loop>
-  <source src="audio/SO.mp3" type="audio/mpeg">
-</audio>
-
     <!-- 主内容 -->
     <div class="container mx-auto px-4 py-8 relative z-10">
         <div class="text-center max-w-2xl mx-auto">
@@ -105,8 +101,14 @@
                 点击下方按钮，去看看吧～ ❤️
             </p>
             <a href="about.html" class="inline-block bg-pink hover:bg-pink-dark text-white font-medium py-3 px-8 rounded-full transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-1 slide-up float" style="animation-delay: 1.6s">
-                点一下试试 ❤️
-            </a>
+                点一下试试 ❤️</a>
+            <audio autoplay loop>
+  <source src="audio/SO.mp3" type="audio/mpeg">
+</audio>
+    <button onclick="document.getElementById('bgMusic').play()" 
+            class="mt-4 inline-block bg-pink hover:bg-pink-dark text-white font-bold py-2 px-4 rounded">
+      播放音乐
+    </button>
             <div class="mt-16 flex justify-center">
                 <div class="w-32 h-32 rounded-full bg-pink-light/50 flex items-center justify-center float" style="animation-delay: 1.9s">
                     <span class="text-4xl text-pink-dark">💖</span>
