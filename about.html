@@ -139,6 +139,9 @@
 </head>
 <body class="bg-morning relative">
     <!-- 阳光效果（仅早安模式显示） -->
+    <audio id="bgMusic" autoplay loop>
+  <source src="zao.mp3" type="audio/mpeg"> <!-- 默认加载早上音乐 -->
+</audio>
     <div class="sunlight active" id="sunlight"></div>
     
     <!-- 动态星星（夜晚模式显示） -->
@@ -224,9 +227,12 @@
 
             toggleBtn.addEventListener('click', function() {
                 isMorning = !isMorning;
+                 const bgMusic = document.getElementById('bgMusic'); 
                 
                 if (isMorning) {
                     // 切换到早安模式
+                    bgMusic.src = 'zao.mp3'; // 替换为你的早上音乐路径
+                    bgMusic.play(); // 播放新音乐
                     body.className = 'bg-morning relative';
                     mainIcon.textContent = '🌞';
                     toggleBtn.textContent = '切换到晚安 🌙';
@@ -263,8 +269,10 @@
                     // 显示阳光效果
                     sunlight.classList.add('active');
                 } else {
-                    // 切换到晚安模式
-                    body.className = 'bg-night relative';
+                    // 切换到晚安
+    bgMusic.src = 'wan.mp3'; // 替换为你的晚上音乐路径
+    bgMusic.play(); // 播放新音乐
+    body.className = 'bg-night relative';
                     mainIcon.textContent = '🌙';
                     toggleBtn.textContent = '切换到早安 🌞';
                     cardContent.className = 'card card-night rounded-lg p-10 md:p-14';
