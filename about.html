@@ -14,6 +14,51 @@
             margin: 0;
             position: relative;
         }
+        /* 云朵样式 */
+.cloud {
+    position: absolute;
+    width: 150px;
+    height: 80px;
+    background-color: white;
+    border-radius: 40px;
+    opacity: 0.8;
+    z-index: 0; /* 确保云朵在贺卡下方 */
+}
+.cloud:before, .cloud:after {
+    content: '';
+    position: absolute;
+    background-color: white;
+    border-radius: 50%;
+}
+.cloud:before {
+    width: 100px;
+    height: 100px;
+    top: -50px;
+    left: 30px;
+}
+.cloud:after {
+    width: 120px;
+    height: 120px;
+    top: -70px;
+    right: 20px;
+}
+/* 云朵动画 */
+.cloud-1 {
+    top: 15vh;
+    animation: float 30s linear infinite;
+}
+.cloud-2 {
+    top: 45vh;
+    animation: float 35s linear infinite 8s;
+}
+.cloud-3 {
+    top: 70vh;
+    animation: float 28s linear infinite 3s;
+}
+@keyframes float {
+    0% { transform: translateX(-200px); }
+    100% { transform: translateX(calc(100vw + 200px)); }
+}
         /* 优化的早安阳光效果 - 更柔和模糊 */
         .sunlight {
             position: absolute;
