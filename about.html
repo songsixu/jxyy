@@ -14,31 +14,51 @@
             margin: 0;
             position: relative;
         }
-/* 云朵容器：负责整体定位和动画 */
+        /* 云朵容器：负责动画和基础定位 */
 .cloud {
   position: absolute;
   z-index: 0;
 }
 
-/* 云朵主体：清晰轮廓 */
+/* 云朵主体：最清晰的一层 */
 .cloud::before {
   content: "";
   position: absolute;
-  width: 120px;
+  width: 150px;
   height: 80px;
-  border-radius: 60px / 40px; /* 椭圆云朵形状 */
-  background: white; /* 不透明白色，轮廓更清晰 */
-  filter: blur(2px); /* 轻微模糊，保留边缘锋利感 */
+  border-radius: 75px / 40px;
+  background: white;
+  filter: blur(5px); /* 轻微模糊，保留主体清晰度 */
 }
 
-/* 拖尾：用阴影模拟，更简洁且带渐变透明 */
-.cloud {
-  box-shadow: 
-    30px 10px 0 rgba(255, 255, 255, 0.7), /* 第一层拖尾，稍透明 */
-    60px 20px 0 rgba(255, 255, 255, 0.5); /* 第二层拖尾，更透明 */
+/* 拖尾层 1：稍模糊、稍透明，跟在主体后 */
+.cloud::after {
+  content: "";
+  position: absolute;
+  width: 130px;
+  height: 70px;
+  left: 20px;
+  top: 10px;
+  border-radius: 65px / 35px;
+  background: white;
+  opacity: 0.7;
+  filter: blur(8px);
 }
 
-/* 云朵动画：左右交替 + 无延迟 + 拖尾节奏 */
+/* 拖尾层 2：更模糊、更透明，拖影更长 */
+.cloud .trail {
+  position: absolute;
+  width: 110px;
+  height: 60px;
+  left: 40px;
+  top: 20px;
+  border-radius: 55px / 30px;
+  background: white;
+  opacity: 0.5;
+  filter: blur(10px);
+}
+
+/* 云朵整体动画：左右飘动 + 无延迟 */
 .cloud-1 {
   top: 10vh;
   animation: floatLeft 25s linear infinite;
@@ -71,7 +91,7 @@
     transform: translateX(-200px);
   }
 }
-        /* 优化的早安阳光效果 - 更柔和模糊 */
+ /* 优化的早安阳光效果 - 更柔和模糊 */
         .sunlight {
             position: absolute;
             top: -30%;
@@ -202,9 +222,15 @@
     <div class="sunlight active" id="sunlight"></div>
     
     <!-- 加入云朵元素 -->
-<div class="cloud cloud-1"></div>
-<div class="cloud cloud-2"></div>
-<div class="cloud cloud-3"></div>
+<div class="cloud cloud-1">
+  <div class="trail"></div>
+</div>
+<div class="cloud cloud-2">
+  <div class="trail"></div>
+</div>
+<div class="cloud cloud-3">
+  <div class="trail"></div>
+</div>
     
     <!-- 动态星星（夜晚模式显示） -->
     <div id="stars-container" class="fixed inset-0 pointer-events-none z-0"></div>
