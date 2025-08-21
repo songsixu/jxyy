@@ -13,9 +13,43 @@
             padding-bottom: 100px;
             margin: 0;
             position: relative;
+            /* 背景基础样式（含噪点纹理） */
+            background-blend-mode: multiply;
         }
-      
-        /* 优化的早安阳光效果 - 更柔和模糊 */
+        
+        /* 页面顶部曲线装饰 */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 120px;
+            transition: background 1s ease;
+            z-index: 0;
+        }
+        
+        /* 早安模式背景 */
+        .bg-morning {
+            background: 
+                linear-gradient(135deg, #FFE0B2, #FFCC80),
+                url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23fff3d6' fill-opacity='0.3'%3E%3Ccircle cx='10' cy='10' r='3'/%3E%3C/g%3E%3C/svg%3E");
+        }
+        .bg-morning::before {
+            background: radial-gradient(circle at 50% -20%, #fff9e8 40%, transparent 41%);
+        }
+        
+        /* 晚安模式背景 */
+        .bg-night {
+            background: 
+                linear-gradient(135deg, #1A237E, #283593),
+                url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%234a69bd' fill-opacity='0.3'%3E%3Ccircle cx='10' cy='10' r='2'/%3E%3C/g%3E%3C/svg%3E");
+        }
+        .bg-night::before {
+            background: radial-gradient(circle at 50% -20%, #E3F2FD 30%, transparent 31%);
+        }
+
+        /* 阳光效果 */
         .sunlight {
             position: absolute;
             top: -30%;
@@ -27,11 +61,13 @@
             z-index: 0;
             opacity: 0;
             transition: opacity 1.5s ease;
-            filter: blur(15px); /* 增加模糊度 */
+            filter: blur(15px);
         }
         .sunlight.active {
             opacity: 1;
         }
+
+        /* 卡片样式（带曲线边框） */
         .card {
             transform: rotate(-2deg);
             transition: all 0.8s ease;
@@ -40,35 +76,85 @@
             overflow: hidden;
             max-width: 800px;
             width: 90%;
+            /* 曲线边框 */
+            border-radius: 30px;
+            /* 装饰性边框 */
+            border: 3px solid transparent;
+            background-clip: padding-box;
         }
-        .card-morning::before {
+        /* 卡片边框渐变 */
+        .card-morning {
+            background: linear-gradient(135deg, #FFF9E6, #FFEFD5);
+            border-color: rgba(255, 210, 170, 0.5);
+        }
+        .card-night {
+            background: linear-gradient(135deg, #E3F2FD, #BBDEFB);
+            border-color: rgba(170, 210, 255, 0.5);
+        }
+
+        .card-morning::before, .card-night::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
+            z-index: 0;
+        }
+        .card-morning::before {
             background-image: 
                 url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffcc80' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"),
                 radial-gradient(circle at 10% 20%, rgba(255,220,160,0.1) 0%, transparent 20%);
-            z-index: 0;
         }
         .card-night::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
             background-image: 
                 url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2380b3ff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"),
                 radial-gradient(circle at 90% 80%, rgba(120,160,255,0.1) 0%, transparent 20%);
-            z-index: 0;
         }
+
         .card:hover {
             transform: rotate(-2deg) scale(1.01);
             box-shadow: 0 20px 40px rgba(0,0,0,0.22);
         }
+
+        /* 动态漂浮元素（云朵） */
+        .float-element {
+            position: absolute;
+            opacity: 0.7;
+            z-index: 1;
+            animation: float 20s infinite linear;
+        }
+        .cloud {
+            background: #fff;
+            border-radius: 50% 50% 30% 70%;
+        }
+        .cloud1 {
+            width: 100px;
+            height: 40px;
+            top: 15%;
+            left: -150px;
+            animation-delay: 0s;
+        }
+        .cloud2 {
+            width: 80px;
+            height: 30px;
+            top: 60%;
+            right: -100px;
+            border-radius: 50% 50% 70% 30%;
+            animation-delay: 8s;
+        }
+        .star-cluster {
+            color: #fff;
+            font-size: 24px;
+            top: 25%;
+            right: -100px;
+            animation-delay: 5s;
+        }
+        @keyframes float {
+            to { transform: translateX(calc(100vw + 200px)); }
+        }
+
+        /* 其他原有样式 */
         .toggle-btn, .next-btn {
             transition: all 0.3s ease;
             cursor: pointer;
@@ -82,18 +168,6 @@
         }
         .icon-large:hover {
             transform: rotate(10deg) scale(1.1);
-        }
-        .bg-morning {
-            background: linear-gradient(135deg, #FFE0B2, #FFCC80);
-        }
-        .bg-night {
-            background: linear-gradient(135deg, #1A237E, #283593);
-        }
-        .card-morning {
-            background: linear-gradient(135deg, #FFF9E6, #FFEFD5);
-        }
-        .card-night {
-            background: linear-gradient(135deg, #E3F2FD, #BBDEFB);
         }
         .star {
             position: absolute;
@@ -140,16 +214,21 @@
 </head>
 <body class="bg-morning relative">
     <audio id="bgMusic" autoplay loop>
-        <source src="audio/zao.mp3" type="audio/mpeg"> <!-- 默认加载早上音乐 -->
+        <source src="audio/zao.mp3" type="audio/mpeg">
     </audio>
     
-    <!-- 阳光效果（仅早安模式显示） -->
+    <!-- 动态漂浮元素 -->
+    <div class="float-element cloud cloud1"></div>
+    <div class="float-element cloud cloud2"></div>
+    <div class="float-element star-cluster">✨</div>
+    
+    <!-- 阳光效果 -->
     <div class="sunlight active" id="sunlight"></div>
     
-    <!-- 动态星星（夜晚模式显示） -->
+    <!-- 星星容器 -->
     <div id="stars-container" class="fixed inset-0 pointer-events-none z-0"></div>
 
-    <!-- 右上角图标和切换按钮 -->
+    <!-- 右上角控制区 -->
     <div class="absolute top-8 right-8 z-20 flex items-center gap-6">
         <button id="toggle-btn" class="toggle-btn bg-white/80 hover:bg-white text-gray-700 px-5 py-2.5 rounded-full text-sm font-medium shadow-md">
             切换到晚安 🌙
@@ -196,7 +275,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // 1. 配置两种模式的差异内容
+            // 配置项
             const cardConfigs = {
                 morning: {
                     title: '早安～',
@@ -234,7 +313,7 @@
                 }
             };
 
-            // 2. 获取DOM元素
+            // DOM元素
             const toggleBtn = document.getElementById('toggle-btn');
             const mainIcon = document.getElementById('main-icon');
             const cardContent = document.getElementById('card-content');
@@ -242,55 +321,47 @@
             const starsContainer = document.getElementById('stars-container');
             const nextBtn = document.getElementById('next-btn');
             const sunlight = document.getElementById('sunlight');
+            const floatElements = document.querySelectorAll('.float-element');
             let isMorning = true;
 
-            // 3. 初始化卡片渲染
+            // 渲染卡片
             function renderCard(config) {
-                // 更新卡片基础样式
                 cardContent.className = `card ${config.bgClass} rounded-lg p-10 md:p-14`;
                 
-                // 更新标题
                 const title = cardContent.querySelector('h2');
                 title.textContent = config.title;
                 title.className = `text-3xl md:text-4xl font-bold mb-6 text-center ${config.titleColor}`;
                 
-                // 更新正文
                 const paragraphs = cardContent.querySelectorAll('p');
                 paragraphs[0].textContent = config.text1;
                 paragraphs[1].textContent = config.text2;
                 paragraphs.forEach(p => p.className = `mb-6 leading-relaxed text-lg ${config.textColor}`);
                 
-                // 更新分割线
                 const dividers = cardContent.querySelectorAll('.pattern-divider');
                 dividers.forEach(divider => divider.className = `pattern-divider ${config.dividerColor}`);
                 
-                // 更新图标
                 const iconsContainer = cardContent.querySelector('.icons-container');
                 iconsContainer.innerHTML = config.icons.map(icon => `<span class="text-3xl">${icon}</span>`).join('');
                 
-                // 更新角落装饰
                 const corners = cardContent.querySelectorAll('.corner-decoration');
                 corners.forEach(corner => {
                     corner.className = `corner-decoration ${corner.classList[1]} ${corner.classList[2]} ${config.cornerColor}`;
                     corner.textContent = config.cornerSymbol;
                 });
                 
-                // 更新侧边装饰
                 const sides = cardContent.querySelectorAll('.side-decoration');
                 sides.forEach(side => {
                     side.className = `side-decoration ${side.classList[1]} ${side.classList[2]} ${config.sideColor}`;
                     side.textContent = config.sideSymbol;
                 });
                 
-                // 更新下一页按钮
                 nextBtn.className = `next-btn bg-white ${config.nextBtnColor} hover:${config.hoverColor}`;
             }
 
-            // 4. 创建星星（夜晚模式）
+            // 创建星星
             function createStars() {
                 starsContainer.innerHTML = '';
                 const starCount = 40;
-                
                 for (let i = 0; i < starCount; i++) {
                     const star = document.createElement('div');
                     star.className = 'star';
@@ -303,36 +374,35 @@
                 }
             }
 
-            // 5. 切换按钮逻辑
+            // 切换日夜模式
             toggleBtn.addEventListener('click', function() {
                 isMorning = !isMorning;
                 const config = isMorning ? cardConfigs.morning : cardConfigs.night;
                 
-                // 切换背景
                 body.className = `bg-${isMorning ? 'morning' : 'night'} relative`;
-                
-                // 切换主图标和按钮文字
                 mainIcon.textContent = isMorning ? '🌞' : '🌙';
                 toggleBtn.textContent = isMorning ? '切换到晚安 🌙' : '切换到早安 🌞';
                 
-                // 切换音乐
                 const bgMusic = document.getElementById('bgMusic');
                 bgMusic.src = config.bgMusic;
                 bgMusic.play();
                 
-                // 切换阳光和星星
                 sunlight.classList.toggle('active', isMorning);
                 starsContainer.style.opacity = isMorning ? '0' : '1';
                 if (!isMorning) createStars();
                 
-                // 渲染卡片内容
+                // 调整漂浮元素显示
+                floatElements.forEach(el => {
+                    el.style.opacity = isMorning ? '0.7' : (el.classList.contains('star-cluster') ? '0.9' : '0.3');
+                });
+                
                 renderCard(config);
             });
 
-            // 6. 初始化页面
+            // 初始化
             createStars();
             starsContainer.style.opacity = '0';
-            renderCard(cardConfigs.morning); // 默认渲染早安模式
+            renderCard(cardConfigs.morning);
         });
     </script>
 </body>
