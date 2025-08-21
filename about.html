@@ -14,36 +14,34 @@
             margin: 0;
             position: relative;
         }
-      /* 调整后的云朵样式 - 更长、透明度更低 */
+ /* 云朵样式 - 更长、透明度低、左右交替飘 */
 .cloud {
     position: absolute;
-    width: 250px; /* 更长的云朵主体 */
+    width: 250px;
     height: 80px;
     background-color: white;
     border-radius: 40px;
-    opacity: 0.6; /* 调低透明度 */
+    opacity: 0.6;
     z-index: 0;
 }
-.cloud:before, .cloud:after {
+.cloud:before, .cloud:after, .cloud:nth-child(2):before {
     content: '';
     position: absolute;
     background-color: white;
     border-radius: 50%;
 }
-/* 调整云朵“凸起”的位置，让整体更舒展 */
 .cloud:before {
     width: 120px;
     height: 120px;
     top: -60px;
-    left: 50px; /* 向右移一点，配合长主体 */
+    left: 50px;
 }
 .cloud:after {
     width: 150px;
     height: 150px;
     top: -80px;
-    right: 40px; /* 向右移一点，让整体更长 */
+    right: 40px;
 }
-/* 新增一个中间凸起，让云朵更自然 */
 .cloud:nth-child(2):before {
     width: 100px;
     height: 100px;
@@ -51,22 +49,30 @@
     left: 150px;
 }
 
-/* 云朵动画位置调整 */
+/* 云朵动画：左右交替飘 */
 .cloud-1 {
     top: 15vh;
-    animation: float 35s linear infinite;
+    animation: floatLeft 35s linear infinite; /* 从左到右 */
 }
 .cloud-2 {
     top: 40vh;
-    animation: float 40s linear infinite 10s;
+    animation: floatRight 40s linear infinite 10s; /* 从右到左 */
 }
 .cloud-3 {
     top: 65vh;
-    animation: float 32s linear infinite 5s;
+    animation: floatLeft 32s linear infinite 5s; /* 从左到右 */
 }
-@keyframes float {
-    0% { transform: translateX(-300px); } /* 起点更左，适应更长的云朵 */
+
+/* 从左到右飘 */
+@keyframes floatLeft {
+    0% { transform: translateX(-300px); }
     100% { transform: translateX(calc(100vw + 300px)); }
+}
+
+/* 从右到左飘 */
+@keyframes floatRight {
+    0% { transform: translateX(calc(100vw + 300px)); }
+    100% { transform: translateX(-300px); }
 }
         
         /* 优化的早安阳光效果 - 更柔和模糊 */
