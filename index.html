@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>康康嘛</title>
+    <title>so</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -133,7 +133,7 @@
     </div>
 
     <footer class="py-6 text-center text-gray-500 text-sm relative z-10 fade-in" style="animation-delay: 1.8s">
-        <p>期待与你再相遇，戈✨</p >
+        <p>期待与你再相遇✨</p >
     </footer>
 
     <script>
@@ -154,23 +154,6 @@
                 confetti.style.top = '-' + (Math.random() * 20) + 'px';
                 confetti.style.animation = 'fall ' + (Math.random() * 8 + 8) + 's linear ' + (Math.random() * 5) + 's infinite';
                 container.appendChild(confetti);
-            }
-        }
-
-        // 星星创建
-        function createStars() {
-            const container = document.getElementById('particles-container');
-            const starCount = 30;
-            
-            for (let i = 0; i < starCount; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.textContent = '★';
-                star.style.left = (Math.random() * 100) + 'vw';
-                star.style.top = '-' + (Math.random() * 20) + 'px';
-                star.style.fontSize = (Math.random() * 10 + 8) + 'px';
-                star.style.animationDelay = (Math.random() * 5) + 's';
-                container.appendChild(star);
             }
         }
 
