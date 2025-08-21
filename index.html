@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>so</title>
+    <title>在不在？</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -24,63 +24,31 @@
         .bg-pattern {
             background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffaccd' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
-        .star {
-            position: absolute;
-            color: #fff;
-            text-shadow: 0 0 5px #fff, 0 0 10px #fff;
-            pointer-events: none;
-            animation: fall 15s linear infinite;
-        }
-        .confetti {
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            pointer-events: none;
-            opacity: 0.6;
-        }
-        .flower {
-            position: absolute;
-            pointer-events: none;
-            opacity: 0.7;
-            animation: float 6s ease-in-out infinite;
-        }
+        .star { position: absolute; color: #fff; text-shadow: 0 0 5px #fff, 0 0 10px #fff; pointer-events: none; animation: fall 15s linear infinite; }
+        .confetti { position: absolute; width: 8px; height: 8px; pointer-events: none; opacity: 0.6; }
+        .flower { position: absolute; pointer-events: none; opacity: 0.7; animation: float 6s ease-in-out infinite; }
+        
         @keyframes fall {
             0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
             100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
         }
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        .float {
-            animation: float 3s ease-in-out infinite;
-        }
-        .fade-in {
-            animation: fadeIn 1.5s ease-out forwards;
-            opacity: 0;
-        }
-        @keyframes fadeIn {
-            to { opacity: 1; }
-        }
-        .slide-up {
-            animation: slideUp 1.2s ease-out forwards;
-            transform: translateY(20px);
-            opacity: 0;
-        }
-        @keyframes slideUp {
-            to { 
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-        .banner-container {
-            position: relative;
-            width: 100%;
-            overflow: hidden;
-        }
-        .banner-image {
+        @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        .float { animation: float 3s ease-in-out infinite; }
+        .fade-in { animation: fadeIn 1.5s ease-out forwards; opacity: 0; }
+        @keyframes fadeIn { to { opacity: 1; } }
+        .slide-up { animation: slideUp 1.2s ease-out forwards; transform: translateY(20px); opacity: 0; }
+        @keyframes slideUp { to { transform: translateY(0); opacity: 1; } }
+        
+        /* 横幅样式 */
+        .banner {
             width: 100%;
             height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+        .banner img {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
             object-position: center;
         }
@@ -89,19 +57,19 @@
             bottom: 0;
             left: 0;
             right: 0;
-            height: 60%;
-            background: linear-gradient(to top, rgba(255,255,255,1), rgba(255,255,255,0));
+            height: 70%;
+            background: linear-gradient(to top, white, transparent);
         }
     </style>
 </head>
 <body class="bg-white bg-pattern min-h-screen relative overflow-hidden">
     <!-- 顶部横幅图 -->
-    <div class="banner-container fade-in" style="animation-delay: 0.2s">
-        < img src="https://s21.ax1x.com/2025/08/21/pVDKauQ.jpg" alt="横幅图片" class="banner-image">
+    <div class="banner fade-in" style="animation-delay: 0.2s">
+        <img src="https://s21.ax1x.com/2025/08/21/pVDKauQ.jpg" alt="顶部横幅">
         <div class="banner-overlay"></div>
     </div>
 
-    <!-- 左下角小花 -->
+    <!-- 装饰花朵 -->
     <div class="flower bottom-8 left-8 z-10" style="width: 60px; height: 60px; animation-delay: 0.5s;">
         <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
             <ellipse cx="50" cy="20" rx="18" ry="12" fill="#FFD6E0" />
@@ -112,7 +80,6 @@
         </svg>
     </div>
 
-    <!-- 右上角小花 -->
     <div class="flower top-8 right-8 z-10" style="width: 40px; height: 40px; animation-delay: 1s;">
         <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
             <ellipse cx="50" cy="25" rx="15" ry="10" fill="#FFB3C8" />
@@ -123,26 +90,22 @@
         </svg>
     </div>
 
-    <!-- 动态元素容器 -->
-    <div id="particles-container" class="fixed inset-0 z-0"></div>
+    <!-- 动态粒子容器 -->
+    <div id="particles" class="fixed inset-0 z-0"></div>
 
-    <!-- 主内容区 -->
+    <!-- 主内容 -->
     <div class="container mx-auto px-4 py-8 relative z-10">
-        <div class="flex flex-col items-center text-center">
+        <div class="text-center max-w-2xl mx-auto">
             <h1 class="text-[clamp(2rem,5vw,3rem)] font-bold text-pink-dark mb-6 float fade-in" style="animation-delay: 0.7s">一份小邀请 💌</h1>
-            
-            <div class="w-24 h-1 bg-pink mb-10 rounded-full fade-in" style="animation-delay: 1s"></div>
-            
-            <p class="text-gray-700 text-lg md:text-xl max-w-lg mb-12 leading-relaxed slide-up" style="animation-delay: 1.3s">
+            <div class="w-24 h-1 bg-pink mx-auto mb-10 rounded-full fade-in" style="animation-delay: 1s"></div>
+            <p class="text-gray-700 text-lg md:text-xl mb-12 leading-relaxed slide-up" style="animation-delay: 1.3s">
                 点击下方按钮，去看看吧～ ❤️
-            </p >
-            
+            </p>
             <a href="about.html" class="inline-block bg-pink hover:bg-pink-dark text-white font-medium py-3 px-8 rounded-full transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-1 slide-up float" style="animation-delay: 1.6s">
                 点一下试试 ❤️
-            </a >
-            
-            <div class="mt-16 w-full max-w-md flex justify-center float" style="animation-delay: 1.9s">
-                <div class="w-32 h-32 rounded-full bg-pink-light/50 flex items-center justify-center">
+            </a>
+            <div class="mt-16 flex justify-center">
+                <div class="w-32 h-32 rounded-full bg-pink-light/50 flex items-center justify-center float" style="animation-delay: 1.9s">
                     <span class="text-4xl text-pink-dark">💖</span>
                 </div>
             </div>
@@ -150,61 +113,41 @@
     </div>
 
     <footer class="py-6 text-center text-gray-500 text-sm relative z-10 fade-in" style="animation-delay: 2.2s">
-        <p>期待与你再相遇✨</p >
+        <p>期待与你再相遇✨</p>
     </footer>
 
     <script>
-        // 星星创建
+        // 生成星星
         function createStars() {
-            const container = document.getElementById('particles-container');
-            const starCount = 30;
-            for (let i = 0; i < starCount; i++) {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 30; i++) {
                 const star = document.createElement('div');
                 star.className = 'star';
                 star.textContent = '★';
-                star.style.left = (Math.random() * 100) + 'vw';
-                star.style.top = (Math.random() * 50) + 'vh';
-                star.style.fontSize = (Math.random() * 10 + 8) + 'px';
-                star.style.animationDelay = (Math.random() * 10) + 's';
+                star.style.left = Math.random() * 100 + 'vw';
+                star.style.top = Math.random() * 50 + 'vh';
+                star.style.fontSize = Math.random() * 10 + 8 + 'px';
+                star.style.animationDelay = Math.random() * 10 + 's';
                 container.appendChild(star);
             }
         }
 
-        // 彩虹碎片创建
+        // 生成彩片
         function createConfetti() {
-            const container = document.getElementById('particles-container');
-            const confettiCount = 50;
-            const colors = [
-                '#ffb3b3', '#ffe6b3', '#b3ffcc', 
-                '#b3e6ff', '#ffcceb', '#e6ccff'
-            ];
-            
-            for (let i = 0; i < confettiCount; i++) {
+            const container = document.getElementById('particles');
+            const colors = ['#ffb3b3', '#ffe6b3', '#b3ffcc', '#b3e6ff', '#ffcceb', '#e6ccff'];
+            for (let i = 0; i < 50; i++) {
                 const confetti = document.createElement('div');
                 confetti.className = 'confetti';
                 confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                confetti.style.left = (Math.random() * 100) + 'vw';
-                confetti.style.top = '-' + (Math.random() * 20) + 'px';
-                confetti.style.animation = 'fall ' + (Math.random() * 8 + 8) + 's linear ' + (Math.random() * 5) + 's infinite';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.top = -Math.random() * 20 + 'px';
+                confetti.style.animation = `fall ${Math.random() * 8 + 8}s linear ${Math.random() * 5}s infinite`;
                 container.appendChild(confetti);
             }
         }
 
-        // 按钮交互
-        const btn = document.querySelector('a[href="about.html"]');
-        if (btn) {
-            btn.addEventListener('mousedown', function() {
-                this.style.transform = 'scale(0.95) translateY(-1px)';
-            });
-            btn.addEventListener('mouseup', function() {
-                this.style.transform = 'scale(1) translateY(-1px)';
-            });
-            btn.addEventListener('mouseleave', function() {
-                this.style.transform = 'scale(1) translateY(0)';
-            });
-        }
-
-        // 初始化
+        // 初始化动画
         createStars();
         createConfetti();
     </script>
