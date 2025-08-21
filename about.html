@@ -14,8 +14,19 @@
             margin: 0;
             position: relative;
         }
-      
-        /* 阳光效果 */
+        
+        /* 点状背景 */
+        .bg-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.05;
+        }
+        
+        /* 阳光效果 - 仅早安模式有 */
         .sunlight {
             position: absolute;
             top: -30%;
@@ -38,7 +49,7 @@
             50% { opacity: 0.9; }
         }
 
-        /* 卡片样式 - 增加曲线边框和装饰 */
+        /* 卡片样式 - 曲线边框和动态边框 */
         .card {
             transform: rotate(-2deg);
             transition: all 0.8s ease;
@@ -47,18 +58,52 @@
             overflow: hidden;
             max-width: 800px;
             width: 90%;
-            /* 曲线边框 */
-            border-radius: 30px;
-            /* 装饰性边框 */
+            border-radius: 30px; /* 曲线边框 */
             border: 8px solid transparent;
             background-clip: padding-box;
+            /* 加快边框动画 */
+            animation: border-shimmer 3s linear infinite;
         }
-        /* 卡片边框装饰 */
-        .card-morning {
-            border-image: linear-gradient(135deg, #FFD580, #FFA000, #FFD580) 1;
+        
+        /* 边框动画 */
+        @keyframes border-shimmer {
+            0% {
+                border-image-source: linear-gradient(135deg, #FFD580, #FFA000, #FFD580);
+            }
+            25% {
+                border-image-source: linear-gradient(225deg, #FFD580, #FFA000, #FFD580);
+            }
+            50% {
+                border-image-source: linear-gradient(315deg, #FFD580, #FFA000, #FFD580);
+            }
+            75% {
+                border-image-source: linear-gradient(45deg, #FFD580, #FFA000, #FFD580);
+            }
+            100% {
+                border-image-source: linear-gradient(135deg, #FFD580, #FFA000, #FFD580);
+            }
         }
+        
         .card-night {
-            border-image: linear-gradient(135deg, #90CAF9, #1565C0, #90CAF9) 1;
+            animation: border-shimmer-night 3s linear infinite;
+        }
+        
+        @keyframes border-shimmer-night {
+            0% {
+                border-image-source: linear-gradient(135deg, #90CAF9, #1565C0, #90CAF9);
+            }
+            25% {
+                border-image-source: linear-gradient(225deg, #90CAF9, #1565C0, #90CAF9);
+            }
+            50% {
+                border-image-source: linear-gradient(315deg, #90CAF9, #1565C0, #90CAF9);
+            }
+            75% {
+                border-image-source: linear-gradient(45deg, #90CAF9, #1565C0, #90CAF9);
+            }
+            100% {
+                border-image-source: linear-gradient(135deg, #90CAF9, #1565C0, #90CAF9);
+            }
         }
 
         .card-morning::before {
@@ -200,6 +245,9 @@
     </style>
 </head>
 <body class="bg-morning relative">
+    <!-- 点状背景 -->
+    <div class="bg-pattern" id="bgPattern"></div>
+    
     <!-- 音频 -->
     <audio id="bgMusic" autoplay loop>
         <source src="audio/zao.mp3" type="audio/mpeg">
@@ -278,7 +326,9 @@
                     dividerColor: 'text-amber-300',
                     nextBtnColor: 'text-amber-600',
                     hoverColor: 'bg-amber-50',
-                    bgMusic: 'audio/zao.mp3'
+                    bgMusic: 'audio/zao.mp3',
+                    // 点状背景图案
+                    pattern: "data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ff9800' fill-opacity='1' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E"
                 },
                 night: {
                     title: '晚安呀～',
@@ -295,7 +345,9 @@
                     dividerColor: 'text-blue-400',
                     nextBtnColor: 'text-indigo-800',
                     hoverColor: 'bg-blue-50',
-                    bgMusic: 'audio/wan.mp3'
+                    bgMusic: 'audio/wan.mp3',
+                    // 点状背景图案
+                    pattern: "data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%2342a5f5' fill-opacity='1' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E"
                 }
             };
 
@@ -308,11 +360,16 @@
             const nextBtn = document.getElementById('next-btn');
             const sunlight = document.getElementById('sunlight');
             const fireworkContainer = document.getElementById('fireworkContainer');
+            const bgPattern = document.getElementById('bgPattern');
             let isMorning = true;
+            let fireworksInterval;
 
             // 渲染卡片
             function renderCard(config) {
                 cardContent.className = `card ${config.bgClass} rounded-lg p-10 md:p-14`;
+                
+                // 更新点状背景
+                bgPattern.style.backgroundImage = `url("${config.pattern}")`;
                 
                 const title = cardContent.querySelector('h2');
                 title.textContent = config.title;
@@ -459,12 +516,23 @@
 
             // 定时发射烟花 (3秒5个)
             function startFireworks() {
-                setInterval(() => {
+                stopFireworks(); // 先停止已有定时器
+                fireworksInterval = setInterval(() => {
                     // 一次发射5个烟花
                     for (let i = 0; i < 5; i++) {
                         setTimeout(createFirework, i * 300); // 错开发射时间
                     }
                 }, 3000);
+            }
+
+            // 停止烟花
+            function stopFireworks() {
+                if (fireworksInterval) {
+                    clearInterval(fireworksInterval);
+                    fireworksInterval = null;
+                }
+                // 清除所有烟花元素
+                fireworkContainer.innerHTML = '';
             }
 
             // 切换按钮逻辑
@@ -480,11 +548,21 @@
                 bgMusic.src = config.bgMusic;
                 bgMusic.play().catch(e => console.log('音频播放需要用户交互'));
                 
+                // 夜晚模式移除阳光效果
                 sunlight.classList.toggle('active', isMorning);
                 starsContainer.style.opacity = isMorning ? '0' : '1';
                 if (!isMorning) createStars();
                 
                 renderCard(config);
+            });
+
+            // 监听页面可见性变化 - 离开页面停止烟花
+            document.addEventListener('visibilitychange', function() {
+                if (document.hidden) {
+                    stopFireworks();
+                } else {
+                    startFireworks();
+                }
             });
 
             // 初始化
