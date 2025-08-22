@@ -14,7 +14,6 @@
                         lightBlue: '#add8e6',
                         lightCyan: '#e0ffff',
                         textBlue: '#1e88e5',
-                        containerBlue: '#d1e7dd',
                     }
                 }
             }
@@ -44,32 +43,19 @@
             .emoji-grid {
                 display: grid;
                 grid-template-columns: repeat(4, 1fr);
-                gap: 15px;
-            }
-            @media (min-width: 640px) {
-                .emoji-grid {
-                    grid-template-columns: repeat(6, 1fr);
-                    gap: 20px;
-                }
+                gap: 20px;
             }
             .emoji-item {
-                width: 80px;
-                height: 80px;
+                width: 90px;
+                height: 90px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                font-size: 2.5rem;
+                font-size: 3rem;
                 cursor: pointer;
                 border-radius: 12px;
                 transition: transform 0.2s;
                 box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            }
-            @media (min-width: 640px) {
-                .emoji-item {
-                    width: 90px;
-                    height: 90px;
-                    font-size: 3rem;
-                }
             }
             .emoji-item:hover {
                 transform: scale(1.1);
@@ -78,18 +64,15 @@
                 opacity: 0.3;
                 pointer-events: none;
             }
-            .vertical-text {
-                writing-mode: vertical-rl;
-                text-orientation: upright;
-                white-space: nowrap;
-            }
             .text-animation {
-                background: linear-gradient(180deg, #1e88e5, #2196f3, #64b5f6, #90caf9);
+                background: linear-gradient(90deg, #1e88e5, #2196f3, #64b5f6, #90caf9);
                 background-size: 300% 300%;
                 -webkit-background-clip: text;
                 background-clip: text;
                 color: transparent;
-                animation: gradient 5s ease infinite, float 4s ease-in-out infinite;
+                animation: gradient 5s ease infinite;
+                display: inline-block;
+                animation: float 3s ease-in-out infinite, gradient 5s ease infinite;
             }
             @keyframes gradient {
                 0% { background-position: 0% 50%; }
@@ -97,9 +80,9 @@
                 100% { background-position: 0% 50%; }
             }
             @keyframes float {
-                0% { transform: translateX(0px); }
-                50% { transform: translateX(-10px); }
-                100% { transform: translateX(0px); }
+                0% { transform: translateY(0px); }
+                50% { transform: translateY(-10px); }
+                100% { transform: translateY(0px); }
             }
             .flower-animation {
                 display: inline-block;
@@ -109,40 +92,34 @@
                 0% { transform: rotate(0deg); }
                 100% { transform: rotate(360deg); }
             }
-            .confetti {
-                position: absolute;
-                width: 10px;
-                height: 10px;
-                opacity: 0;
-                animation: confetti-fall 5s ease-in-out infinite;
-            }
-            @keyframes confetti-fall {
-                0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
-                100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-            }
         }
     </style>
 </head>
-<body class="min-h-screen bg-gradient-custom overflow-x-hidden overflow-y-auto relative">
+<body class="min-h-screen bg-gradient-custom overflow-hidden">
     <!-- 背景音乐 -->
     <audio id="bgMusic" loop>
         <source src="audio/52o.mp3" type="audio/mpeg">
     </audio>
 
-    <!-- 主内容区 -->
-    <div class="max-w-4xl mx-auto px-4 py-12 md:py-16">
-        <!-- 连连看游戏区域 -->
-        <div class="flex flex-col items-center justify-center pb-16">
-            <div class="mb-6 text-blue-600 text-xl font-medium">💙 找到相同的图案配对吧 💙</div>
-            
-            <div id="emojiContainer" class="emoji-grid"></div>
-            
-            <!-- 完成按钮（默认隐藏） -->
-            <div id="nextButton" class="mt-10 hidden">
-                <a href="contact.html" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 px-10 rounded-full transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-lg flex items-center">
-                    继续探索 <i class="fa fa-arrow-right ml-2"></i>
-                </a>
-            </div>
+    <!-- 文字容器 -->
+    <div class="flex justify-center mt-12 md:mt-16">
+        <div class="bg-white/70 backdrop-blur-sm px-10 py-6 rounded-xl shadow-lg">
+            <h1 class="text-[clamp(2rem,5vw,3.5rem)] text-center font-bold text-shadow">
+                <span class="text-animation">原来你早就知道自己可爱啦</span>
+                <span class="flower-animation">💐</span>
+            </h1>
+        </div>
+    </div>
+
+    <!-- 连连看游戏区域 -->
+    <div class="flex flex-col items-center justify-center mt-12 md:mt-16">
+        <div id="emojiContainer" class="emoji-grid"></div>
+        
+        <!-- 完成按钮（默认隐藏） -->
+        <div id="nextButton" class="mt-10 hidden">
+            <a href="contact.html" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 px-10 rounded-full transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-lg">
+                继续 <i class="fa fa-arrow-right ml-2"></i>
+            </a>
         </div>
     </div>
 
@@ -158,9 +135,8 @@
                 }, { once: true });
             });
 
-            // 创建星星和彩屑装饰
+            // 创建星星
             createStars();
-            createConfetti();
             
             // 初始化连连看游戏
             initEmojiGame();
@@ -168,7 +144,7 @@
 
         // 创建掉落的星星
         function createStars() {
-            const starCount = 80;
+            const starCount = 60;
             for (let i = 0; i < starCount; i++) {
                 const star = document.createElement('div');
                 star.classList.add('star');
@@ -186,30 +162,9 @@
             }
         }
 
-        // 创建彩屑装饰
-        function createConfetti() {
-            const confettiCount = 50;
-            const colors = ['#90caf9', '#64b5f6', '#42a5f5', '#2196f3', '#1e88e5'];
-            
-            for (let i = 0; i < confettiCount; i++) {
-                const confetti = document.createElement('div');
-                confetti.classList.add('confetti');
-                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                confetti.style.left = `${Math.random() * 100}vw`;
-                confetti.style.top = `-${10}px`;
-                confetti.style.width = `${Math.random() * 6 + 4}px`;
-                confetti.style.height = `${Math.random() * 6 + 4}px`;
-                confetti.style.borderRadius = `${Math.random() > 0.5 ? '50%' : '0'}`;
-                confetti.style.animationDuration = `${Math.random() * 8 + 4}s`;
-                confetti.style.animationDelay = `${Math.random() * 15}s`;
-                
-                document.body.appendChild(confetti);
-            }
-        }
-
         // 连连看游戏逻辑
         function initEmojiGame() {
-            const emojis = ['🌧️', '❄️', '💙', '💧', '🌊', '🔷', '🔵', '💎', '🌌', '💦', '🌀', '🔹', '🌊', '❄️', '💧'];
+            const emojis = ['🌧️', '❄️', '💙', '💧', '🌊', '🔷', '🔵', '💎'];
             // 每种表情出现两次
             const gameEmojis = [...emojis, ...emojis];
             // 打乱顺序
@@ -222,7 +177,7 @@
             // 创建表情网格
             shuffledEmojis.forEach((emoji, index) => {
                 const emojiElement = document.createElement('div');
-                emojiElement.classList.add('emoji-item', 'bg-white/50', 'backdrop-blur-sm', 'border', 'border-blue-100');
+                emojiElement.classList.add('emoji-item', 'bg-white/50', 'backdrop-blur-sm');
                 emojiElement.dataset.emoji = emoji;
                 emojiElement.dataset.index = index;
                 emojiElement.textContent = emoji;
