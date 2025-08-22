@@ -13,7 +13,6 @@
             padding: 20px;
             font-family: system-ui, -apple-system, sans-serif;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             position: relative;
@@ -64,81 +63,86 @@
             z-index: 0;
         }
         
-        /* 带花纹的卡片边框 */
+        /* 带花纹的横向卡片边框 */
         .card {
             background-color: white;
-            border-radius: 20px;
-            padding: 40px;
-            max-width: 700px;
-            width: 90%;
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 90%;
+            width: 800px;
             position: relative;
             z-index: 1;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 30px;
+            /* 增强花纹边框 */
             border: 10px solid transparent;
             background-clip: padding-box;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-            border-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z' fill='%23ce93d8'/%3E%3Cpath d='M12 6.5c-2.48 0-4.5 2.02-4.5 4.5s2.02 4.5 4.5 4.5 4.5-2.02 4.5-4.5-2.02-4.5-4.5-4.5zm0 7c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z' fill='%2381c784'/%3E%3C/svg%3E") 24 stretch;
-            margin-bottom: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            border-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 20 C10 0 30 0 40 20 C30 40 10 40 0 20 Z' fill='%23ce93d8'/%3E%3Ccircle cx='20' cy='20' r='8' fill='%2381c784'/%3E%3C/svg%3E") 30 stretch;
+        }
+        
+        /* 卡片上下横线 */
+        .card::before, .card::after {
+            content: '';
+            position: absolute;
+            left: 5%;
+            width: 90%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ce93d8, #81c784, transparent);
+        }
+        
+        .card::before {
+            top: -15px;
+        }
+        
+        .card::after {
+            bottom: -15px;
         }
         
         /* 卡片内部装饰 */
         .card-decoration {
             position: absolute;
             color: rgba(129, 199, 132, 0.2);
-            font-size: 24px;
         }
-        .top-left { top: 20px; left: 20px; }
-        .top-right { top: 20px; right: 20px; }
-        .bottom-left { bottom: 20px; left: 20px; }
-        .bottom-right { bottom: 20px; right: 20px; }
+        .top-left { top: 15px; left: 15px; }
+        .top-right { top: 15px; right: 15px; }
+        .bottom-left { bottom: 15px; left: 15px; }
+        .bottom-right { bottom: 15px; right: 15px; }
         
         .card-title {
             color: #6a5acd;
-            font-size: 28px;
+            font-size: 22px;
             margin-top: 0;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             text-align: center;
         }
         
         .title-line {
-            height: 3px;
-            width: 120px;
+            height: 2px;
+            width: 80px;
             background: linear-gradient(90deg, #81c784, #ce93d8);
-            margin: 0 auto 30px;
+            margin: 0 auto 25px;
         }
         
         /* 图片样式 */
         .content-image {
-            width: 100%;
-            border-radius: 12px;
-            margin: 0 auto 30px;
-            display: block;
-            max-height: 300px;
+            width: 300px;
+            border-radius: 10px;
             object-fit: cover;
+            flex-shrink: 0;
         }
         
-        /* 底部横幅图片 */
-        .bottom-banner {
-            max-width: 700px;
-            width: 90%;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            z-index: 1;
-            margin-top: auto;
-            margin-bottom: 20px;
-        }
-        
-        .bottom-banner img {
-            width: 100%;
-            height: auto;
-            border-radius: 12px;
-            display: block;
+        .card-content-wrapper {
+            flex-grow: 1;
         }
         
         .card-content {
             color: #555;
             line-height: 1.8;
-            font-size: 18px;
-            margin-bottom: 40px;
+            font-size: 16px;
+            margin-bottom: 30px;
         }
         
         .green-btn {
@@ -146,12 +150,12 @@
             color: white;
             border: none;
             border-radius: 30px;
-            padding: 14px 30px;
-            font-size: 18px;
+            padding: 12px 24px;
+            font-size: 16px;
             cursor: pointer;
             transition: all 0.3s ease;
             display: block;
-            margin: 0 auto 30px;
+            margin: 0 auto 20px;
         }
         
         .green-btn:hover {
@@ -161,12 +165,12 @@
         
         .hint-text {
             color: #ce93d8;
-            font-size: 18px;
+            font-size: 16px;
             text-align: center;
             display: none;
             margin-top: 0;
-            padding: 20px;
-            border-radius: 12px;
+            padding: 15px;
+            border-radius: 10px;
             background-color: #f9f4fc;
         }
         
@@ -194,27 +198,38 @@
         
         .countdown {
             text-align: center;
-            margin-top: 30px;
-            padding: 20px;
+            margin-top: 25px;
+            padding: 15px;
             background-color: #f1f9f4;
-            border-radius: 12px;
+            border-radius: 10px;
         }
         
         .countdown-title {
             color: #388e3c;
-            font-size: 16px;
-            margin-bottom: 10px;
+            font-size: 14px;
+            margin-bottom: 8px;
         }
         
         .countdown-number {
             color: #6a5acd;
-            font-size: 30px;
+            font-size: 24px;
             font-weight: bold;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .card {
+                flex-direction: column;
+            }
+            .content-image {
+                width: 100%;
+                max-width: 300px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- 背景音乐（使用指定的音频文件，自动播放+循环） -->
+    <!-- 背景音乐（自动播放+循环） -->
     <audio autoplay loop>
         <source src="audio/hhhh.mp3" type="audio/mpeg">
         您的浏览器不支持音频播放
@@ -241,33 +256,30 @@
         <div class="card-decoration bottom-left">❦</div>
         <div class="card-decoration bottom-right">❦</div>
         
-        <h2 class="card-title">等你等了好久哦 o_o ....</h2>
-        <div class="title-line"></div>
-        
         <!-- 图片展示区域 -->
         <img src="https://s21.ax1x.com/2025/08/19/pVBN7Mq.jpg" alt="配图" class="content-image">
         
-        <div class="card-content">
-            想想你在干嘛，打工？度假？有事？猜不到…<br>
+        <div class="card-content-wrapper">
+            <h2 class="card-title">等你等了好久哦 o_o ....</h2>
+            <div class="title-line"></div>
+            
+            <div class="card-content">
+                想想你在干嘛，打工？度假？有事？猜不到…<br>
             第一天嘛，害怕这是危机的信号…<br>
             第二天还不在……好嘛~我~自~由~了~
         </div>
-        
-        <button class="green-btn" id="guessBtn">猜猜我的想法呢？</button>
-        <p class="hint-text" id="hintText">
-            无所谓啊～毕竟你这么<a href="next.html" class="cute-link">可爱</a>欸～💘
-        </p>
-        
-        <div class="countdown">
-            <div class="countdown-title">倒计时</div>
-            <div class="countdown-number" id="countdownNumber">30</div>
-            <div class="countdown-title">天</div>
+            
+            <button class="green-btn" id="guessBtn">猜猜我的想法呢？</button>
+            <p class="hint-text" id="hintText">
+                无所谓啊～毕竟你这么<a href="next.html" class="cute-link">可爱</a>欸～💘
+            </p>
+            
+            <div class="countdown">
+                <div class="countdown-title">倒计时</div>
+                <div class="countdown-number" id="countdownNumber">30</div>
+                <div class="countdown-title">天</div>
+            </div>
         </div>
-    </div>
-    
-    <!-- 底部横幅图片 -->
-    <div class="bottom-banner">
-        <img src="https://free.picui.cn/free/2025/08/21/68a6ee0cf1746.jpg" alt="底部横幅图片" class="banner-img">
     </div>
 
     <script>
