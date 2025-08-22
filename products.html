@@ -44,6 +44,28 @@
             }
         }
         
+        /* 云朵样式 */
+        .cloud {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.6;
+            filter: blur(5px);
+            z-index: 0;
+            animation: float 30s linear infinite;
+        }
+        
+        /* 长云朵组合 */
+        .long-cloud {
+            position: absolute;
+            z-index: 0;
+        }
+        
+        @keyframes float {
+            0% { transform: translateX(-100%) translateY(0); }
+            100% { transform: translateX(100vw) translateY(0); }
+        }
+        
         /* 装饰性小图标 */
         .decor-icon {
             position: absolute;
@@ -76,7 +98,6 @@
             flex-direction: row;
             align-items: center;
             gap: 30px;
-            /* 增强花纹边框 */
             border: 10px solid transparent;
             background-clip: padding-box;
             box-shadow: 0 10px 25px rgba(0,0,0,0.08);
@@ -235,6 +256,23 @@
         您的浏览器不支持音频播放
     </audio>
     
+    <!-- 长云朵装饰 -->
+    <div class="long-cloud" style="top: 10%; left: -300px; animation: float 60s linear infinite;">
+        <div class="cloud" style="width: 200px; height: 60px; top: 0; left: 0;"></div>
+        <div class="cloud" style="width: 150px; height: 50px; top: -20px; left: 80px;"></div>
+        <div class="cloud" style="width: 100px; height: 40px; top: -10px; left: 180px;"></div>
+    </div>
+    <div class="long-cloud" style="top: 25%; right: -300px; animation: float 75s linear 15s infinite reverse;">
+        <div class="cloud" style="width: 250px; height: 70px; top: 0; left: 0;"></div>
+        <div class="cloud" style="width: 180px; height: 60px; top: -25px; left: 100px;"></div>
+        <div class="cloud" style="width: 120px; height: 50px; top: -15px; left: 220px;"></div>
+    </div>
+    <div class="long-cloud" style="top: 45%; left: -400px; animation: float 90s linear 30s infinite;">
+        <div class="cloud" style="width: 180px; height: 55px; top: 0; left: 0;"></div>
+        <div class="cloud" style="width: 220px; height: 65px; top: -15px; left: 100px;"></div>
+        <div class="cloud" style="width: 140px; height: 45px; top: -5px; left: 250px;"></div>
+    </div>
+    
     <!-- 飘落的小花容器 -->
     <div class="flower-container" id="flowerContainer"></div>
     
@@ -295,20 +333,14 @@
             for (let i = 0; i < totalFlowers; i++) {
                 const flower = document.createElement('div');
                 flower.className = 'flower';
-                // 随机选择花朵符号
                 flower.textContent = flowerSymbols[Math.floor(Math.random() * flowerSymbols.length)];
-                // 随机大小
                 const size = Math.random() * 16 + 12;
                 flower.style.fontSize = `${size}px`;
-                // 随机位置
                 flower.style.left = `${Math.random() * 100}vw`;
                 flower.style.top = `-${size}px`;
-                // 随机透明度
                 flower.style.opacity = Math.random() * 0.5 + 0.3;
-                // 随机动画时长（5-15秒）
                 const duration = Math.random() * 10 + 5;
                 flower.style.animationDuration = `${duration}s`;
-                // 随机动画延迟
                 flower.style.animationDelay = `${Math.random() * 5}s`;
                 
                 container.appendChild(flower);
@@ -346,7 +378,6 @@
         
         // 初始化飘落的小花
         createFallingFlowers();
-        // 每15秒重新生成一批花朵
         setInterval(createFallingFlowers, 15000);
     </script>
 </body>
