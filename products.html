@@ -52,18 +52,43 @@
             opacity: 0.6;
             filter: blur(5px);
             z-index: 0;
-            animation: float 30s linear infinite;
         }
         
         /* 长云朵组合 */
         .long-cloud {
             position: absolute;
             z-index: 0;
+            animation: float 30s linear infinite;
         }
         
         @keyframes float {
             0% { transform: translateX(-100%) translateY(0); }
             100% { transform: translateX(100vw) translateY(0); }
+        }
+        
+        /* 星星样式 */
+        .star {
+            position: absolute;
+            color: #fff;
+            text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #ffd700, 0 0 20px #ffd700;
+            opacity: 0;
+            z-index: 0;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+        
+        /* 文字动态效果 - 整体轻微浮动 */
+        .animated-text {
+            animation: floatText 6s ease-in-out infinite;
+            position: relative;
+        }
+        
+        @keyframes floatText {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
         }
         
         /* 装饰性小图标 */
@@ -138,6 +163,7 @@
             margin-top: 0;
             margin-bottom: 20px;
             text-align: center;
+            position: relative;
         }
         
         .title-line {
@@ -164,6 +190,7 @@
             line-height: 1.8;
             font-size: 16px;
             margin-bottom: 30px;
+            position: relative;
         }
         
         .green-btn {
@@ -177,6 +204,7 @@
             transition: all 0.3s ease;
             display: block;
             margin: 0 auto 20px;
+            position: relative;
         }
         
         .green-btn:hover {
@@ -193,6 +221,7 @@
             padding: 15px;
             border-radius: 10px;
             background-color: #f9f4fc;
+            position: relative;
         }
         
         /* 跳转链接样式 */
@@ -223,6 +252,7 @@
             padding: 15px;
             background-color: #f1f9f4;
             border-radius: 10px;
+            position: relative;
         }
         
         .countdown-title {
@@ -255,6 +285,9 @@
         <source src="audio/hhhh.mp3" type="audio/mpeg">
         您的浏览器不支持音频播放
     </audio>
+    
+    <!-- 星星容器 -->
+    <div id="starsContainer"></div>
     
     <!-- 长云朵装饰 -->
     <div class="long-cloud" style="top: 10%; left: -300px; animation: float 60s linear infinite;">
@@ -298,21 +331,21 @@
         <img src="https://s21.ax1x.com/2025/08/19/pVBN7Mq.jpg" alt="配图" class="content-image">
         
         <div class="card-content-wrapper">
-            <h2 class="card-title">等你等了好久哦 o_o ....</h2>
+            <h2 class="card-title animated-text">等你等了好久哦 o_o ....</h2>
             <div class="title-line"></div>
             
-            <div class="card-content">
+            <div class="card-content animated-text">
                 想想你在干嘛，打工？度假？有事？猜不到…<br>
             第一天嘛，害怕这是危机的信号…<br>
             第二天还不在……好嘛~我~自~由~了~
         </div>
             
-            <button class="green-btn" id="guessBtn">猜猜我的想法呢？</button>
-            <p class="hint-text" id="hintText">
+            <button class="green-btn animated-text" id="guessBtn">猜猜我的想法呢？</button>
+            <p class="hint-text animated-text" id="hintText">
                 无所谓啊～毕竟你这么<a href="next.html" class="cute-link">可爱</a>欸～💘
             </p>
             
-            <div class="countdown">
+            <div class="countdown animated-text">
                 <div class="countdown-title">倒计时</div>
                 <div class="countdown-number" id="countdownNumber">30</div>
                 <div class="countdown-title">天</div>
@@ -327,7 +360,6 @@
             const flowerSymbols = ['🌸', '🌼', '💮', '❀'];
             const totalFlowers = 15;
             
-            // 清除已有花朵
             container.innerHTML = '';
             
             for (let i = 0; i < totalFlowers; i++) {
@@ -347,13 +379,106 @@
             }
         }
         
+        // 创建闪烁的星星
+        function createStars() {
+            const container = document.getElementById('starsContainer');
+            const textElements = document.querySelectorAll('.animated-text');
+            const totalStars = 30;
+            
+            container.innerHTML = '';
+            
+            // 在页面随机位置创建星星
+            for (let i = 0; i < totalStars; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.textContent = '★';
+                const size = Math.random() * 10 + 5;
+                star.style.fontSize = `${size}px`;
+                star.style.left = `${Math.random() * 100}vw`;
+                star.style.top = `${Math.random() * 100}vh`;
+                const duration = Math.random() * 3 + 2;
+                star.style.animation = `twinkle ${duration}s infinite`;
+                star.style.animationDelay = `${Math.random() * 3}s`;
+                
+                container.appendChild(star);
+            }
+            
+            // 在文字旁边创建额外的星星
+            textElements.forEach(element => {
+                const rect = element.getBoundingClientRect();
+                const offsetX = rect.left + window.scrollX;
+                const offsetY = rect.top + window.scrollY;
+                
+                // 每个文本块周围创建5-8个星星
+                const starCount = Math.floor(Math.random() * 4) + 5;
+                for (let i = 0; i < starCount; i++) {
+                    const star = document.createElement('div');
+                    star.className = 'star';
+                    star.textContent = '★';
+                    const size = Math.random() * 8 + 3;
+                    star.style.fontSize = `${size}px`;
+                    
+                    // 限制星星在文本周围
+                    const x = offsetX - 50 + Math.random() * (rect.width + 100);
+                    const y = offsetY - 30 + Math.random() * (rect.height + 60);
+                    
+                    star.style.left = `${x}px`;
+                    star.style.top = `${y}px`;
+                    const duration = Math.random() * 2 + 1;
+                    star.style.animation = `twinkle ${duration}s infinite`;
+                    star.style.animationDelay = `${Math.random() * 2}s`;
+                    star.style.zIndex = '1'; // 确保星星在卡片上方但在文字下方
+                    
+                    container.appendChild(star);
+                }
+            });
+        }
+        
         // 按钮点击交互
         const guessBtn = document.getElementById('guessBtn');
         const hintText = document.getElementById('hintText');
         
         guessBtn.addEventListener('click', () => {
             hintText.style.display = hintText.style.display === 'block' ? 'none' : 'block';
+            // 显示提示文字时额外生成一些星星
+            if (hintText.style.display === 'block') {
+                createStarsAroundElement(hintText);
+            }
         });
+        
+        // 在指定元素周围创建额外星星
+        function createStarsAroundElement(element) {
+            const container = document.getElementById('starsContainer');
+            const rect = element.getBoundingClientRect();
+            const offsetX = rect.left + window.scrollX;
+            const offsetY = rect.top + window.scrollY;
+            
+            for (let i = 0; i < 8; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.textContent = '★';
+                const size = Math.random() * 8 + 3;
+                star.style.fontSize = `${size}px`;
+                
+                const x = offsetX - 30 + Math.random() * (rect.width + 60);
+                const y = offsetY - 20 + Math.random() * (rect.height + 40);
+                
+                star.style.left = `${x}px`;
+                star.style.top = `${y}px`;
+                const duration = Math.random() * 2 + 1;
+                star.style.animation = `twinkle ${duration}s infinite`;
+                star.style.animationDelay = `${Math.random() * 2}s`;
+                star.style.zIndex = '2';
+                
+                container.appendChild(star);
+                
+                // 星星自动消失
+                setTimeout(() => {
+                    star.style.opacity = '0';
+                    setTimeout(() => star.remove(), 1000);
+                }, 5000);
+            }
+        }
         
         // 30天倒计时功能
         const countdownNumber = document.getElementById('countdownNumber');
@@ -365,8 +490,8 @@
             countdownNumber.textContent = daysLeft;
         }
         
-        setInterval(updateCountdown, 86400000); // 24小时更新一次
-
+        setInterval(updateCountdown, 86400000);
+        
         // 处理浏览器自动播放限制
         document.addEventListener('click', function playMusic() {
             const audio = document.querySelector('audio');
@@ -376,9 +501,11 @@
             document.removeEventListener('click', playMusic);
         }, { once: true });
         
-        // 初始化飘落的小花
+        // 初始化
         createFallingFlowers();
+        createStars();
         setInterval(createFallingFlowers, 15000);
+        setInterval(createStars, 8000); // 定期更新星星位置
     </script>
 </body>
 </html>
