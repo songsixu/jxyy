@@ -1,1 +1,520 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>玩个游戏嘛</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: 
+                linear-gradient(135deg, #8ec5fc 0%, #e0c3fc 100%),
+                radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 100% 100%, 30px 30px; /* 保持渐变同时添加圆点背景 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: system-ui, -apple-system, sans-serif;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* 顶部横幅 - 固定高度200px */
+        .banner-container {
+            width: 100%;
+            position: relative;
+            height: 200px; /* 固定横幅高度为200px */
+            overflow: hidden;
+        }
+        
+        .banner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        
+        .banner-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* 保持图片比例并填充容器 */
+        }
+        
+        /* 横幅上下边缘的渐变模糊效果 */
+        .banner::before, .banner::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 40px;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        .banner::before {
+            top: 0;
+            background: linear-gradient(to bottom, rgba(142, 197, 252, 0.8), transparent);
+        }
+        
+        .banner::after {
+            bottom: 0;
+            background: linear-gradient(to top, rgba(142, 197, 252, 0.8), transparent);
+        }
+        
+        /* 横幅下方的线条装饰 */
+        .banner-line {
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #4a90e2, transparent);
+            margin-bottom: 10px;
+        }
+        
+        .title-container {
+            position: relative;
+            padding: 0 20px;
+            margin: 10px 0 20px;
+        }
+        
+        .title {
+            color: #4a90e2;
+            font-size: 28px;
+            margin: 0;
+            text-align: center;
+            text-shadow: 1px 1px 3px rgba(255,255,255,0.8);
+            -webkit-text-stroke: 1px #2962b9;
+            position: relative;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        /* 标题下方曲线装饰 */
+        .title-curve {
+            width: 100%;
+            height: 20px;
+            margin-top: 10px;
+            position: relative;
+        }
+        
+        .title-curve::after {
+            content: '';
+            position: absolute;
+            left: 10%;
+            right: 10%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%234a90e2' fill-opacity='0.3' d='M0,192L48,181.3C96,171,192,149,288,149.3C384,149,480,171,576,181.3C672,192,768,192,864,181.3C960,171,1056,149,1152,144C1248,139,1344,149,1392,154.7L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E") no-repeat;
+            background-size: 100% 100%;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .game-container {
+            position: relative;
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto 40px;
+            padding: 0 20px;
+        }
+        
+        /* 爱心形状的网格容器 */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 8px;
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .cell:hover {
+            transform: scale(1.05);
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .cell.selected {
+            background-color: #b3d4fc;
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(74, 144, 226, 0.3);
+        }
+        
+        .cell.matched {
+            background-color: #c8e6c9;
+            animation: pop 0.5s ease-out;
+            opacity: 0.7;
+        }
+        
+        @keyframes pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(0.8); }
+        }
+        
+        .message {
+            color: #2962b9;
+            font-size: 18px;
+            margin: 20px 0;
+            text-align: center;
+            height: 24px;
+        }
+        
+        .complete-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 10;
+        }
+        
+        .next-btn {
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 12px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 5px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .next-btn:hover {
+            background-color: #2962b9;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(41, 98, 185, 0.3);
+        }
+        
+        /* 飘落的蓝色系emoji */
+        .falling-emoji {
+            position: absolute;
+            pointer-events: none;
+            z-index: 1;
+            animation: fall linear forwards;
+        }
+        
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+        
+        /* 四周小花花 */
+        .flower {
+            position: absolute;
+            color: #81c784;
+            opacity: 0.7;
+            z-index: 1;
+        }
+        
+        .flower-top-left { top: 20px; left: 20px; animation: sway 8s ease-in-out infinite; }
+        .flower-top-right { top: 20px; right: 20px; animation: sway 10s ease-in-out infinite; }
+        .flower-bottom-left { bottom: 20px; left: 20px; animation: sway 9s ease-in-out infinite; }
+        .flower-bottom-right { bottom: 20px; right: 20px; animation: sway 11s ease-in-out infinite; }
+        
+        @keyframes sway {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 600px) {
+            .grid {
+                grid-template-columns: repeat(6, 1fr);
+                gap: 5px;
+                padding: 10px;
+            }
+            
+            .cell {
+                font-size: 18px;
+            }
+            
+            .title {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 背景音乐 -->
+    <audio autoplay loop>
+        <source src="audio/lala.mp3" type="audio/mpeg">
+        您的浏览器不支持音频播放
+    </audio>
+    
+    <!-- 顶部横幅 -->
+    <div class="banner-container">
+        <div class="banner">
+            <img src="https://s21.ax1x.com/2025/08/21/pVD16o9.jpg" alt="横幅图片" class="banner-img">
+        </div>
+        <!-- 横幅下方的线条 -->
+        <div class="banner-line"></div>
+    </div>
+    
+    <div class="title-container">
+        <h1 class="title">原来你早就知道自己可爱啦</h1>
+        <div class="title-curve"></div>
+    </div>
+    
+    <div class="game-container">
+        <div class="grid" id="gameGrid"></div>
+        <div class="message" id="message">选择两个相同的Emoji匹配哦</div>
+        
+        <div class="complete-message" id="completeMessage">
+            <!-- 只保留前进按钮 -->
+            <a href="contact.html" class="next-btn">前进 →</a>
+        </div>
+    </div>
+    
+    <!-- 四周小花花 -->
+    <div class="flower flower-top-left">🌸</div>
+    <div class="flower flower-top-right">💮</div>
+    <div class="flower flower-bottom-left">🌼</div>
+    <div class="flower flower-bottom-right">❀</div>
+    
+    <!-- 飘落emoji容器 -->
+    <div id="fallingContainer"></div>
 
+    <script>
+        // 游戏配置
+        const config = {
+            // 爱心形状的网格布局
+            heartShape: [
+                [0,0,1,1,1,1,0,0],
+                [0,1,1,1,1,1,1,0],
+                [1,1,1,1,1,1,1,1],
+                [1,1,1,1,1,1,1,1],
+                [1,1,1,1,1,1,1,1],
+                [0,1,1,1,1,1,1,0],
+                [0,0,1,1,1,1,0,0],
+                [0,0,0,1,1,0,0,0]
+            ],
+            // 确保每个emoji都有配对
+            emojis: ['❤️', '❤️', '💙', '💙', '💜', '💜', '💖', '💖', '💕', '💕', '💞', '💞', 
+                     '💘', '💘', '💝', '💝', '💓', '💓', '💧', '💧', '💦', '💦', '🌊', '🌊',
+                     '🔷', '🔷', '🔵', '🔵', '💎', '💎', '🐬', '🐬', '🦋', '🦋', '☁️', '☁️'],
+            blueEmojis: ['💙', '💧', '💦', '🌊', '🐬', '🔷', '🔵', '💎', '☁️']
+        };
+        
+        // 游戏状态
+        const gameState = {
+            grid: [],
+            selected: [],
+            matched: [],
+            isProcessing: false
+        };
+        
+        // DOM元素
+        const gameGrid = document.getElementById('gameGrid');
+        const message = document.getElementById('message');
+        const completeMessage = document.getElementById('completeMessage');
+        const fallingContainer = document.getElementById('fallingContainer');
+        
+        // 初始化游戏
+        function initGame() {
+            createHeartGrid();
+            renderGrid();
+            startFallingEmojis();
+        }
+        
+        // 创建爱心网格并填充emoji
+        function createHeartGrid() {
+            const positions = [];
+            for (let row = 0; row < config.heartShape.length; row++) {
+                for (let col = 0; col < config.heartShape[row].length; col++) {
+                    if (config.heartShape[row][col] === 1) {
+                        positions.push({row, col});
+                    }
+                }
+            }
+            
+            // 打乱emoji顺序
+            const shuffledEmojis = [...config.emojis];
+            shuffleArray(shuffledEmojis);
+            
+            // 初始化网格
+            gameState.grid = Array(config.heartShape.length).fill().map(() => Array(config.heartShape[0].length).fill(null));
+            
+            // 填充emoji到网格
+            let index = 0;
+            for (let row = 0; row < config.heartShape.length; row++) {
+                for (let col = 0; col < config.heartShape[row].length; col++) {
+                    if (config.heartShape[row][col] === 1) {
+                        gameState.grid[row][col] = shuffledEmojis[index];
+                        index++;
+                    }
+                }
+            }
+            
+            gameState.matched = Array(config.heartShape.length).fill().map(() => Array(config.heartShape[0].length).fill(false));
+        }
+        
+        // 渲染网格
+        function renderGrid() {
+            gameGrid.innerHTML = '';
+            gameGrid.style.gridTemplateRows = `repeat(${config.heartShape.length}, 1fr)`;
+            
+            for (let row = 0; row < config.heartShape.length; row++) {
+                for (let col = 0; col < config.heartShape[row].length; col++) {
+                    if (config.heartShape[row][col] === 1) {
+                        const cell = document.createElement('div');
+                        cell.className = 'cell';
+                        cell.dataset.row = row;
+                        cell.dataset.col = col;
+                        
+                        if (gameState.matched[row][col]) {
+                            cell.classList.add('matched');
+                        }
+                        
+                        cell.textContent = gameState.grid[row][col];
+                        cell.addEventListener('click', () => handleCellClick(row, col, cell));
+                        gameGrid.appendChild(cell);
+                    } else {
+                        const emptyCell = document.createElement('div');
+                        emptyCell.style.visibility = 'hidden';
+                        gameGrid.appendChild(emptyCell);
+                    }
+                }
+            }
+        }
+        
+        // 处理单元格点击
+        function handleCellClick(row, col, cellElement) {
+            if (gameState.isProcessing || gameState.matched[row][col]) return;
+            
+            // 取消已选中的相同单元格
+            if (gameState.selected.length > 0 && 
+                gameState.selected[0].row === row && 
+                gameState.selected[0].col === col) {
+                deselectCells();
+                message.textContent = '请选择两个相同的Emoji进行匹配';
+                return;
+            }
+            
+            cellElement.classList.add('selected');
+            gameState.selected.push({row, col, element: cellElement});
+            
+            if (gameState.selected.length === 2) {
+                checkMatch();
+            } else {
+                message.textContent = '选择另一个相同的Emoji喔';
+            }
+        }
+        
+        // 检查匹配
+        function checkMatch() {
+            gameState.isProcessing = true;
+            const first = gameState.selected[0];
+            const second = gameState.selected[1];
+            
+            if (gameState.grid[first.row][first.col] === gameState.grid[second.row][second.col]) {
+                message.textContent = '匹配成功啦！🎉';
+                gameState.matched[first.row][first.col] = true;
+                gameState.matched[second.row][second.col] = true;
+                
+                first.element.classList.add('matched');
+                second.element.classList.add('matched');
+                
+                setTimeout(() => {
+                    if (isGameComplete()) {
+                        completeMessage.style.display = 'block';
+                        message.textContent = '恭喜你完成啦！';
+                    }
+                    
+                    gameState.selected = [];
+                    gameState.isProcessing = false;
+                }, 500);
+            } else {
+                message.textContent = '匹配失败，请再试一次嘛';
+                
+                setTimeout(() => {
+                    deselectCells();
+                    gameState.isProcessing = false;
+                }, 800);
+            }
+        }
+        
+        // 取消选中
+        function deselectCells() {
+            gameState.selected.forEach(item => {
+                item.element.classList.remove('selected');
+            });
+            gameState.selected = [];
+        }
+        
+        // 检查游戏是否完成
+        function isGameComplete() {
+            for (let row = 0; row < config.heartShape.length; row++) {
+                for (let col = 0; col < config.heartShape[row].length; col++) {
+                    if (config.heartShape[row][col] === 1 && !gameState.matched[row][col]) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+        
+        // 打乱数组
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+        
+        // 飘落emoji效果
+        function createFallingEmoji() {
+            const emoji = document.createElement('div');
+            emoji.className = 'falling-emoji';
+            emoji.textContent = config.blueEmojis[Math.floor(Math.random() * config.blueEmojis.length)];
+            
+            const size = Math.random() * 16 + 12;
+            emoji.style.fontSize = `${size}px`;
+            emoji.style.left = `${Math.random() * 100}vw`;
+            emoji.style.top = `-${size}px`;
+            
+            const duration = Math.random() * 8 + 5;
+            emoji.style.animationDuration = `${duration}s`;
+            
+            fallingContainer.appendChild(emoji);
+            
+            setTimeout(() => emoji.remove(), duration * 1000);
+        }
+        
+        // 开始飘落效果
+        function startFallingEmojis() {
+            for (let i = 0; i < 5; i++) {
+                createFallingEmoji();
+            }
+            setInterval(createFallingEmoji, 1000);
+        }
+        
+        // 初始化游戏
+        window.addEventListener('DOMContentLoaded', initGame);
+    </script>
+</body>
+</html>
+    
