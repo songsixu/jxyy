@@ -15,9 +15,6 @@
                         secondary: '#FFC2D1',
                         accent: '#FFD8E3',
                     },
-                    fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif'],
-                    },
                 }
             }
         }
@@ -36,17 +33,21 @@
             .stripe-border {
                 background: repeating-linear-gradient(
                     45deg,
-                    rgba(255, 255, 255, 0.1),
-                    rgba(255, 255, 255, 0.1) 10px,
-                    rgba(255, 255, 255, 0.2) 10px,
-                    rgba(255, 255, 255, 0.2) 20px
+                    rgba(255,255,255,0.1),
+                    rgba(255,255,255,0.1) 10px,
+                    rgba(255,255,255,0.2) 10px,
+                    rgba(255,255,255,0.2) 20px
                 );
             }
             .calendar-day {
                 transition: all 0.3s ease;
+                cursor: pointer !important;
+                user-select: none;
+                padding: 10px;
+                margin: 2px;
             }
-            .calendar-day:hover:not(.marked) {
-                background-color: rgba(255, 255, 255, 0.3);
+            .calendar-day:hover:not(.marked):not(.selected) {
+                background-color: rgba(255,255,255,0.3);
                 transform: scale(1.1);
             }
             .calendar-day.marked {
@@ -62,6 +63,28 @@
                 transform: translate(-50%, -50%);
                 font-weight: bold;
             }
+            .calendar-day.selected {
+                background-color: #8A9FD1;
+                color: white;
+                box-shadow: 0 0 0 2px white inset;
+            }
+            /* 月份切换按钮 */
+            .month-nav {
+                width: 40px;
+                height: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer !important;
+                border-radius: 50%;
+                transition: all 0.2s ease;
+                position: relative;
+                z-index: 30; /* 按钮层级高于气球 */
+            }
+            .month-nav:hover {
+                background-color: rgba(255, 255, 255, 0.3);
+                transform: scale(1.1);
+            }
             .balloon {
                 position: absolute;
                 width: 60px;
@@ -69,9 +92,9 @@
                 border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
                 background-color: #FF6B6B;
                 cursor: pointer;
-                transition: all 0.3s ease;
                 animation: fall 15s linear infinite;
-                box-shadow: inset -10px -10px 0 rgba(0, 0, 0, 0.1);
+                z-index: 20; /* 气球层级低于按钮但高于其他内容 */
+                pointer-events: auto; /* 确保气球可以被点击 */
             }
             .balloon::after {
                 content: '';
@@ -81,88 +104,49 @@
                 transform: translateX(-50%);
                 width: 4px;
                 height: 20px;
-                background-color: rgba(0, 0, 0, 0.2);
+                background-color: rgba(0,0,0,0.2);
             }
             .balloon.pop {
                 animation: pop 0.5s forwards;
+                pointer-events: none;
+            }
+            /* 气球容器不拦截点击 */
+            #balloons-container {
+                pointer-events: none;
+                position: fixed;
+                inset: 0;
+                z-index: 20;
             }
             @keyframes float {
-                0%, 100% {
-                    transform: translateY(0) rotate(0deg);
-                }
-                50% {
-                    transform: translateY(-20px) rotate(5deg);
-                }
+                0%,100% { transform: translateY(0) rotate(0deg); }
+                50% { transform: translateY(-20px) rotate(5deg); }
             }
             @keyframes fall {
-                0% {
-                    transform: translateY(-100px) rotate(0deg);
-                }
-                100% {
-                    transform: translateY(calc(100vh + 100px)) rotate(360deg);
-                }
+                0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+                100% { transform: translateY(calc(100vh + 100px)) rotate(360deg); opacity: 0.8; }
             }
             @keyframes pop {
-                0% {
-                    transform: scale(1);
-                    opacity: 1;
-                }
-                50% {
-                    transform: scale(1.5);
-                    opacity: 0.8;
-                }
-                100% {
-                    transform: scale(0);
-                    opacity: 0;
-                }
+                0% { transform: scale(1); opacity: 1; }
+                50% { transform: scale(1.5); opacity: 0.8; }
+                100% { transform: scale(0); opacity: 0; }
             }
             .text-animation {
                 animation: fadeInUp 1s ease forwards;
                 opacity: 0;
             }
             @keyframes fadeInUp {
-                from {
-                    opacity: 0;
-                    transform: translateY(20px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-            .wave-border {
-                position: relative;
-                overflow: hidden;
-            }
-            .wave-border::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                height: 15px;
-                background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='rgba(255,255,255,0.3)' fill-opacity='1' d='M0,192L48,186.7C96,181,192,171,288,181.3C384,192,480,224,576,218.7C672,213,768,171,864,165.3C960,160,1056,192,1152,197.3C1248,203,1344,181,1392,170.7L1440,160L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z'%3E%3C/path%3E%3C/svg%3E") repeat-x;
-                background-size: 1440px 15px;
-            }
-            .wave-border::after {
-                content: '';
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                height: 15px;
-                background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='rgba(255,255,255,0.3)' fill-opacity='1' d='M0,160L48,176C96,192,192,224,288,229.3C384,235,480,213,576,186.7C672,160,768,128,864,133.3C960,139,1056,181,1152,186.7C1248,192,1344,160,1392,144L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E") repeat-x;
-                background-size: 1440px 15px;
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
             }
         }
     </style>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-primary to-secondary overflow-x-hidden relative">
     <!-- 背景音乐 -->
-    <audio src="audio/very.mp3" autoplay loop></audio>
+    <audio id="bg-music" src="audio/very.mp3" loop></audio>
 
     <!-- 彩色气泡背景 -->
-    <div id="bubbles-container" class="fixed inset-0 -z-10"></div>
+    <div id="background-bubbles" class="fixed inset-0 -z-10"></div>
 
     <!-- 主内容容器 -->
     <div class="container mx-auto px-4 py-12 relative z-10">
@@ -178,7 +162,7 @@
 
         <!-- 装饰性条纹边框容器 -->
         <div class="stripe-border rounded-3xl p-1 mb-12 max-w-2xl mx-auto">
-            <div class="bg-white/20 backdrop-blur-sm rounded-3xl p-6 wave-border">
+            <div class="bg-white/20 backdrop-blur-sm rounded-3xl p-6">
                 <p class="text-white text-lg md:text-xl leading-relaxed">
                     在之前看到你总是凌晨上线，感觉…有点可怜( ＿ ＿)ノ｜<br>
                     但可能是你的个人习惯吧。
@@ -187,18 +171,18 @@
         </div>
 
         <!-- 日历组件 -->
-        <div class="max-w-2xl mx-auto bg-white/30 backdrop-blur-sm rounded-3xl p-6 mb-12 shadow-lg text-animation" style="animation-delay: 0.9s;">
+        <div class="max-w-2xl mx-auto bg-white/30 backdrop-blur-sm rounded-3xl p-6 mb-12 shadow-lg text-animation" style="animation-delay: 0.9s; position: relative; z-index: 25;">
             <h2 class="text-center text-2xl font-bold text-white mb-6">2025年 8月 - 10月</h2>
             
             <!-- 月份切换 -->
-            <div class="flex justify-between items-center mb-4 px-4">
-                <button id="prev-month" class="text-white hover:text-pink-200 transition-colors">
-                    <i class="fa fa-chevron-left"></i>
-                </button>
+            <div class="flex justify-between items-center mb-6 px-2">
+                <div id="prev-month" class="month-nav text-white">
+                    <i class="fa fa-chevron-left text-xl"></i>
+                </div>
                 <h3 id="current-month" class="text-xl font-semibold text-white">八月</h3>
-                <button id="next-month" class="text-white hover:text-pink-200 transition-colors">
-                    <i class="fa fa-chevron-right"></i>
-                </button>
+                <div id="next-month" class="month-nav text-white">
+                    <i class="fa fa-chevron-right text-xl"></i>
+                </div>
             </div>
             
             <!-- 星期标题 -->
@@ -225,102 +209,162 @@
     </div>
 
     <!-- 红气球容器 -->
-    <div id="balloons-container" class="fixed inset-0 pointer-events-none z-20"></div>
+    <div id="balloons-container"></div>
 
     <script>
-        // 创建彩色气泡背景
-        function createBubbles() {
-            const container = document.getElementById('bubbles-container');
-            const bubbleCount = 20;
+        document.addEventListener('DOMContentLoaded', function() {
+            // 创建背景气泡
+            createBackgroundBubbles();
             
-            for (let i = 0; i < bubbleCount; i++) {
+            // 日历初始化 - 8月(索引7)
+            let currentMonth = 7;
+            generateCalendar(currentMonth);
+            
+            // 月份切换事件 - 使用双重绑定确保可靠性
+            const prevBtn = document.getElementById('prev-month');
+            const nextBtn = document.getElementById('next-month');
+            
+            // 方法1: onclick绑定
+            prevBtn.onclick = function() {
+                console.log('上月按钮点击 (onclick)');
+                if (currentMonth > 7) {
+                    currentMonth--;
+                    generateCalendar(currentMonth);
+                }
+            };
+            
+            nextBtn.onclick = function() {
+                console.log('下月按钮点击 (onclick)');
+                if (currentMonth < 9) {
+                    currentMonth++;
+                    generateCalendar(currentMonth);
+                }
+            };
+            
+            // 方法2: addEventListener绑定作为备份
+            prevBtn.addEventListener('click', function() {
+                console.log('上月按钮点击 (addEventListener)');
+                if (currentMonth > 7) {
+                    currentMonth--;
+                    generateCalendar(currentMonth);
+                }
+            });
+            
+            nextBtn.addEventListener('click', function() {
+                console.log('下月按钮点击 (addEventListener)');
+                if (currentMonth < 9) {
+                    currentMonth++;
+                    generateCalendar(currentMonth);
+                }
+            });
+            
+            // 创建红气球并确保可点击
+            createBalloons();
+            
+            // 设置当前日期
+            const now = new Date(2025, 7, 23, 16, 0);
+            document.getElementById('current-date').textContent = 
+                `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日${now.getHours()}点`;
+                
+            // 日历日期点击事件
+            document.getElementById('calendar-grid').addEventListener('click', function(e) {
+                if (e.target.classList.contains('calendar-day') && !e.target.classList.contains('marked')) {
+                    document.querySelectorAll('.calendar-day.selected').forEach(el => {
+                        el.classList.remove('selected');
+                    });
+                    e.target.classList.add('selected');
+                }
+            });
+        });
+
+        // 创建背景气泡
+        function createBackgroundBubbles() {
+            const container = document.getElementById('background-bubbles');
+            for (let i = 0; i < 20; i++) {
                 const bubble = document.createElement('div');
-                bubble.classList.add('bubble');
-                
-                // 随机大小
+                bubble.className = 'bubble';
                 const size = Math.random() * 100 + 30;
-                bubble.style.width = `${size}px`;
-                bubble.style.height = `${size}px`;
-                
-                // 随机位置
-                bubble.style.left = `${Math.random() * 100}%`;
-                bubble.style.top = `${Math.random() * 100}%`;
-                
-                // 随机颜色
-                const hue = Math.random() * 360;
-                bubble.style.backgroundColor = `hsla(${hue}, 80%, 70%, 0.3)`;
-                
-                // 随机动画延迟和持续时间
-                bubble.style.animationDelay = `${Math.random() * 5}s`;
-                bubble.style.animationDuration = `${Math.random() * 10 + 5}s`;
-                
+                bubble.style.cssText = `
+                    width: ${size}px;
+                    height: ${size}px;
+                    left: ${Math.random() * 100}%;
+                    top: ${Math.random() * 100}%;
+                    background-color: hsla(${Math.random() * 360}, 80%, 70%, 0.3);
+                    animation-delay: ${Math.random() * 5}s;
+                    animation-duration: ${Math.random() * 10 + 5}s;
+                `;
                 container.appendChild(bubble);
             }
         }
 
         // 生成日历
         function generateCalendar(month) {
-            const months = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
-            const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-            
-            // 更新月份标题
-            document.getElementById('current-month').textContent = months[month];
-            
+            const months = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月'];
+            const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31];
             const grid = document.getElementById('calendar-grid');
             grid.innerHTML = '';
+            document.getElementById('current-month').textContent = months[month];
             
-            // 获取当月第一天是星期几 (0-6, 0是星期日)
             const firstDay = new Date(2025, month, 1).getDay();
             
-            // 当月天数
-            const days = daysInMonth[month];
-            
-            // 添加上个月的占位符
+            // 添加上月占位
             for (let i = 0; i < firstDay; i++) {
-                const emptyDay = document.createElement('div');
-                emptyDay.classList.add('calendar-day', 'h-10', 'flex', 'items-center', 'justify-center', 'rounded-full');
-                grid.appendChild(emptyDay);
+                const empty = document.createElement('div');
+                empty.className = 'calendar-day h-10 flex items-center justify-center rounded-full';
+                grid.appendChild(empty);
             }
             
-            // 添加当月的日期
+            // 添加日期
+            const days = daysInMonth[month];
             for (let i = 1; i <= days; i++) {
-                const dayElement = document.createElement('div');
-                dayElement.classList.add('calendar-day', 'h-10', 'flex', 'items-center', 'justify-center', 'rounded-full', 'text-white', 'font-medium');
-                dayElement.textContent = i;
+                const dayEl = document.createElement('div');
+                dayEl.className = 'calendar-day h-10 flex items-center justify-center rounded-full text-white font-medium';
+                dayEl.textContent = i;
+                dayEl.dataset.day = i;
                 
-                // 标记8月15日至23日
-                if (month === 7 && i >= 15 && i <= 23) { // 8月是索引7
-                    dayElement.classList.add('marked');
-                    dayElement.textContent = ''; // 清空文本，使用✓符号
+                if (month === 7 && i >= 15 && i <= 23) {
+                    dayEl.classList.add('marked');
+                    dayEl.textContent = '';
                 }
                 
-                grid.appendChild(dayElement);
+                grid.appendChild(dayEl);
+            }
+            
+            // 默认选中今天
+            if (month === 7) {
+                const todayEl = grid.querySelector('[data-day="23"]');
+                if (todayEl && !todayEl.classList.contains('marked')) {
+                    todayEl.classList.add('selected');
+                }
             }
         }
 
-        // 创建红气球
+        // 创建红气球 - 确保可点击
         function createBalloons() {
             const container = document.getElementById('balloons-container');
-            const balloonCount = 5;
             
-            for (let i = 0; i < balloonCount; i++) {
+            for (let i = 0; i < 5; i++) {
                 const balloon = document.createElement('div');
-                balloon.classList.add('balloon');
+                balloon.className = 'balloon';
+                balloon.style.cssText = `
+                    left: ${Math.random() * 80 + 10}%;
+                    top: -${Math.random() * 200 + 100}px;
+                    animation-delay: ${Math.random() * 10}s;
+                    animation-duration: ${Math.random() * 10 + 15}s;
+                `;
                 
-                // 随机位置
-                balloon.style.left = `${Math.random() * 80 + 10}%`;
-                balloon.style.top = `-${Math.random() * 200 + 100}px`;
-                
-                // 随机动画延迟和持续时间
-                balloon.style.animationDelay = `${Math.random() * 10}s`;
-                balloon.style.animationDuration = `${Math.random() * 10 + 15}s`;
-                
-                // 点击气球
-                balloon.addEventListener('click', function() {
+                // 双重绑定点击事件确保可靠性
+                balloon.onclick = function() {
+                    console.log('气球被点击 (onclick)');
                     this.classList.add('pop');
-                    this.style.pointerEvents = 'none';
-                    
-                    // 动画结束后跳转到下一页
+                    setTimeout(() => {
+                        window.location.href = 'a.html';
+                    }, 500);
+                };
+                
+                balloon.addEventListener('click', function() {
+                    console.log('气球被点击 (addEventListener)');
+                    this.classList.add('pop');
                     setTimeout(() => {
                         window.location.href = 'a.html';
                     }, 500);
@@ -329,45 +373,6 @@
                 container.appendChild(balloon);
             }
         }
-
-        // 初始化
-        document.addEventListener('DOMContentLoaded', function() {
-            // 创建气泡背景
-            createBubbles();
-            
-            // 初始化日历为8月(索引7)
-            let currentMonth = 7;
-            generateCalendar(currentMonth);
-            
-            // 月份切换事件
-            document.getElementById('prev-month').addEventListener('click', function() {
-                if (currentMonth > 6) { // 只允许8-10月 (索引7-9)
-                    currentMonth--;
-                    generateCalendar(currentMonth);
-                }
-            });
-            
-            document.getElementById('next-month').addEventListener('click', function() {
-                if (currentMonth < 9) { // 只允许8-10月 (索引7-9)
-                    currentMonth++;
-                    generateCalendar(currentMonth);
-                }
-            });
-            
-            // 创建红气球
-            createBalloons();
-            
-            // 设置当前日期时间
-            const now = new Date(2025, 7, 23, 16, 0); // 2025年8月23日16点
-            const options = { 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            };
-            document.getElementById('current-date').textContent = now.toLocaleString('zh-CN', options);
-        });
     </script>
 </body>
 </html>
