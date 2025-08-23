@@ -3,132 +3,371 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>啦啦啦</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+    <title>好久不见</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF9BB3',
+                        secondary: '#FFC2D1',
+                        accent: '#FFD8E3',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
         }
-        /* 渐变粉色背景 */
-        body {
-            min-height: 100vh;
-            background: linear-gradient(135deg, #ffccd5, #ff9aaf, #ff6b8b, #ff4777);
-            background-size: 400% 400%;
-            animation: gradientBg 15s ease infinite;
-            position: relative;
-            overflow: hidden;
-            font-family: "Microsoft YaHei", sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        /* 背景渐变动画 */
-        @keyframes gradientBg {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        /* 彩色气泡样式 */
-        .bubble {
-            position: absolute;
-            border-radius: 50%;
-            opacity: 0.7;
-            animation: float 8s ease-in-out infinite;
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-30px) scale(1.05); }
-        }
-        /* 条纹曲线边框容器 */
-        .content-box {
-            background-color: rgba(255, 255, 255, 0.9);
-            padding: 40px 30px;
-            border-radius: 20px;
-            text-align: center;
-            position: relative;
-            z-index: 10;
-            /* 条纹曲线边框 */
-            border: 8px solid;
-            border-image: linear-gradient(45deg, #ff9aaf, #82c3ec, #a7f3d0, #fbbf24) 1;
-            box-shadow: 0 0 20px rgba(255, 107, 139, 0.3);
-        }
-        /* 大标题样式 */
-        .title {
-            font-size: 28px;
-            color: #ff4777;
-            margin-bottom: 30px;
-            text-shadow: 1px 1px 3px rgba(255, 107, 139, 0.2);
-        }
-        /* 提示文字样式 */
-        .tip-text {
-            font-size: 18px;
-            color: #555;
-            line-height: 1.8;
-            margin-bottom: 40px;
-        }
-        /* 跳转按钮样式 */
-        .jump-btn {
-            padding: 12px 30px;
-            background-color: #ff6b8b;
-            color: white;
-            border: none;
-            border-radius: 50px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(255, 107, 139, 0.3);
-        }
-        .jump-btn:hover {
-            background-color: #ff4777;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(255, 107, 139, 0.4);
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            .bubble {
+                position: absolute;
+                border-radius: 50%;
+                opacity: 0.7;
+                animation: float 8s infinite ease-in-out;
+            }
+            .stripe-border {
+                background: repeating-linear-gradient(
+                    45deg,
+                    rgba(255, 255, 255, 0.1),
+                    rgba(255, 255, 255, 0.1) 10px,
+                    rgba(255, 255, 255, 0.2) 10px,
+                    rgba(255, 255, 255, 0.2) 20px
+                );
+            }
+            .calendar-day {
+                transition: all 0.3s ease;
+            }
+            .calendar-day:hover:not(.marked) {
+                background-color: rgba(255, 255, 255, 0.3);
+                transform: scale(1.1);
+            }
+            .calendar-day.marked {
+                background-color: #FF6B6B;
+                color: white;
+                position: relative;
+            }
+            .calendar-day.marked::after {
+                content: "✓";
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-weight: bold;
+            }
+            .balloon {
+                position: absolute;
+                width: 60px;
+                height: 80px;
+                border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+                background-color: #FF6B6B;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                animation: fall 15s linear infinite;
+                box-shadow: inset -10px -10px 0 rgba(0, 0, 0, 0.1);
+            }
+            .balloon::after {
+                content: '';
+                position: absolute;
+                bottom: -15px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 4px;
+                height: 20px;
+                background-color: rgba(0, 0, 0, 0.2);
+            }
+            .balloon.pop {
+                animation: pop 0.5s forwards;
+            }
+            @keyframes float {
+                0%, 100% {
+                    transform: translateY(0) rotate(0deg);
+                }
+                50% {
+                    transform: translateY(-20px) rotate(5deg);
+                }
+            }
+            @keyframes fall {
+                0% {
+                    transform: translateY(-100px) rotate(0deg);
+                }
+                100% {
+                    transform: translateY(calc(100vh + 100px)) rotate(360deg);
+                }
+            }
+            @keyframes pop {
+                0% {
+                    transform: scale(1);
+                    opacity: 1;
+                }
+                50% {
+                    transform: scale(1.5);
+                    opacity: 0.8;
+                }
+                100% {
+                    transform: scale(0);
+                    opacity: 0;
+                }
+            }
+            .text-animation {
+                animation: fadeInUp 1s ease forwards;
+                opacity: 0;
+            }
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            .wave-border {
+                position: relative;
+                overflow: hidden;
+            }
+            .wave-border::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 15px;
+                background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='rgba(255,255,255,0.3)' fill-opacity='1' d='M0,192L48,186.7C96,181,192,171,288,181.3C384,192,480,224,576,218.7C672,213,768,171,864,165.3C960,160,1056,192,1152,197.3C1248,203,1344,181,1392,170.7L1440,160L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z'%3E%3C/path%3E%3C/svg%3E") repeat-x;
+                background-size: 1440px 15px;
+            }
+            .wave-border::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 15px;
+                background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='rgba(255,255,255,0.3)' fill-opacity='1' d='M0,160L48,176C96,192,192,224,288,229.3C384,235,480,213,576,186.7C672,160,768,128,864,133.3C960,139,1056,181,1152,186.7C1248,192,1344,160,1392,144L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E") repeat-x;
+                background-size: 1440px 15px;
+            }
         }
     </style>
 </head>
-<body>
-    <!-- 音频播放（自动播放+隐藏控件） -->
-    <audio src="audio/very.mp3" autoplay loop style="display: none;"></audio>
+<body class="min-h-screen bg-gradient-to-br from-primary to-secondary overflow-x-hidden relative">
+    <!-- 背景音乐 -->
+    <audio src="audio/very.mp3" autoplay loop></audio>
 
-    <!-- 条纹曲线边框内容容器 -->
-    <div class="content-box">
+    <!-- 彩色气泡背景 -->
+    <div id="bubbles-container" class="fixed inset-0 -z-10"></div>
+
+    <!-- 主内容容器 -->
+    <div class="container mx-auto px-4 py-12 relative z-10">
         <!-- 大标题 -->
-        <h1 class="title">感谢“小可爱”有耐心看到这里啦 💐</h1>
-        <!-- 提示文字 -->
-        <p class="tip-text">
-            告诉你一个小提示，之后的密码是你的"签名"哦～<br><br>
-            在之前看到你总是凌晨上线，感觉…有点可怜( ＿ ＿)ノ｜<br>
-            但可能是你的个人习惯吧
-        </p >
-        <!-- 跳转按钮 -->
-        <button class="jump-btn" onclick="window.location.href='a.html'">走吧</button>
+        <div class="text-center mb-10 text-animation" style="animation-delay: 0.3s;">
+            <h1 class="text-[clamp(2.5rem,8vw,5rem)] font-bold text-white text-shadow">好久不见，戈 📆</h1>
+        </div>
+
+        <!-- 副标题 -->
+        <div class="text-center mb-12 max-w-2xl mx-auto text-animation" style="animation-delay: 0.6s;">
+            <p class="text-[clamp(1.2rem,3vw,1.8rem)] text-white/90">数着日子盼了好久，终于等到你出现的这一刻。</p>
+        </div>
+
+        <!-- 装饰性条纹边框容器 -->
+        <div class="stripe-border rounded-3xl p-1 mb-12 max-w-2xl mx-auto">
+            <div class="bg-white/20 backdrop-blur-sm rounded-3xl p-6 wave-border">
+                <p class="text-white text-lg md:text-xl leading-relaxed">
+                    在之前看到你总是凌晨上线，感觉…有点可怜( ＿ ＿)ノ｜<br>
+                    但可能是你的个人习惯吧。
+                </p>
+            </div>
+        </div>
+
+        <!-- 日历组件 -->
+        <div class="max-w-2xl mx-auto bg-white/30 backdrop-blur-sm rounded-3xl p-6 mb-12 shadow-lg text-animation" style="animation-delay: 0.9s;">
+            <h2 class="text-center text-2xl font-bold text-white mb-6">2025年 8月 - 10月</h2>
+            
+            <!-- 月份切换 -->
+            <div class="flex justify-between items-center mb-4 px-4">
+                <button id="prev-month" class="text-white hover:text-pink-200 transition-colors">
+                    <i class="fa fa-chevron-left"></i>
+                </button>
+                <h3 id="current-month" class="text-xl font-semibold text-white">八月</h3>
+                <button id="next-month" class="text-white hover:text-pink-200 transition-colors">
+                    <i class="fa fa-chevron-right"></i>
+                </button>
+            </div>
+            
+            <!-- 星期标题 -->
+            <div class="grid grid-cols-7 gap-1 mb-2">
+                <div class="text-center text-white font-medium">日</div>
+                <div class="text-center text-white font-medium">一</div>
+                <div class="text-center text-white font-medium">二</div>
+                <div class="text-center text-white font-medium">三</div>
+                <div class="text-center text-white font-medium">四</div>
+                <div class="text-center text-white font-medium">五</div>
+                <div class="text-center text-white font-medium">六</div>
+            </div>
+            
+            <!-- 日历网格 -->
+            <div id="calendar-grid" class="grid grid-cols-7 gap-1">
+                <!-- 日历内容将通过JavaScript动态生成 -->
+            </div>
+            
+            <!-- 今天日期显示 -->
+            <div class="mt-4 text-right text-white/90 text-sm md:text-base">
+                今天 <span id="current-date">2025年8月23日16点</span>
+            </div>
+        </div>
     </div>
 
-    <!-- 彩色气泡（JS动态生成，避免重复代码） -->
+    <!-- 红气球容器 -->
+    <div id="balloons-container" class="fixed inset-0 pointer-events-none z-20"></div>
+
     <script>
-        // 气泡颜色数组
-        const bubbleColors = ['#ffccd5', '#82c3ec', '#a7f3d0', '#fbbf24', '#c084fc', '#fca5a5'];
-        // 生成15个气泡
-        for (let i = 0; i < 15; i++) {
-            const bubble = document.createElement('div');
-            bubble.classList.add('bubble');
-            // 随机气泡大小（50-150px）
-            const size = Math.random() * 100 + 50;
-            bubble.style.width = `${size}px`;
-            bubble.style.height = `${size}px`;
-            // 随机颜色
-            bubble.style.background = bubbleColors[Math.floor(Math.random() * bubbleColors.length)];
-            // 随机位置
-            bubble.style.left = `${Math.random() * 100}vw`;
-            bubble.style.top = `${Math.random() * 100}vh`;
-            // 随机动画延迟
-            bubble.style.animationDelay = `${Math.random() * 5}s`;
-            // 随机透明度
-            bubble.style.opacity = Math.random() * 0.4 + 0.3;
-            document.body.appendChild(bubble);
+        // 创建彩色气泡背景
+        function createBubbles() {
+            const container = document.getElementById('bubbles-container');
+            const bubbleCount = 20;
+            
+            for (let i = 0; i < bubbleCount; i++) {
+                const bubble = document.createElement('div');
+                bubble.classList.add('bubble');
+                
+                // 随机大小
+                const size = Math.random() * 100 + 30;
+                bubble.style.width = `${size}px`;
+                bubble.style.height = `${size}px`;
+                
+                // 随机位置
+                bubble.style.left = `${Math.random() * 100}%`;
+                bubble.style.top = `${Math.random() * 100}%`;
+                
+                // 随机颜色
+                const hue = Math.random() * 360;
+                bubble.style.backgroundColor = `hsla(${hue}, 80%, 70%, 0.3)`;
+                
+                // 随机动画延迟和持续时间
+                bubble.style.animationDelay = `${Math.random() * 5}s`;
+                bubble.style.animationDuration = `${Math.random() * 10 + 5}s`;
+                
+                container.appendChild(bubble);
+            }
         }
+
+        // 生成日历
+        function generateCalendar(month) {
+            const months = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
+            const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+            
+            // 更新月份标题
+            document.getElementById('current-month').textContent = months[month];
+            
+            const grid = document.getElementById('calendar-grid');
+            grid.innerHTML = '';
+            
+            // 获取当月第一天是星期几 (0-6, 0是星期日)
+            const firstDay = new Date(2025, month, 1).getDay();
+            
+            // 当月天数
+            const days = daysInMonth[month];
+            
+            // 添加上个月的占位符
+            for (let i = 0; i < firstDay; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.classList.add('calendar-day', 'h-10', 'flex', 'items-center', 'justify-center', 'rounded-full');
+                grid.appendChild(emptyDay);
+            }
+            
+            // 添加当月的日期
+            for (let i = 1; i <= days; i++) {
+                const dayElement = document.createElement('div');
+                dayElement.classList.add('calendar-day', 'h-10', 'flex', 'items-center', 'justify-center', 'rounded-full', 'text-white', 'font-medium');
+                dayElement.textContent = i;
+                
+                // 标记8月15日至23日
+                if (month === 7 && i >= 15 && i <= 23) { // 8月是索引7
+                    dayElement.classList.add('marked');
+                    dayElement.textContent = ''; // 清空文本，使用✓符号
+                }
+                
+                grid.appendChild(dayElement);
+            }
+        }
+
+        // 创建红气球
+        function createBalloons() {
+            const container = document.getElementById('balloons-container');
+            const balloonCount = 5;
+            
+            for (let i = 0; i < balloonCount; i++) {
+                const balloon = document.createElement('div');
+                balloon.classList.add('balloon');
+                
+                // 随机位置
+                balloon.style.left = `${Math.random() * 80 + 10}%`;
+                balloon.style.top = `-${Math.random() * 200 + 100}px`;
+                
+                // 随机动画延迟和持续时间
+                balloon.style.animationDelay = `${Math.random() * 10}s`;
+                balloon.style.animationDuration = `${Math.random() * 10 + 15}s`;
+                
+                // 点击气球
+                balloon.addEventListener('click', function() {
+                    this.classList.add('pop');
+                    this.style.pointerEvents = 'none';
+                    
+                    // 动画结束后跳转到下一页
+                    setTimeout(() => {
+                        window.location.href = 'a.html';
+                    }, 500);
+                });
+                
+                container.appendChild(balloon);
+            }
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 创建气泡背景
+            createBubbles();
+            
+            // 初始化日历为8月(索引7)
+            let currentMonth = 7;
+            generateCalendar(currentMonth);
+            
+            // 月份切换事件
+            document.getElementById('prev-month').addEventListener('click', function() {
+                if (currentMonth > 6) { // 只允许8-10月 (索引7-9)
+                    currentMonth--;
+                    generateCalendar(currentMonth);
+                }
+            });
+            
+            document.getElementById('next-month').addEventListener('click', function() {
+                if (currentMonth < 9) { // 只允许8-10月 (索引7-9)
+                    currentMonth++;
+                    generateCalendar(currentMonth);
+                }
+            });
+            
+            // 创建红气球
+            createBalloons();
+            
+            // 设置当前日期时间
+            const now = new Date(2025, 7, 23, 16, 0); // 2025年8月23日16点
+            const options = { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+            document.getElementById('current-date').textContent = now.toLocaleString('zh-CN', options);
+        });
     </script>
 </body>
 </html>
