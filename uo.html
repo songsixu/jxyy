@@ -1,1 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>感谢浏览</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        pinkLight: '#FFEBF0',
+                        pinkMedium: '#FFCCD5',
+                        pinkDark: '#FF85A1',
+                        pinkAccent: '#FF4D79',
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .bg-gradient-pink {
+                background: linear-gradient(135deg, #FFEBF0, #FFD1DC);
+            }
+            .text-shadow-pink {
+                text-shadow: 1px 1px 3px rgba(255, 77, 121, 0.15);
+            }
+            .fade-in {
+                animation: fadeIn 1s ease forwards;
+                opacity: 0;
+            }
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .pulse-gentle {
+                animation: pulse 4s infinite;
+            }
+            @keyframes pulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.03); }
+                100% { transform: scale(1); }
+            }
+            .bubble {
+                position: absolute;
+                border-radius: 50%;
+                opacity: 0.5;
+                animation: float-bubble linear infinite;
+            }
+            @keyframes float-bubble {
+                0% { transform: translateY(100vh) scale(0.5); }
+                100% { transform: translateY(-100px) scale(1.2); }
+            }
+            /* 简约装饰元素 */
+            .delicate-border {
+                border: 1px solid #FFCCD5;
+                box-shadow: 0 4px 20px rgba(255, 133, 161, 0.1);
+            }
+            .corner-flower {
+                position: absolute;
+                font-size: 1.2rem;
+                opacity: 0.7;
+            }
+            .floating-petal {
+                position: absolute;
+                opacity: 0.6;
+                pointer-events: none;
+                animation: float-petal ease-in-out infinite;
+            }
+            @keyframes float-petal {
+                0% { transform: translateY(0) rotate(0deg); }
+                50% { transform: translateY(-10px) rotate(5deg); }
+                100% { transform: translateY(0) rotate(0deg); }
+            }
+            /* 曲线装饰 */
+            .curve-decoration {
+                position: absolute;
+                width: 100%;
+                height: 30px;
+                left: 0;
+                pointer-events: none;
+                z-index: 1;
+                opacity: 0.3;
+            }
+            .top-curve {
+                top: 0;
+                background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23FF85A1' fill-opacity='1' d='M0,224L48,213.3C96,203,192,181,288,181.3C384,181,480,203,576,208C672,213,768,203,864,181.3C960,160,1056,128,1152,133.3C1248,139,1344,181,1392,202.7L1440,224L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z'%3E%3C/path%3E%3C/svg%3E") no-repeat bottom;
+                background-size: 100% 30px;
+            }
+            .bottom-curve {
+                bottom: 0;
+                background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23FF85A1' fill-opacity='1' d='M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,245.3C1248,256,1344,224,1392,208L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E") no-repeat top;
+                background-size: 100% 30px;
+            }
+            .side-curve {
+                position: absolute;
+                width: 20px;
+                height: 40%;
+                top: 30%;
+                background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 800'%3E%3Cpath fill='%23FFA6C9' fill-opacity='0.2' d='M60,400C60,400,60,400,60,400C60,400,60,400,60,400C60,400,60,400,60,400C60,266.7,60,133.3,60,0C60,133.3,60,266.7,60,400Z'%3E%3C/path%3E%3C/svg%3E") no-repeat;
+                background-size: 20px 100%;
+                pointer-events: none;
+                z-index: 1;
+            }
+            .left-curve {
+                left: 10px;
+            }
+            .right-curve {
+                right: 10px;
+                transform: scaleX(-1);
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-pink p-6 md:p-12 relative overflow-hidden">
+    <!-- 彩色气泡背景容器 -->
+    <div id="bubbles-container" class="fixed inset-0 pointer-events-none"></div>
+  
+    <audio id="backgroundMusic" loop>
+        <source src="audio/very.mp3" type="audio/mpeg">
+    </audio>
+    <!-- 主要内容 -->
+    <div class="max-w-2xl mx-auto bg-white/90 backdrop-blur-sm rounded-2xl p-8 md:p-10 delicate-border relative z-10 mt-10 md:mt-16">
+        <!-- 曲线装饰 -->
+        <div class="curve-decoration top-curve"></div>
+        <div class="curve-decoration bottom-curve"></div>
+        <div class="side-curve left-curve"></div>
+        <div class="side-curve right-curve"></div>
+        
+        <!-- 角落简约装饰 -->
+        <div class="corner-flower top-4 left-4">🌸</div>
+        <div class="corner-flower top-4 right-4">💮</div>
+        <div class="corner-flower bottom-4 left-4">🌼</div>
+        <div class="corner-flower bottom-4 right-4">🌷</div>
+        
+        <!-- 浮动花瓣装饰 -->
+        <div class="floating-petal top-1/4 left-10" style="animation-duration: 8s;">🌺</div>
+        <div class="floating-petal top-1/3 right-12" style="animation-duration: 10s;">💐</div>
+        <div class="floating-petal bottom-1/4 right-10" style="animation-duration: 9s;">🌻</div>
+        
+        <!-- 标题装饰 -->
+        <div class="text-center mb-8">
+            <div class="inline-block p-3 bg-pinkMedium/30 rounded-full mb-4 pulse-gentle">
+                <span class="text-4xl">💐</span>
+            </div>
+        </div>
+        
+        <!-- 感谢文字 -->
+        <div class="space-y-6 text-gray-700 relative z-10">
+            <p class="text-[clamp(1.3rem,4vw,1.8rem)] leading-relaxed text-center fade-in font-medium text-pinkAccent text-shadow-pink" style="animation-delay: 0.3s;">
+                感谢小可爱有耐心看到这里啦 💐
+            </p>
+            
+            <p class="text-lg md:text-xl leading-relaxed fade-in" style="animation-delay: 0.6s; line-height: 1.8;">
+                告诉你一个小提示，之后的密码是你的"签名"哦～
+            </p>
+            
+            <p class="text-lg md:text-xl leading-relaxed fade-in" style="animation-delay: 0.9s; line-height: 1.8;">
+                在之前看到你总是凌晨上线，感觉…有点可怜( ＿ ＿)ノ｜  但可能是你的个人习惯，嗯。
+            </p>
+        </div>
+        
+        <!-- 按钮区域 -->
+        <div class="mt-12 text-center">
+            <a href="a.html" class="inline-block bg-pinkAccent hover:bg-pinkAccent/90 text-white font-medium py-3 px-8 rounded-full transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                <i class="fa fa-heart mr-2"></i> 继续探索
+            </a>
+        </div>
+    </div>
 
+    <script>
+        // 创建彩色气泡背景
+        function createColorfulBubbles() {
+            const container = document.getElementById('bubbles-container');
+            const count = 30;
+            const colors = [
+                '#FFEBF0', '#FFD1DC', '#FFCCD5', '#FFB6C1', 
+                '#FFC0CB', '#FFA6C9', '#FF85A1', '#FF4D79'
+            ];
+            
+            for (let i = 0; i < count; i++) {
+                const bubble = document.createElement('div');
+                bubble.classList.add('bubble');
+                
+                const size = Math.random() * 80 + 20;
+                bubble.style.width = `${size}px`;
+                bubble.style.height = `${size}px`;
+                bubble.style.left = `${Math.random() * 100}vw`;
+                bubble.style.bottom = `-${size}px`;
+                bubble.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                bubble.style.opacity = Math.random() * 0.2 + 0.05;
+                bubble.style.animationDuration = `${Math.random() * 40 + 20}s`;
+                
+                container.appendChild(bubble);
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            createColorfulBubbles();
+            document.querySelectorAll('.fade-in').forEach(el => {
+                el.style.animationPlayState = 'running';
+            });
+        });
+    </script>
+</body>
+</html>
