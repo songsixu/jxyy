@@ -1,1 +1,583 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>你最近在干嘛呀？</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        lightGreen: '#d4edda',
+                        lightYellow: '#fff3cd',
+                        cardGreen: '#c3e6cb',
+                        cardYellow: '#ffeeba',
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .bg-gradient-custom {
+                background: linear-gradient(135deg, #d4edda, #fff3cd);
+            }
+            .bubble {
+                position: absolute;
+                border-radius: 50%;
+                animation: float ease-in-out infinite;
+            }
+            @keyframes float {
+                0% { transform: translateY(0) rotate(0deg); }
+                50% { transform: translateY(-20px) rotate(5deg); }
+                100% { transform: translateY(0) rotate(0deg); }
+            }
+            .floating-emoji {
+                position: absolute;
+                pointer-events: none;
+                animation: float-up ease-out forwards;
+                z-index: 50;
+            }
+            @keyframes float-up {
+                0% { transform: translateY(0) scale(1); opacity: 1; }
+                100% { transform: translateY(-100px) scale(0.5); opacity: 0; }
+            }
+            .option-card {
+                transition: all 0.3s ease;
+                transform-origin: center;
+                position: relative;
+                overflow: hidden;
+            }
+            .option-card::before {
+                content: '';
+                position: absolute;
+                top: -50%;
+                left: -50%;
+                width: 200%;
+                height: 200%;
+                background: linear-gradient(
+                    to right,
+                    rgba(255, 255, 255, 0) 0%,
+                    rgba(255, 255, 255, 0.3) 50%,
+                    rgba(255, 255, 255, 0) 100%
+                );
+                transform: rotate(30deg);
+                animation: shine 3s infinite;
+            }
+            @keyframes shine {
+                0% { transform: translateX(-100%) rotate(30deg); }
+                100% { transform: translateX(100%) rotate(30deg); }
+            }
+            .option-card:hover {
+                transform: translateY(-8px) scale(1.05);
+                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            }
+            .option-card:active {
+                transform: translateY(-2px) scale(1.02);
+            }
+            .option-card:hover .card-icon {
+                animation: bounce 0.6s ease infinite alternate;
+            }
+            @keyframes bounce {
+                from { transform: translateY(0); }
+                to { transform: translateY(-10px); }
+            }
+            .pulse {
+                animation: pulse 2s infinite;
+            }
+            @keyframes pulse {
+                0% { box-shadow: 0 0 0 0 rgba(195, 230, 203, 0.7); }
+                70% { box-shadow: 0 0 0 10px rgba(195, 230, 203, 0); }
+                100% { box-shadow: 0 0 0 0 rgba(195, 230, 203, 0); }
+            }
+            .fade-in {
+                animation: fadeIn 0.5s ease forwards;
+            }
+            @keyframes fadeIn {
+                from { opacity: 0; transform: scale(0.9); }
+                to { opacity: 1; transform: scale(1); }
+            }
+            .modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 100;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.3s ease;
+            }
+            .modal.active {
+                opacity: 1;
+                pointer-events: all;
+            }
+            .modal-content {
+                background-color: white;
+                padding: 2rem;
+                border-radius: 1rem;
+                text-align: center;
+                transform: scale(0.8);
+                transition: transform 0.3s ease;
+                position: relative;
+                overflow: hidden;
+            }
+            .modal.active .modal-content {
+                transform: scale(1);
+            }
+            .confetti {
+                position: absolute;
+                width: 10px;
+                height: 10px;
+                opacity: 0;
+            }
+            .star {
+                position: absolute;
+                background-color: #fff3cd;
+                border-radius: 50%;
+                pointer-events: none;
+                animation: falling-star linear forwards;
+                box-shadow: 0 0 6px rgba(255, 243, 205, 0.9), 
+                            0 0 12px rgba(255, 228, 132, 0.7);
+            }
+            @keyframes falling-star {
+                0% {
+                    transform: translateY(-50px) rotate(0deg);
+                    opacity: 1;
+                }
+                100% {
+                    transform: translateY(100vh) rotate(360deg);
+                    opacity: 0;
+                }
+            }
+            .music-control {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                background-color: rgba(255, 255, 255, 0.8);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                cursor: pointer;
+                z-index: 90;
+                transition: all 0.3s ease;
+            }
+            .music-control:hover {
+                transform: scale(1.1);
+                background-color: white;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-custom overflow-x-hidden overflow-y-auto relative p-4 md:p-8">
+    <!-- 背景音乐 -->
+    <audio id="backgroundMusic" loop>
+        <source src="audio/go.mp3" type="audio/mpeg">
+    </audio>
+    
+    <!-- 音乐控制按钮 -->
+    <div class="music-control" id="musicControl">
+        <i class="fa fa-music text-yellow-500 text-xl"></i>
+    </div>
+    
+    <!-- 背景气泡（非emoji装饰） -->
+    <div id="bubbles-container"></div>
+    
+    <!-- 星星容器 -->
+    <div id="stars-container"></div>
 
+    <!-- 标题 -->
+    <div class="text-center mt-8 md:mt-12 mb-10 md:mb-16 relative">
+        <h1 class="text-[clamp(2rem,5vw,3rem)] font-bold text-gray-700 relative z-10">
+            最近在干嘛呀？
+        </h1>
+        <div class="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-32 h-3 bg-yellow-200 rounded-full opacity-50"></div>
+    </div>
+
+    <!-- 选项卡片 -->
+    <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+        <!-- 工作 -->
+        <div class="option-card bg-cardGreen/80 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-green-200 cursor-pointer">
+            <div class="flex items-center justify-between">
+                <h2 class="text-xl md:text-2xl font-semibold text-gray-800">工作中</h2>
+                <span class="text-3xl md:text-4xl card-icon">💼</span>
+            </div>
+            <p class="mt-2 text-gray-700">努力搬砖，为梦想奋斗</p>
+        </div>
+
+        <!-- 度假 -->
+        <div class="option-card bg-cardYellow/80 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-yellow-200 cursor-pointer">
+            <div class="flex items-center justify-between">
+                <h2 class="text-xl md:text-2xl font-semibold text-gray-800">在度假</h2>
+                <span class="text-3xl md:text-4xl card-icon">🏖️</span>
+            </div>
+            <p class="mt-2 text-gray-700">享受阳光与自由的时光</p>
+        </div>
+
+        <!-- 考试 -->
+        <div class="option-card bg-cardGreen/80 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-green-200 cursor-pointer">
+            <div class="flex items-center justify-between">
+                <h2 class="text-xl md:text-2xl font-semibold text-gray-800">准备考试</h2>
+                <span class="text-3xl md:text-4xl card-icon">📚</span>
+            </div>
+            <p class="mt-2 text-gray-700">临时抱佛脚，希望能通过</p>
+        </div>
+
+        <!-- 掉线 -->
+        <div class="option-card bg-cardYellow/80 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-yellow-200 cursor-pointer">
+            <div class="flex items-center justify-between">
+                <h2 class="text-xl md:text-2xl font-semibold text-gray-800">掉线中</h2>
+                <span class="text-3xl md:text-4xl card-icon">📴</span>
+            </div>
+            <p class="mt-2 text-gray-700">暂时失联，请勿打扰</p>
+        </div>
+    </div>
+
+    <!-- 输入框区域 -->
+    <div class="max-w-2xl mx-auto fade-in">
+        <div class="bg-white/70 backdrop-blur-sm rounded-xl p-5 shadow-lg border border-yellow-200 mb-6 relative overflow-hidden">
+            <p class="text-gray-700 mb-3">难道还有我未知的？</p>
+            <div class="flex gap-3">
+                <input type="text" id="customInput" placeholder="说说看嘛" 
+                    class="flex-1 px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all">
+                <button id="submitBtn" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold px-6 py-3 rounded-lg transition-all pulse">
+                    提交
+                </button>
+            </div>
+        </div>
+
+        <!-- 返回按钮 -->
+        <div class="text-center">
+            <a href="index.html" class="inline-block bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-full transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                <i class="fa fa-arrow-left mr-2"></i> 下一个喔
+            </a>
+        </div>
+    </div>
+
+    <!-- 提示弹窗 -->
+    <div id="notificationModal" class="modal">
+        <div class="modal-content max-w-md w-full mx-4">
+            <p class="text-2xl font-bold text-gray-800 mb-4">原来是这样的啊，不错哦 🎉</p>
+            <button id="closeModal" class="bg-green-500 hover:bg-green-600 text-white font-bold px-6 py-2 rounded-lg transition-all">
+                走
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // 音乐控制功能
+        function setupMusicControl() {
+            const music = document.getElementById('backgroundMusic');
+            const controlBtn = document.getElementById('musicControl');
+            const icon = controlBtn.querySelector('i');
+            
+            // 尝试自动播放（现代浏览器通常会阻止）
+            music.play().catch(e => {
+                console.log('自动播放被阻止，需要用户交互后才能播放');
+            });
+            
+            // 点击控制按钮切换播放/暂停
+            controlBtn.addEventListener('click', () => {
+                if (music.paused) {
+                    music.play().then(() => {
+                        icon.classList.remove('fa-music');
+                        icon.classList.add('fa-pause');
+                    }).catch(e => {
+                        console.log('播放失败:', e);
+                    });
+                } else {
+                    music.pause();
+                    icon.classList.remove('fa-pause');
+                    icon.classList.add('fa-music');
+                }
+            });
+            
+            // 监听播放状态变化
+            music.addEventListener('play', () => {
+                icon.classList.remove('fa-music');
+                icon.classList.add('fa-pause');
+            });
+            
+            music.addEventListener('pause', () => {
+                icon.classList.remove('fa-pause');
+                icon.classList.add('fa-music');
+            });
+        }
+
+        // 创建背景气泡（非emoji装饰）
+        function createBubbles() {
+            const container = document.getElementById('bubbles-container');
+            const bubbleCount = 30;
+            
+            for (let i = 0; i < bubbleCount; i++) {
+                const bubble = document.createElement('div');
+                bubble.classList.add('bubble');
+                
+                // 随机大小和位置
+                const size = Math.random() * 80 + 20;
+                bubble.style.width = `${size}px`;
+                bubble.style.height = `${size}px`;
+                bubble.style.left = `${Math.random() * 100}vw`;
+                bubble.style.top = `${Math.random() * 100}vh`;
+                bubble.style.animationDuration = `${Math.random() * 15 + 10}s`;
+                bubble.style.animationDelay = `${Math.random() * 5}s`;
+                bubble.style.opacity = Math.random() * 0.4 + 0.1;
+                
+                // 随机浅绿色或浅黄色半透明气泡
+                const isGreen = Math.random() > 0.5;
+                bubble.style.backgroundColor = isGreen 
+                    ? 'rgba(195, 230, 203, 0.3)' 
+                    : 'rgba(255, 238, 186, 0.3)';
+                
+                container.appendChild(bubble);
+            }
+        }
+
+        // 创建掉落的小星星
+        function createFallingStars() {
+            const container = document.getElementById('stars-container');
+            const totalStars = 30;
+            
+            // 定时创建新星星
+            const starInterval = setInterval(() => {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                
+                // 随机大小
+                const size = Math.random() * 4 + 1;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                
+                // 随机水平位置
+                star.style.left = `${Math.random() * 100}vw`;
+                star.style.top = '-20px';
+                
+                // 随机下落时间和延迟
+                const duration = Math.random() * 5 + 3;
+                star.style.animationDuration = `${duration}s`;
+                
+                container.appendChild(star);
+                
+                // 动画结束后移除星星元素
+                setTimeout(() => {
+                    star.remove();
+                }, duration * 1000);
+            }, 500);
+            
+            // 初始创建一批星星
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const event = new Event('interval');
+                    starInterval.dispatchEvent(event);
+                }, i * 300);
+            }
+        }
+
+        // 选项点击效果
+        function setupOptionCards() {
+            const cards = document.querySelectorAll('.option-card');
+            const emojis = {
+                '工作中': ['💼', '📊', '💻'],
+                '在度假': ['🏖️', '🌴', '☀️'],
+                '准备考试': ['📚', '✏️', '📝'],
+                '掉线中': ['📴', '🌙', '😴']
+            };
+            
+            cards.forEach(card => {
+                card.addEventListener('click', function() {
+                    // 播放音乐（如果尚未播放）
+                    const music = document.getElementById('backgroundMusic');
+                    if (music.paused) {
+                        music.play().catch(e => console.log('播放失败:', e));
+                    }
+                    
+                    // 添加点击动画
+                    this.classList.add('scale-95');
+                    setTimeout(() => {
+                        this.classList.remove('scale-95');
+                    }, 200);
+                    
+                    // 获取选项文本
+                    const optionText = this.querySelector('h2').textContent;
+                    showNotification(`原来你在${optionText}呀，行嘛`);
+                    
+                    // 生成相关emoji漂浮效果
+                    createFloatingEmojis(emojis[optionText], this);
+                    
+                    // 点击时额外生成一些星星
+                    createExtraStarsOnClick();
+                });
+            });
+        }
+
+        // 点击时额外生成星星
+        function createExtraStarsOnClick() {
+            const container = document.getElementById('stars-container');
+            const count = 10;
+            
+            for (let i = 0; i < count; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                
+                const size = Math.random() * 4 + 1;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${Math.random() * 100}vw`;
+                star.style.top = '-20px';
+                star.style.animationDuration = `${Math.random() * 3 + 2}s`;
+                
+                container.appendChild(star);
+                
+                setTimeout(() => {
+                    star.remove();
+                }, 5000);
+            }
+        }
+
+        // 创建漂浮的emoji（仅在点击时出现，非背景装饰）
+        function createFloatingEmojis(emojiList, sourceElement) {
+            const rect = sourceElement.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            for (let i = 0; i < 5; i++) {
+                const emoji = document.createElement('div');
+                emoji.textContent = emojiList[Math.floor(Math.random() * emojiList.length)];
+                emoji.classList.add('floating-emoji');
+                emoji.style.left = `${centerX}px`;
+                emoji.style.top = `${centerY}px`;
+                emoji.style.fontSize = `${Math.random() * 16 + 16}px`;
+                emoji.style.animationDuration = `${Math.random() * 1 + 1}s`;
+                emoji.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 360}deg)`;
+                
+                document.body.appendChild(emoji);
+                
+                // 自动移除元素
+                setTimeout(() => {
+                    emoji.remove();
+                }, 1000);
+            }
+        }
+
+        // 自定义输入提交
+        function setupCustomInput() {
+            const input = document.getElementById('customInput');
+            const submitBtn = document.getElementById('submitBtn');
+            const modal = document.getElementById('notificationModal');
+            const closeBtn = document.getElementById('closeModal');
+            
+            // 提交按钮点击
+            submitBtn.addEventListener('click', () => {
+                if (input.value.trim()) {
+                    // 播放音乐（如果尚未播放）
+                    const music = document.getElementById('backgroundMusic');
+                    if (music.paused) {
+                        music.play().catch(e => console.log('播放失败:', e));
+                    }
+                    
+                    modal.classList.add('active');
+                    createConfetti(); // 显示庆祝效果
+                    createExtraStarsOnClick(); // 提交时也生成额外星星
+                    input.value = '';
+                }
+            });
+            
+            // 回车键提交
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && input.value.trim()) {
+                    // 播放音乐（如果尚未播放）
+                    const music = document.getElementById('backgroundMusic');
+                    if (music.paused) {
+                        music.play().catch(e => console.log('播放失败:', e));
+                    }
+                    
+                    modal.classList.add('active');
+                    createConfetti(); // 显示庆祝效果
+                    createExtraStarsOnClick(); // 提交时也生成额外星星
+                    input.value = '';
+                }
+            });
+            
+            // 关闭弹窗
+            closeBtn.addEventListener('click', () => {
+                modal.classList.remove('active');
+            });
+        }
+
+        // 创建庆祝彩屑
+        function createConfetti() {
+            const container = document.querySelector('.modal-content');
+            const colors = ['#c3e6cb', '#ffeeba', '#d1ecf1', '#f8d7da', '#d4edda'];
+            const count = 50;
+            
+            // 清除之前的彩屑
+            document.querySelectorAll('.confetti').forEach(c => c.remove());
+            
+            for (let i = 0; i < count; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.width = `${Math.random() * 8 + 4}px`;
+                confetti.style.height = `${Math.random() * 8 + 4}px`;
+                confetti.style.left = `${Math.random() * 100}%`;
+                confetti.style.top = `-10px`;
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                confetti.style.animation = `float-up ${Math.random() * 2 + 2}s ease-out forwards`;
+                confetti.style.animationDelay = `${Math.random() * 0.5}s`;
+                
+                container.appendChild(confetti);
+            }
+        }
+
+        // 显示通知
+        function showNotification(message) {
+            // 创建通知元素
+            const notification = document.createElement('div');
+            notification.className = 'fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-white px-6 py-3 rounded-full shadow-xl z-50 fade-in';
+            notification.textContent = message;
+            
+            // 添加到页面
+            document.body.appendChild(notification);
+            
+            // 3秒后移除
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transition = 'opacity 0.3s ease';
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 3000);
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            setupMusicControl(); // 初始化音乐控制
+            createBubbles();
+            createFallingStars(); // 初始化掉落星星
+            setupOptionCards();
+            setupCustomInput();
+            
+            // 卡片淡入效果
+            const cards = document.querySelectorAll('.option-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                setTimeout(() => {
+                    card.classList.add('fade-in');
+                }, 100 * index);
+            });
+        });
+    </script>
+</body>
+</html>
+    
