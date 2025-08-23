@@ -148,7 +148,10 @@
     <source src="audio/very.mp3" type="audio/mpeg">
     <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_9f9d89277b.mp3?filename=soft-piano-102063.mp3" type="audio/mpeg">
     您的浏览器不支持音频播放
- </audio>
+ </audio><!-- 音乐控制按钮 -->
+<div id="musicControl" class="fixed bottom-24 right-24 w-14 h-14 rounded-full bg-white/40 backdrop-blur-2xl flex items-center justify-center text-white cursor-pointer z-100 hover:bg-white/60 transition-all">
+    <i id="musicIcon" class="fa fa-play text-xl"></i>
+</div>
     
     <!-- 彩色气泡背景 -->
     <div id="background-bubbles" class="fixed inset-0 -z-10"></div>
@@ -281,6 +284,47 @@
                 }
             });
         });
+
+        // ---------------------- 音乐控制核心代码 ----------------------
+const audio = document.getElementById('backgroundMusic');
+const musicBtn = document.getElementById('musicControl');
+const musicIcon = document.getElementById('musicIcon');
+let isPlaying = false;
+
+// 本地音频加载失败时，自动切备用链接
+audio.onerror = function() {
+    audio.src = 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_9f9d89277b.mp3?filename=soft-piano-102063.mp3';
+    audio.load();
+};
+
+// 点击按钮切换播放/暂停
+musicBtn.onclick = function() {
+    if (isPlaying) {
+        audio.pause();
+        musicIcon.classList = 'fa fa-play text-xl'; // 图标变“播放”
+    } else {
+        // 解决浏览器自动播放限制
+        audio.play().then(() => {
+            musicIcon.classList = 'fa fa-pause text-xl'; // 图标变“暂停”
+        }).catch(() => {
+            alert('先点击页面任意位置，再点音乐按钮~');
+        });
+    }
+    isPlaying = !isPlaying;
+};
+
+// 页面首次点击时，自动尝试播放（符合浏览器规则）
+document.addEventListener('click', function firstPlay() {
+    if (!isPlaying) {
+        audio.play().then(() => {
+            isPlaying = true;
+            musicIcon.classList = 'fa fa-pause text-xl';
+        });
+    }
+    document.removeEventListener('click', firstPlay); // 只执行一次
+}, { once: true });
+// -------------------------------------------------------------
+        
 
         // 创建背景气泡
         function createBackgroundBubbles() {
