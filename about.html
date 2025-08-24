@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>生活愉快</title>
+    <title>记得今天要过得开心哦</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
@@ -15,6 +15,7 @@
             position: relative;
         }
         
+        /* 明暗切换效果容器 */
         .light-container {
             position: fixed;
             top: 0;
@@ -28,6 +29,7 @@
             transition: opacity 0.2s ease;
         }
         
+        /* 点状背景 */
         .bg-pattern {
             position: absolute;
             top: 0;
@@ -38,6 +40,7 @@
             opacity: 0.05;
         }
         
+        /* 阳光效果 - 仅早安模式有 */
         .sunlight {
             position: absolute;
             top: -30%;
@@ -60,6 +63,7 @@
             50% { opacity: 0.9; }
         }
 
+        /* 卡片样式 - 恢复原始大小 */
         .card {
             transform: rotate(-2deg) translateY(20px);
             transition: all 1s ease;
@@ -68,23 +72,35 @@
             overflow: hidden;
             max-width: 800px;
             width: 90%;
-            border-radius: 30px;
+            border-radius: 30px; /* 曲线边框 */
             border: 8px solid transparent;
             background-clip: padding-box;
-            opacity: 0;
+            opacity: 0; /* 初始隐藏 */
         }
         
+        /* 卡片显示状态 */
         .card.visible {
             opacity: 1;
             transform: rotate(-2deg) translateY(0);
         }
         
+        /* 边框动画 */
         @keyframes border-shimmer {
-            0% { border-image-source: linear-gradient(135deg, #FFD580, #FFA000, #FFD580); }
-            25% { border-image-source: linear-gradient(225deg, #FFD580, #FFA000, #FFD580); }
-            50% { border-image-source: linear-gradient(315deg, #FFD580, #FFA000, #FFD580); }
-            75% { border-image-source: linear-gradient(45deg, #FFD580, #FFA000, #FFD580); }
-            100% { border-image-source: linear-gradient(135deg, #FFD580, #FFA000, #FFD580); }
+            0% {
+                border-image-source: linear-gradient(135deg, #FFD580, #FFA000, #FFD580);
+            }
+            25% {
+                border-image-source: linear-gradient(225deg, #FFD580, #FFA000, #FFD580);
+            }
+            50% {
+                border-image-source: linear-gradient(315deg, #FFD580, #FFA000, #FFD580);
+            }
+            75% {
+                border-image-source: linear-gradient(45deg, #FFD580, #FFA000, #FFD580);
+            }
+            100% {
+                border-image-source: linear-gradient(135deg, #FFD580, #FFA000, #FFD580);
+            }
         }
         
         .card-morning {
@@ -96,11 +112,21 @@
         }
         
         @keyframes border-shimmer-night {
-            0% { border-image-source: linear-gradient(135deg, #90CAF9, #1565C0, #90CAF9); }
-            25% { border-image-source: linear-gradient(225deg, #90CAF9, #1565C0, #90CAF9); }
-            50% { border-image-source: linear-gradient(315deg, #90CAF9, #1565C0, #90CAF9); }
-            75% { border-image-source: linear-gradient(45deg, #90CAF9, #1565C0, #90CAF9); }
-            100% { border-image-source: linear-gradient(135deg, #90CAF9, #1565C0, #90CAF9); }
+            0% {
+                border-image-source: linear-gradient(135deg, #90CAF9, #1565C0, #90CAF9);
+            }
+            25% {
+                border-image-source: linear-gradient(225deg, #90CAF9, #1565C0, #90CAF9);
+            }
+            50% {
+                border-image-source: linear-gradient(315deg, #90CAF9, #1565C0, #90CAF9);
+            }
+            75% {
+                border-image-source: linear-gradient(45deg, #90CAF9, #1565C0, #90CAF9);
+            }
+            100% {
+                border-image-source: linear-gradient(135deg, #90CAF9, #1565C0, #90CAF9);
+            }
         }
 
         .card-morning::before {
@@ -111,7 +137,8 @@
             right: 0;
             bottom: 0;
             background-image: 
-                url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffcc80' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+                url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffcc80' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"),
+                radial-gradient(circle at 10% 20%, rgba(255,220,160,0.1) 0%, transparent 20%);
             z-index: 0;
         }
         .card-night::before {
@@ -122,7 +149,8 @@
             right: 0;
             bottom: 0;
             background-image: 
-                url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2380b3ff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+                url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2380b3ff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"),
+                radial-gradient(circle at 90% 80%, rgba(120,160,255,0.1) 0%, transparent 20%);
             z-index: 0;
         }
         .card:hover {
@@ -130,6 +158,7 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.22);
         }
 
+        /* 按钮样式 */
         .toggle-btn, .next-btn {
             transition: all 0.3s ease;
             cursor: pointer;
@@ -138,6 +167,7 @@
             transform: translateY(-2px);
         }
 
+        /* 主图标 */
         .icon-large {
             filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
             transition: transform 1s ease;
@@ -146,6 +176,7 @@
             transform: rotate(10deg) scale(1.1);
         }
 
+        /* 背景样式 */
         .bg-morning {
             background: linear-gradient(135deg, #FFE0B2, #FFCC80);
         }
@@ -153,6 +184,7 @@
             background: linear-gradient(135deg, #1A237E, #283593);
         }
 
+        /* 卡片背景 */
         .card-morning {
             background: linear-gradient(135deg, #FFF9E6, #FFEFD5);
         }
@@ -160,6 +192,7 @@
             background: linear-gradient(135deg, #E3F2FD, #BBDEFB);
         }
 
+        /* 星星样式 */
         .star {
             position: absolute;
             color: #fff;
@@ -171,6 +204,7 @@
             50% { opacity: 1; }
         }
 
+        /* 装饰元素 */
         .corner-decoration {
             position: absolute;
             width: 40px;
@@ -185,6 +219,7 @@
             z-index: 1;
         }
 
+        /* 分割线 */
         .pattern-divider {
             height: 1px;
             background: linear-gradient(90deg, transparent, currentColor, transparent);
@@ -192,6 +227,7 @@
             margin: 1rem 0;
         }
 
+        /* 下一页按钮 */
         .next-btn {
             position: fixed;
             bottom: 30px;
@@ -212,6 +248,7 @@
             transform: translateX(-50%) translateY(0);
         }
 
+        /* 烟花效果 */
         .firework-container {
             position: fixed;
             top: 0;
@@ -236,6 +273,7 @@
             opacity: 0;
         }
         
+        /* 右上角元素的渐入效果 */
         .top-right-elements {
             opacity: 0;
             transform: translateY(-20px);
@@ -247,220 +285,37 @@
             transform: translateY(0);
         }
         
+        /* 卡片容器 - 确保两张卡片位置一致 */
         .card-wrapper {
             position: relative;
             width: 100%;
             display: flex;
             justify-content: center;
         }
-        
-        .animation-container {
-            width: 100%;
-            height: 180px;
-            margin: 20px auto;
-            position: relative;
-            overflow: hidden;
-            border-radius: 15px;
-            background-color: rgba(255, 255, 255, 0.3);
-        }
-        
-        .stickman {
-            position: absolute;
-            width: 20px;
-            height: 45px;
-            bottom: 45px;
-            left: -50px;
-            opacity: 0;
-            will-change: transform, opacity;
-            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-        }
-        
-        .stickman.layer-1 { z-index: 1; }
-        .stickman.layer-2 { z-index: 2; }
-        .stickman.layer-3 { z-index: 3; }
-        
-        .stickman-head {
-            width: 15px;
-            height: 15px;
-            border-radius: 50%;
-            background-color: #333;
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        
-        .stickman-body {
-            width: 2px;
-            height: 20px;
-            background-color: #333;
-            position: absolute;
-            top: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        
-        .stickman-arm {
-            width: 12px;
-            height: 2px;
-            background-color: #333;
-            position: absolute;
-            top: 20px;
-            will-change: transform;
-        }
-        
-        .stickman-arm.left {
-            left: 0;
-            transform-origin: right center;
-        }
-        
-        .stickman-arm.right {
-            right: 0;
-            transform-origin: left center;
-        }
-        
-        .stickman-leg {
-            width: 2px;
-            height: 14px;
-            background-color: #333;
-            position: absolute;
-            top: 35px;
-            will-change: transform;
-        }
-        
-        .stickman-leg.left {
-            left: 8px;
-            transform-origin: top center;
-        }
-        
-        .stickman-leg.right {
-            right: 8px;
-            transform-origin: top center;
-        }
-        
-        .office {
-            position: absolute;
-            width: 80px;
-            height: 50px;
-            background-color: #888;
-            right: 30px;
-            bottom: 30px;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 14px;
-            z-index: 4;
-            transition: transform 0.3s ease-out;
-        }
-        
-        .road {
-            position: absolute;
-            width: 100%;
-            height: 2px;
-            background-color: #555;
-            bottom: 30px;
-            z-index: 0;
-        }
-        
-        .houses-container {
-            position: absolute;
-            bottom: 30px;
-            right: 30px;
-            display: flex;
-            gap: 60px;
-            z-index: 4;
-            transition: transform 0.3s ease-out;
-        }
-        
-        .house {
-            width: 45px;
-            position: relative;
-        }
-        
-        .house-body {
-            width: 45px;
-            height: 35px;
-            background-color: #8B4513;
-            position: relative;
-        }
-        
-        .house-roof {
-            width: 0;
-            height: 0;
-            border-left: 28px solid transparent;
-            border-right: 28px solid transparent;
-            border-bottom: 22px solid #A52A2A;
-            position: absolute;
-            top: -22px;
-            left: -5.5px;
-        }
-        
-        .house-window {
-            width: 18px;
-            height: 18px;
-            background-color: #333;
-            position: absolute;
-            top: 8px;
-            left: 13px;
-            transition: background-color 0.3s ease;
-        }
-        
-        .house-window.lit {
-            background-color: #FFFF99;
-            box-shadow: 0 0 10px #FFFF99, 0 0 20px rgba(255, 255, 153, 0.5);
-        }
-        
-        /* 优化动画参数，使用更平滑的缓动函数 */
-        @keyframes walk {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-2px); }
-        }
-        
-        @keyframes armSwing {
-            0%, 100% { transform: rotate(0deg); }
-            50% { transform: rotate(20deg); }
-        }
-        
-        @keyframes leftLegSwing {
-            0%, 100% { transform: rotate(0deg); }
-            50% { transform: rotate(-18deg); }
-        }
-        
-        @keyframes rightLegSwing {
-            0%, 100% { transform: rotate(0deg); }
-            50% { transform: rotate(18deg); }
-        }
-        
-        .walking .stickman-arm.left,
-        .walking .stickman-arm.right {
-            animation: armSwing 0.35s cubic-bezier(0.4, 0, 0.6, 1) infinite alternate;
-        }
-        
-        .walking .stickman-leg.left {
-            animation: leftLegSwing 0.35s cubic-bezier(0.4, 0, 0.6, 1) infinite alternate;
-        }
-        
-        .walking .stickman-leg.right {
-            animation: rightLegSwing 0.35s cubic-bezier(0.4, 0, 0.6, 1) infinite alternate;
-        }
-        
-        .walking {
-            animation: walk 0.35s cubic-bezier(0.4, 0, 0.6, 1) infinite alternate;
-        }
     </style>
 </head>
 <body class="bg-morning relative">
+    <!-- 明暗切换效果容器 -->
     <div class="light-container" id="lightContainer"></div>
+    
+    <!-- 点状背景 -->
     <div class="bg-pattern" id="bgPattern"></div>
+    
+    <!-- 音频 -->
     <audio id="bgMusic" autoplay loop>
         <source src="audio/ci.mp3" type="audio/mpeg">
     </audio>
+    
+    <!-- 烟花容器 -->
     <div class="firework-container" id="fireworkContainer"></div>
+    
+    <!-- 阳光效果 -->
     <div class="sunlight active" id="sunlight"></div>
+    
+    <!-- 动态星星 -->
     <div id="stars-container" class="fixed inset-0 pointer-events-none z-0"></div>
 
+    <!-- 右上角图标和切换按钮 -->
     <div class="absolute top-8 right-8 z-20 flex items-center gap-6 top-right-elements" id="topRightElements">
         <button id="toggle-btn" class="toggle-btn bg-white/80 hover:bg-white text-gray-700 px-5 py-2.5 rounded-full text-sm font-medium shadow-md">
             切换到晚安 🌙
@@ -470,14 +325,18 @@
         </div>
     </div>
 
+    <!-- 主贺卡容器 -->
     <div class="container mx-auto px-4 py-24 md:py-36 relative z-10">
         <div class="card-wrapper">
+            <!-- 早安卡片 -->
             <div id="morning-card" class="card card-morning rounded-lg p-10 md:p-14">
+                <!-- 角落装饰 -->
                 <div class="corner-decoration top-6 left-6 text-amber-300">❦</div>
                 <div class="corner-decoration top-6 right-6 text-amber-300">❦</div>
                 <div class="corner-decoration bottom-6 left-6 text-amber-300">❦</div>
                 <div class="corner-decoration bottom-6 right-6 text-amber-300">❦</div>
 
+                <!-- 侧边装饰 -->
                 <div class="side-decoration top-1/4 left-4 text-amber-200">✽</div>
                 <div class="side-decoration top-3/4 left-4 text-amber-200">✽</div>
                 <div class="side-decoration top-1/4 right-4 text-amber-200">✽</div>
@@ -491,35 +350,6 @@
                     <p class="text-gray-700 mb-6 leading-relaxed text-lg">清晨的风好像都在说今天会很好，所以把这份祝福也一起给你啦。</p>
                     <p class="text-gray-700 mb-8 leading-relaxed text-lg">愿你今天的每一步都轻松自在，抬头有惊喜，低头有温柔，早安耶～</p>
                     
-                    <div class="animation-container">
-                        <div class="road"></div>
-                        <div class="office" id="office-building">公司</div>
-                        <div class="stickman layer-1" id="morning-stickman-1">
-                            <div class="stickman-head"></div>
-                            <div class="stickman-body"></div>
-                            <div class="stickman-arm left"></div>
-                            <div class="stickman-arm right"></div>
-                            <div class="stickman-leg left"></div>
-                            <div class="stickman-leg right"></div>
-                        </div>
-                        <div class="stickman layer-2" id="morning-stickman-2">
-                            <div class="stickman-head"></div>
-                            <div class="stickman-body"></div>
-                            <div class="stickman-arm left"></div>
-                            <div class="stickman-arm right"></div>
-                            <div class="stickman-leg left"></div>
-                            <div class="stickman-leg right"></div>
-                        </div>
-                        <div class="stickman layer-3" id="morning-stickman-3">
-                            <div class="stickman-head"></div>
-                            <div class="stickman-body"></div>
-                            <div class="stickman-arm left"></div>
-                            <div class="stickman-arm right"></div>
-                            <div class="stickman-leg left"></div>
-                            <div class="stickman-leg right"></div>
-                        </div>
-                    </div>
-                    
                     <div class="pattern-divider text-amber-300"></div>
                     
                     <div class="flex justify-center gap-8 mt-8 icons-container">
@@ -530,12 +360,15 @@
                 </div>
             </div>
             
+            <!-- 晚安卡片 (初始隐藏) -->
             <div id="night-card" class="card card-night rounded-lg p-10 md:p-14 absolute">
+                <!-- 角落装饰 -->
                 <div class="corner-decoration top-6 left-6 text-blue-400">❦</div>
                 <div class="corner-decoration top-6 right-6 text-blue-400">❦</div>
                 <div class="corner-decoration bottom-6 left-6 text-blue-400">❦</div>
                 <div class="corner-decoration bottom-6 right-6 text-blue-400">❦</div>
 
+                <!-- 侧边装饰 -->
                 <div class="side-decoration top-1/4 left-4 text-blue-300">✽</div>
                 <div class="side-decoration top-3/4 left-4 text-blue-300">✽</div>
                 <div class="side-decoration top-1/4 right-4 text-blue-300">✽</div>
@@ -549,54 +382,6 @@
                     <p class="text-indigo-900 mb-6 leading-relaxed text-lg">知道你白天可能攒了点小累，所以把这份祝福在晚上送给你。</p>
                     <p class="text-indigo-900 mb-8 leading-relaxed text-lg">看见的时候，就当是给今天的自己一个小奖励吧～ 好好休息，明天继续闪闪发光吧～</p>
                     
-                    <div class="animation-container">
-                        <div class="road"></div>
-                        <div class="houses-container" id="houses-container">
-                            <div class="house" id="house-1">
-                                <div class="house-roof"></div>
-                                <div class="house-body">
-                                    <div class="house-window" id="window-1"></div>
-                                </div>
-                            </div>
-                            <div class="house" id="house-2">
-                                <div class="house-roof"></div>
-                                <div class="house-body">
-                                    <div class="house-window" id="window-2"></div>
-                                </div>
-                            </div>
-                            <div class="house" id="house-3">
-                                <div class="house-roof"></div>
-                                <div class="house-body">
-                                    <div class="house-window" id="window-3"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="stickman layer-1" id="night-stickman-1">
-                            <div class="stickman-head"></div>
-                            <div class="stickman-body"></div>
-                            <div class="stickman-arm left"></div>
-                            <div class="stickman-arm right"></div>
-                            <div class="stickman-leg left"></div>
-                            <div class="stickman-leg right"></div>
-                        </div>
-                        <div class="stickman layer-2" id="night-stickman-2">
-                            <div class="stickman-head"></div>
-                            <div class="stickman-body"></div>
-                            <div class="stickman-arm left"></div>
-                            <div class="stickman-arm right"></div>
-                            <div class="stickman-leg left"></div>
-                            <div class="stickman-leg right"></div>
-                        </div>
-                        <div class="stickman layer-3" id="night-stickman-3">
-                            <div class="stickman-head"></div>
-                            <div class="stickman-body"></div>
-                            <div class="stickman-arm left"></div>
-                            <div class="stickman-arm right"></div>
-                            <div class="stickman-leg left"></div>
-                            <div class="stickman-leg right"></div>
-                        </div>
-                    </div>
-                    
                     <div class="pattern-divider text-blue-400"></div>
                     
                     <div class="flex justify-center gap-8 mt-8 icons-container">
@@ -609,6 +394,7 @@
         </div>
     </div>
 
+    <!-- 下一页按钮 -->
     <a href="products.html" id="next-btn" class="next-btn bg-white text-amber-600 hover:bg-amber-50">
         Hi →
     </a>
@@ -627,39 +413,10 @@
             const fireworkContainer = document.getElementById('fireworkContainer');
             const bgPattern = document.getElementById('bgPattern');
             const topRightElements = document.getElementById('topRightElements');
-            const lightContainer = document.getElementById('lightContainer');
-            const officeBuilding = document.getElementById('office-building');
-            const housesContainer = document.getElementById('houses-container');
-            const houses = [
-                document.getElementById('house-1'),
-                document.getElementById('house-2'),
-                document.getElementById('house-3')
-            ];
-            
-            // 动画元素 - 早上的三个火柴人
-            const morningStickmen = [
-                document.getElementById('morning-stickman-1'),
-                document.getElementById('morning-stickman-2'),
-                document.getElementById('morning-stickman-3')
-            ];
-            
-            // 动画元素 - 晚上的三个火柴人
-            const nightStickmen = [
-                document.getElementById('night-stickman-1'),
-                document.getElementById('night-stickman-2'),
-                document.getElementById('night-stickman-3')
-            ];
-            
-            // 晚上的窗户
-            const windows = [
-                document.getElementById('window-1'),
-                document.getElementById('window-2'),
-                document.getElementById('window-3')
-            ];
+            const lightContainer = document.getElementById('lightContainer'); // 明暗切换容器
             
             let isMorning = true;
             let fireworksInterval;
-            let activeAnimations = new Map(); // 跟踪活跃的动画ID
             
             // 配置两种模式的差异内容
             const configs = {
@@ -683,11 +440,12 @@
 
             // 初始显示动画
             function initAnimation() {
+                // 显示点状背景
                 bgPattern.style.backgroundImage = `url("${configs.morning.pattern}")`;
                 
+                // 延迟显示元素，创造层次感
                 setTimeout(() => {
                     morningCard.classList.add('visible');
-                    startMorningAnimations();
                 }, 300);
                 
                 setTimeout(() => {
@@ -698,290 +456,6 @@
                     nextBtn.classList.add('visible');
                     startFireworks();
                 }, 900);
-            }
-
-            // 重置火柴人状态
-            function resetStickman(stickman) {
-                // 移除所有动画类
-                stickman.classList.remove('walking');
-                
-                // 清除与此火柴人相关的所有动画
-                if (activeAnimations.has(stickman.id)) {
-                    const animationIds = activeAnimations.get(stickman.id);
-                    animationIds.forEach(id => cancelAnimationFrame(id));
-                    activeAnimations.delete(stickman.id);
-                }
-                
-                // 重置位置和样式
-                stickman.style.left = '-50px';
-                stickman.style.opacity = '0';
-                stickman.style.transform = 'translateY(0) scale(1)';
-                
-                // 重置肢体位置
-                const arms = stickman.querySelectorAll('.stickman-arm');
-                const legs = stickman.querySelectorAll('.stickman-leg');
-                arms.forEach(arm => arm.style.transform = 'rotate(0deg)');
-                legs.forEach(leg => leg.style.transform = 'rotate(0deg)');
-                
-                // 重置公司和房子的大小
-                officeBuilding.style.transform = 'scale(1)';
-                housesContainer.style.transform = 'scale(1)';
-            }
-
-            // 检查两个元素的碰撞/靠近
-            function isNear(element1, element2, threshold = 30) {
-                const rect1 = element1.getBoundingClientRect();
-                const rect2 = element2.getBoundingClientRect();
-                const containerRect = element1.parentElement.getBoundingClientRect();
-                
-                // 计算相对于容器的位置
-                const x1 = rect1.left - containerRect.left + rect1.width / 2;
-                const y1 = rect1.top - containerRect.top + rect1.height / 2;
-                const x2 = rect2.left - containerRect.left + rect2.width / 2;
-                const y2 = rect2.top - containerRect.top + rect2.height / 2;
-                
-                // 计算距离
-                const distance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-                
-                return distance < threshold;
-            }
-
-            // 火柴人到达目标点后的处理
-            function handleStickmanArrival(stickman, targetElement, isHouse = false) {
-                // 停止火柴人动画
-                stickman.classList.remove('walking');
-                
-                // 清除与此火柴人相关的所有动画
-                if (activeAnimations.has(stickman.id)) {
-                    const animationIds = activeAnimations.get(stickman.id);
-                    animationIds.forEach(id => cancelAnimationFrame(id));
-                    activeAnimations.delete(stickman.id);
-                }
-                
-                // 火柴人缩小并消失
-                stickman.style.transform = 'scale(0)';
-                stickman.style.opacity = '0';
-                
-                // 目标容器(公司/房子)缩小
-                if (isHouse) {
-                    housesContainer.style.transform = 'scale(0.8)';
-                } else {
-                    targetElement.style.transform = 'scale(0.8)';
-                }
-                
-                // 短暂延迟后重置
-                setTimeout(() => {
-                    resetStickman(stickman);
-                }, 300);
-            }
-
-            // 使用requestAnimationFrame实现平滑的移动动画
-            function animateStickmanMovement(stickman, targetX, targetElement, isHouse = false, duration = 4000) {
-                return new Promise(resolve => {
-                    const startX = -50; // 起始位置
-                    const startTime = performance.now();
-                    const containerWidth = stickman.parentElement.offsetWidth;
-                    const effectiveTargetX = Math.min(targetX, containerWidth - 30);
-                    
-                    // 存储此动画的ID
-                    const animationIds = [];
-                    let hasArrived = false;
-                    
-                    // 肢体动画函数
-                    function animateLimbs(timestamp) {
-                        if (!activeAnimations.has(stickman.id) || hasArrived) return;
-                        
-                        const elapsed = timestamp - startTime;
-                        const progress = Math.min(elapsed / duration, 1);
-                        const cycle = (progress * 10) % 1; // 肢体摆动频率
-                        
-                        const leftArm = stickman.querySelector('.stickman-arm.left');
-                        const rightArm = stickman.querySelector('.stickman-arm.right');
-                        const leftLeg = stickman.querySelector('.stickman-leg.left');
-                        const rightLeg = stickman.querySelector('.stickman-leg.right');
-                        
-                        // 手臂摆动 - 使用正弦函数使动作更流畅
-                        const armAngle = Math.sin(cycle * Math.PI * 2) * 20;
-                        leftArm.style.transform = `rotate(${armAngle}deg)`;
-                        rightArm.style.transform = `rotate(${-armAngle}deg)`;
-                        
-                        // 腿部摆动 - 与手臂反向
-                        const legAngle = Math.sin(cycle * Math.PI * 2 + Math.PI) * 18;
-                        leftLeg.style.transform = `rotate(${legAngle}deg)`;
-                        rightLeg.style.transform = `rotate(${-legAngle}deg)`;
-                        
-                        // 身体上下微动
-                        const bounce = Math.sin(cycle * Math.PI * 2) * 2;
-                        stickman.style.transform = `translateY(${bounce}px) scale(1)`;
-                        
-                        const id = requestAnimationFrame(animateLimbs);
-                        animationIds.push(id);
-                        activeAnimations.set(stickman.id, animationIds);
-                    }
-                    
-                    // 位置移动函数
-                    function animatePosition(timestamp) {
-                        if (!activeAnimations.has(stickman.id) || hasArrived) {
-                            resolve();
-                            return;
-                        }
-                        
-                        const elapsed = timestamp - startTime;
-                        const progress = Math.min(elapsed / duration, 1);
-                        
-                        // 检查是否已经到达目标点
-                        if (isNear(stickman, targetElement, 35)) {
-                            hasArrived = true;
-                            handleStickmanArrival(stickman, targetElement, isHouse);
-                            resolve();
-                            return;
-                        }
-                        
-                        // 使用缓动函数使加速减速更自然
-                        const easeProgress = progress < 0.5 
-                            ? 4 * progress * progress * progress 
-                            : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-                        
-                        // 计算当前位置
-                        const currentX = startX + (effectiveTargetX - startX) * easeProgress;
-                        stickman.style.left = `${currentX}px`;
-                        
-                        // 淡入效果
-                        if (progress < 0.1) {
-                            stickman.style.opacity = progress * 10;
-                        } else {
-                            stickman.style.opacity = 1;
-                        }
-                        
-                        // 检查是否到达目标或需要停止
-                        if (progress >= 1) {
-                            resetStickman(stickman);
-                            resolve();
-                            return;
-                        }
-                        
-                        const id = requestAnimationFrame(animatePosition);
-                        animationIds.push(id);
-                        activeAnimations.set(stickman.id, animationIds);
-                    }
-                    
-                    // 开始动画
-                    stickman.classList.add('walking');
-                    const posId = requestAnimationFrame(animatePosition);
-                    const limbId = requestAnimationFrame(animateLimbs);
-                    animationIds.push(posId, limbId);
-                    activeAnimations.set(stickman.id, animationIds);
-                });
-            }
-
-            // 早上所有火柴人循环动画
-            async function startMorningLoop() {
-                // 确保在早安模式下才执行
-                while (isMorning) {
-                    try {
-                        const container = morningStickmen[0].parentElement;
-                        const containerWidth = container.offsetWidth;
-                        const targetX = containerWidth - 50; // 目标位置（公司附近）
-                        
-                        // 三个火柴人依次出发，保持流畅的动画流
-                        await Promise.all([
-                            animateStickmanMovement(morningStickmen[0], targetX, officeBuilding, false, 4000),
-                            animateStickmanMovement(morningStickmen[1], targetX, officeBuilding, false, 4000).then(() => 
-                                new Promise(resolve => setTimeout(resolve, 600))
-                            ),
-                            animateStickmanMovement(morningStickmen[2], targetX, officeBuilding, false, 4000).then(() => 
-                                new Promise(resolve => setTimeout(resolve, 1200))
-                            )
-                        ]);
-                        
-                        // 短暂停顿后开始下一轮
-                        await new Promise(resolve => setTimeout(resolve, 300));
-                    } catch (error) {
-                        console.error("早上动画循环错误:", error);
-                        if (isMorning) {
-                            continue;
-                        } else {
-                            break;
-                        }
-                    }
-                }
-            }
-
-            // 晚上火柴人动画
-            function animateStickmanToHouse(stickman, house, window, targetX, delay) {
-                return new Promise(resolve => {
-                    setTimeout(async () => {
-                        window.classList.remove('lit');
-                        await animateStickmanMovement(stickman, targetX, house, true, 4000);
-                        window.classList.add('lit');
-                        resolve();
-                    }, delay);
-                });
-            }
-
-            // 晚上所有火柴人循环动画
-            async function startNightLoop() {
-                windows.forEach(window => window.classList.remove('lit'));
-                
-                while (!isMorning) {
-                    try {
-                        const container = nightStickmen[0].parentElement;
-                        const containerWidth = container.offsetWidth;
-                        
-                        // 每个火柴人对应的目标位置
-                        const targetPositions = [
-                            containerWidth - 250,
-                            containerWidth - 170,
-                            containerWidth - 90
-                        ];
-                        
-                        await Promise.all([
-                            animateStickmanToHouse(nightStickmen[0], houses[0], windows[0], targetPositions[0], 0),
-                            animateStickmanToHouse(nightStickmen[1], houses[1], windows[1], targetPositions[1], 800),
-                            animateStickmanToHouse(nightStickmen[2], houses[2], windows[2], targetPositions[2], 1600)
-                        ]);
-                        
-                        await new Promise(resolve => setTimeout(resolve, 500));
-                    } catch (error) {
-                        console.error("晚上动画循环错误:", error);
-                        if (!isMorning) {
-                            continue;
-                        } else {
-                            break;
-                        }
-                    }
-                }
-            }
-
-            // 开始早上动画
-            function startMorningAnimations() {
-                stopAllAnimations();
-                setTimeout(() => {
-                    startMorningLoop();
-                }, 100);
-            }
-
-            // 开始晚上动画
-            function startNightAnimations() {
-                stopAllAnimations();
-                setTimeout(() => {
-                    startNightLoop();
-                }, 100);
-            }
-
-            // 停止所有动画
-            function stopAllAnimations() {
-                // 清除所有活跃的动画
-                activeAnimations.forEach((ids, id) => {
-                    ids.forEach(frameId => cancelAnimationFrame(frameId));
-                });
-                activeAnimations.clear();
-                
-                // 重置所有火柴人
-                [...morningStickmen, ...nightStickmen].forEach(resetStickman);
-                
-                // 重置窗户状态
-                windows.forEach(window => window.classList.remove('lit'));
             }
 
             // 创建星星
@@ -1003,12 +477,15 @@
 
             // 烟花效果
             function createFirework() {
+                // 随机位置
                 const startX = Math.random() * window.innerWidth;
                 const startY = window.innerHeight;
                 
+                // 创建烟花发射体
                 const firework = document.createElement('div');
                 firework.className = 'firework';
                 
+                // 随机颜色
                 const colors = ['#FF5252', '#FFEB3B', '#4CAF50', '#2196F3', '#E91E63', '#9C27B0'];
                 const color = colors[Math.floor(Math.random() * colors.length)];
                 firework.style.backgroundColor = color;
@@ -1017,8 +494,9 @@
                 firework.style.top = startY + 'px';
                 fireworkContainer.appendChild(firework);
                 
-                const duration = 1000 + Math.random() * 1000;
-                const endY = Math.random() * window.innerHeight * 0.6;
+                // 发射动画
+                const duration = 1000 + Math.random() * 1000; // 1-2秒
+                const endY = Math.random() * window.innerHeight * 0.6; // 随机高度爆炸
                 
                 let startTime = null;
                 function animate(currentTime) {
@@ -1027,11 +505,13 @@
                     const progress = timeElapsed / duration;
                     
                     if (progress < 1) {
+                        // 抛物线运动
                         const y = startY - (startY - endY) * progress - 50 * Math.sin(progress * Math.PI);
                         firework.style.top = y + 'px';
                         firework.style.opacity = 1 - progress * 0.5;
                         requestAnimationFrame(animate);
                     } else {
+                        // 爆炸效果
                         explode(firework, startX, endY, color);
                         firework.remove();
                     }
@@ -1041,7 +521,7 @@
 
             // 烟花爆炸效果
             function explode(firework, x, y, color) {
-                const particleCount = 50;
+                const particleCount = 50; // 粒子数量
                 
                 for (let i = 0; i < particleCount; i++) {
                     const particle = document.createElement('div');
@@ -1051,11 +531,13 @@
                     particle.style.top = y + 'px';
                     fireworkContainer.appendChild(particle);
                     
+                    // 随机方向和速度
                     const angle = Math.random() * Math.PI * 2;
                     const speed = 2 + Math.random() * 5;
                     const vx = Math.cos(angle) * speed;
                     const vy = Math.sin(angle) * speed;
                     
+                    // 重力效果
                     let gravity = 0.05;
                     let particleX = x;
                     let particleY = y;
@@ -1069,8 +551,11 @@
                         const timeElapsed = currentTime - startTime;
                         
                         if (timeElapsed < duration && alpha > 0) {
+                            // 更新位置
                             particleX += vx;
                             particleY += vy + gravity * (timeElapsed / 100);
+                            
+                            // 更新透明度
                             alpha = 1 - (timeElapsed / duration);
                             
                             particle.style.left = particleX + 'px';
@@ -1088,10 +573,11 @@
 
             // 定时发射烟花
             function startFireworks() {
-                stopFireworks();
+                stopFireworks(); // 先停止已有定时器
                 fireworksInterval = setInterval(() => {
+                    // 一次发射5个烟花
                     for (let i = 0; i < 5; i++) {
-                        setTimeout(createFirework, i * 300);
+                        setTimeout(createFirework, i * 300); // 错开发射时间
                     }
                 }, 3000);
             }
@@ -1102,34 +588,45 @@
                     clearInterval(fireworksInterval);
                     fireworksInterval = null;
                 }
+                // 清除所有烟花元素
                 fireworkContainer.innerHTML = '';
             }
 
-            // 切换卡片
+            // 切换卡片 - 带有明暗变化效果
             function switchCard() {
+                // 先隐藏所有卡片
                 morningCard.classList.remove('visible');
                 nightCard.classList.remove('visible');
                 
+                // 触发"开灯/关灯"效果 - 模拟时间的瞬间变化
                 lightContainer.style.opacity = isMorning ? '0.8' : '0.4';
                 setTimeout(() => {
                     lightContainer.style.opacity = '0';
                     
+                    // 切换状态
                     isMorning = !isMorning;
                     const config = isMorning ? configs.morning : configs.night;
                     
+                    // 更新背景和图标
                     body.className = `${config.bgClass} relative`;
                     mainIcon.textContent = config.icon;
                     toggleBtn.textContent = config.toggleText;
                     
+                    // 更新音乐
                     const bgMusic = document.getElementById('bgMusic');
                     bgMusic.src = config.music;
                     bgMusic.play().catch(e => console.log('音频播放需要用户交互'));
                     
+                    // 更新下一页按钮样式
                     nextBtn.className = `next-btn bg-white ${config.nextBtnClass} visible`;
+                    
+                    // 更新点状背景
                     bgPattern.style.backgroundImage = `url("${config.pattern}")`;
                     
+                    // 显示/隐藏阳光效果
                     sunlight.classList.toggle('active', isMorning);
                     
+                    // 显示/隐藏星星
                     if (!isMorning) {
                         createStars();
                         starsContainer.style.opacity = '1';
@@ -1137,32 +634,27 @@
                         starsContainer.style.opacity = '0';
                     }
                     
+                    // 显示对应的卡片
                     setTimeout(() => {
                         if (isMorning) {
                             morningCard.classList.add('visible');
-                            setTimeout(startMorningAnimations, 500);
                         } else {
                             nightCard.classList.add('visible');
-                            setTimeout(startNightAnimations, 500);
                         }
                     }, 200);
-                }, 150);
+                }, 150); // 更短暂的闪光效果，增强时间残酷感
             }
 
-            // 事件监听
+            // 切换按钮事件
             toggleBtn.addEventListener('click', switchCard);
-            
+
+            // 监听页面可见性变化
             document.addEventListener('visibilitychange', function() {
                 if (document.hidden) {
                     stopFireworks();
                 } else {
                     startFireworks();
                 }
-            });
-            
-            window.addEventListener('beforeunload', function() {
-                stopAllAnimations();
-                stopFireworks();
             });
 
             // 初始化
