@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>你最近在干嘛呀？</title>
+    <title>好久不见</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script>
@@ -11,573 +11,417 @@
             theme: {
                 extend: {
                     colors: {
-                        lightGreen: '#d4edda',
-                        lightYellow: '#fff3cd',
-                        cardGreen: '#c3e6cb',
-                        cardYellow: '#ffeeba',
-                    }
+                        primary: '#FF9BB3',
+                        secondary: '#FFC2D1',
+                        accent: '#FFD8E3',
+                    },
                 }
             }
         }
     </script>
     <style type="text/tailwindcss">
         @layer utilities {
-            .bg-gradient-custom {
-                background: linear-gradient(135deg, #d4edda, #fff3cd);
+            .text-shadow {
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
             }
             .bubble {
                 position: absolute;
                 border-radius: 50%;
-                animation: float ease-in-out infinite;
+                opacity: 0.7;
+                animation: float 8s infinite ease-in-out;
             }
-            @keyframes float {
-                0% { transform: translateY(0) rotate(0deg); }
-                50% { transform: translateY(-20px) rotate(5deg); }
-                100% { transform: translateY(0) rotate(0deg); }
+            .stripe-border {
+                background: repeating-linear-gradient(
+                    45deg,
+                    rgba(255,255,255,0.1),
+                    rgba(255,255,255,0.1) 10px,
+                    rgba(255,255,255,0.2) 10px,
+                    rgba(255,255,255,0.2) 20px
+                );
             }
-            .floating-emoji {
-                position: absolute;
-                pointer-events: none;
-                animation: float-up ease-out forwards;
-                z-index: 50;
-            }
-            @keyframes float-up {
-                0% { transform: translateY(0) scale(1); opacity: 1; }
-                100% { transform: translateY(-100px) scale(0.5); opacity: 0; }
-            }
-            .option-card {
+            .calendar-day {
                 transition: all 0.3s ease;
-                transform-origin: center;
-                position: relative;
-                overflow: hidden;
+                cursor: pointer !important;
+                user-select: none;
+                padding: 10px;
+                margin: 2px;
             }
-            .option-card::before {
+            .calendar-day:hover:not(.marked):not(.selected) {
+                background-color: rgba(255,255,255,0.3);
+                transform: scale(1.1);
+            }
+            .calendar-day.marked {
+                background-color: #FF6B6B;
+                color: white;
+                position: relative;
+            }
+            .calendar-day.marked::after {
+                content: "✓";
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-weight: bold;
+            }
+            .calendar-day.selected {
+                background-color: #8A9FD1;
+                color: white;
+                box-shadow: 0 0 0 2px white inset;
+            }
+            /* 月份切换按钮 */
+            .month-nav {
+                width: 40px;
+                height: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer !important;
+                border-radius: 50%;
+                transition: all 0.2s ease;
+                position: relative;
+                z-index: 30; /* 按钮层级高于气球 */
+            }
+            .month-nav:hover {
+                background-color: rgba(255, 255, 255, 0.3);
+                transform: scale(1.1);
+            }
+            .balloon {
+                position: absolute;
+                width: 60px;
+                height: 80px;
+                border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+                background-color: #FF6B6B;
+                cursor: pointer;
+                animation: fall 15s linear infinite;
+                z-index: 20; /* 气球层级低于按钮但高于其他内容 */
+                pointer-events: auto; /* 确保气球可以被点击 */
+            }
+            .balloon::after {
                 content: '';
                 position: absolute;
-                top: -50%;
-                left: -50%;
-                width: 200%;
-                height: 200%;
-                background: linear-gradient(
-                    to right,
-                    rgba(255, 255, 255, 0) 0%,
-                    rgba(255, 255, 255, 0.3) 50%,
-                    rgba(255, 255, 255, 0) 100%
-                );
-                transform: rotate(30deg);
-                animation: shine 3s infinite;
+                bottom: -15px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 4px;
+                height: 20px;
+                background-color: rgba(0,0,0,0.2);
             }
-            @keyframes shine {
-                0% { transform: translateX(-100%) rotate(30deg); }
-                100% { transform: translateX(100%) rotate(30deg); }
-            }
-            .option-card:hover {
-                transform: translateY(-8px) scale(1.05);
-                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-            }
-            .option-card:active {
-                transform: translateY(-2px) scale(1.02);
-            }
-            .option-card:hover .card-icon {
-                animation: bounce 0.6s ease infinite alternate;
-            }
-            @keyframes bounce {
-                from { transform: translateY(0); }
-                to { transform: translateY(-10px); }
-            }
-            .pulse {
-                animation: pulse 2s infinite;
-            }
-            @keyframes pulse {
-                0% { box-shadow: 0 0 0 0 rgba(195, 230, 203, 0.7); }
-                70% { box-shadow: 0 0 0 10px rgba(195, 230, 203, 0); }
-                100% { box-shadow: 0 0 0 0 rgba(195, 230, 203, 0); }
-            }
-            .fade-in {
-                animation: fadeIn 0.5s ease forwards;
-            }
-            @keyframes fadeIn {
-                from { opacity: 0; transform: scale(0.9); }
-                to { opacity: 1; transform: scale(1); }
-            }
-            .modal {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: rgba(0, 0, 0, 0.5);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                z-index: 100;
-                opacity: 0;
+            .balloon.pop {
+                animation: pop 0.5s forwards;
                 pointer-events: none;
-                transition: opacity 0.3s ease;
             }
-            .modal.active {
-                opacity: 1;
-                pointer-events: all;
+            /* 气球容器不拦截点击 */
+            #balloons-container {
+                pointer-events: none;
+                position: fixed;
+                inset: 0;
+                z-index: 20;
             }
-            .modal-content {
-                background-color: white;
-                padding: 2rem;
-                border-radius: 1rem;
-                text-align: center;
-                transform: scale(0.8);
-                transition: transform 0.3s ease;
-                position: relative;
-                overflow: hidden;
+            @keyframes float {
+                0%,100% { transform: translateY(0) rotate(0deg); }
+                50% { transform: translateY(-20px) rotate(5deg); }
             }
-            .modal.active .modal-content {
-                transform: scale(1);
+            @keyframes fall {
+                0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+                100% { transform: translateY(calc(100vh + 100px)) rotate(360deg); opacity: 0.8; }
             }
-            .confetti {
-                position: absolute;
-                width: 10px;
-                height: 10px;
+            @keyframes pop {
+                0% { transform: scale(1); opacity: 1; }
+                50% { transform: scale(1.5); opacity: 0.8; }
+                100% { transform: scale(0); opacity: 0; }
+            }
+            .text-animation {
+                animation: fadeInUp 1s ease forwards;
                 opacity: 0;
             }
-            .star {
-                position: absolute;
-                background-color: #fff3cd;
-                border-radius: 50%;
-                pointer-events: none;
-                animation: falling-star linear forwards;
-                box-shadow: 0 0 6px rgba(255, 243, 205, 0.9), 
-                            0 0 12px rgba(255, 228, 132, 0.7);
-            }
-            @keyframes falling-star {
-                0% {
-                    transform: translateY(-50px) rotate(0deg);
-                    opacity: 1;
-                }
-                100% {
-                    transform: translateY(100vh) rotate(360deg);
-                    opacity: 0;
-                }
-            }
-            .music-control {
-                position: fixed;
-                bottom: 20px;
-                right: 20px;
-                width: 50px;
-                height: 50px;
-                border-radius: 50%;
-                background-color: rgba(255, 255, 255, 0.8);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-                cursor: pointer;
-                z-index: 90;
-                transition: all 0.3s ease;
-            }
-            .music-control:hover {
-                transform: scale(1.1);
-                background-color: white;
+            @keyframes fadeInUp {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
             }
         }
     </style>
 </head>
-<body class="min-h-screen bg-gradient-custom overflow-x-hidden overflow-y-auto relative p-4 md:p-8">
+<body class="min-h-screen bg-gradient-to-br from-primary to-secondary overflow-x-hidden relative">
     <!-- 背景音乐 -->
-    <audio id="backgroundMusic" loop>
-        <source src="audio/okp.mp3" type="audio/mpeg">
-    </audio>
+<audio id="backgroundMusic" preload="auto" loop>
+    <!-- 优先用你本地的音频，找不到就自动用备用链接 -->
+    <source src="audio/very.mp3" type="audio/mpeg">
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_9f9d89277b.mp3?filename=soft-piano-102063.mp3" type="audio/mpeg">
+    您的浏览器不支持音频播放
+ </audio><!-- 音乐控制按钮 -->
+<div id="musicControl" class="fixed bottom-24 right-24 w-14 h-14 rounded-full bg-white/40 backdrop-blur-2xl flex items-center justify-center text-white cursor-pointer z-100 hover:bg-white/60 transition-all">
+    <i id="musicIcon" class="fa fa-play text-xl"></i>
+</div>
     
-    <!-- 音乐控制按钮 -->
-    <div class="music-control" id="musicControl">
-        <i class="fa fa-music text-yellow-500 text-xl"></i>
-    </div>
-    
-    <!-- 背景气泡（非emoji装饰） -->
-    <div id="bubbles-container"></div>
-    
-    <!-- 星星容器 -->
-    <div id="stars-container"></div>
+    <!-- 彩色气泡背景 -->
+    <div id="background-bubbles" class="fixed inset-0 -z-10"></div>
 
-    <!-- 标题 -->
-    <div class="text-center mt-8 md:mt-12 mb-10 md:mb-16 relative">
-        <h1 class="text-[clamp(2rem,5vw,3rem)] font-bold text-gray-700 relative z-10">
-            最近在干嘛呀？
-        </h1>
-        <div class="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-32 h-3 bg-yellow-200 rounded-full opacity-50"></div>
-    </div>
-
-    <!-- 选项卡片 -->
-    <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-        <!-- 工作 -->
-        <div class="option-card bg-cardGreen/80 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-green-200 cursor-pointer">
-            <div class="flex items-center justify-between">
-                <h2 class="text-xl md:text-2xl font-semibold text-gray-800">工作中</h2>
-                <span class="text-3xl md:text-4xl card-icon">💼</span>
-            </div>
-            <p class="mt-2 text-gray-700">努力搬砖，为梦想奋斗</p>
+    <!-- 主内容容器 -->
+    <div class="container mx-auto px-4 py-12 relative z-10">
+        <!-- 大标题 -->
+        <div class="text-center mb-10 text-animation" style="animation-delay: 0.3s;">
+            <h1 class="text-[clamp(2.5rem,8vw,5rem)] font-bold text-white text-shadow">好久不见，戈 📆</h1>
         </div>
 
-        <!-- 度假 -->
-        <div class="option-card bg-cardYellow/80 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-yellow-200 cursor-pointer">
-            <div class="flex items-center justify-between">
-                <h2 class="text-xl md:text-2xl font-semibold text-gray-800">在度假</h2>
-                <span class="text-3xl md:text-4xl card-icon">🏖️</span>
-            </div>
-            <p class="mt-2 text-gray-700">享受阳光与自由的时光</p>
+        <!-- 副标题 -->
+        <div class="text-center mb-12 max-w-2xl mx-auto text-animation" style="animation-delay: 0.6s;">
+            <p class="text-[clamp(1.2rem,3vw,1.8rem)] text-white/90">数着日子盼了好久，终于等到你出现的这一刻。</p>
         </div>
 
-        <!-- 考试 -->
-        <div class="option-card bg-cardGreen/80 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-green-200 cursor-pointer">
-            <div class="flex items-center justify-between">
-                <h2 class="text-xl md:text-2xl font-semibold text-gray-800">准备考试</h2>
-                <span class="text-3xl md:text-4xl card-icon">📚</span>
-            </div>
-            <p class="mt-2 text-gray-700">临时抱佛脚，希望能通过</p>
-        </div>
-
-        <!-- 掉线 -->
-        <div class="option-card bg-cardYellow/80 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-yellow-200 cursor-pointer">
-            <div class="flex items-center justify-between">
-                <h2 class="text-xl md:text-2xl font-semibold text-gray-800">掉线中</h2>
-                <span class="text-3xl md:text-4xl card-icon">📴</span>
-            </div>
-            <p class="mt-2 text-gray-700">暂时失联，请勿打扰</p>
-        </div>
-    </div>
-
-    <!-- 输入框区域 -->
-    <div class="max-w-2xl mx-auto fade-in">
-        <div class="bg-white/70 backdrop-blur-sm rounded-xl p-5 shadow-lg border border-yellow-200 mb-6 relative overflow-hidden">
-            <p class="text-gray-700 mb-3">难道还有我未知的？</p>
-            <div class="flex gap-3">
-                <input type="text" id="customInput" placeholder="说说看嘛" 
-                    class="flex-1 px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all">
-                <button id="submitBtn" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold px-6 py-3 rounded-lg transition-all pulse">
-                    提交
-                </button>
+        <!-- 装饰性条纹边框容器 -->
+        <div class="stripe-border rounded-3xl p-1 mb-12 max-w-2xl mx-auto">
+            <div class="bg-white/20 backdrop-blur-sm rounded-3xl p-6">
+                <p class="text-white text-lg md:text-xl leading-relaxed">
+                    在之前看到你总是凌晨上线，感觉…有点可怜( ＿ ＿)ノ｜<br>
+                    但可能是你的个人习惯吧。
+                </p>
             </div>
         </div>
 
-        <!-- 返回按钮 -->
-        <div class="text-center">
-            <a href="uo.html" class="inline-block bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-full transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-                💛居然能看到这吗？哇
-            </a>
+        <!-- 日历组件 -->
+        <div class="max-w-2xl mx-auto bg-white/30 backdrop-blur-sm rounded-3xl p-6 mb-12 shadow-lg text-animation" style="animation-delay: 0.9s; position: relative; z-index: 25;">
+            <h2 class="text-center text-2xl font-bold text-white mb-6">2025年 8月 - 10月</h2>
+            
+            <!-- 月份切换 -->
+            <div class="flex justify-between items-center mb-6 px-2">
+                <div id="prev-month" class="month-nav text-white">
+                    <i class="fa fa-chevron-left text-xl"></i>
+                </div>
+                <h3 id="current-month" class="text-xl font-semibold text-white">八月</h3>
+                <div id="next-month" class="month-nav text-white">
+                    <i class="fa fa-chevron-right text-xl"></i>
+                </div>
+            </div>
+            
+            <!-- 星期标题 -->
+            <div class="grid grid-cols-7 gap-1 mb-2">
+                <div class="text-center text-white font-medium">日</div>
+                <div class="text-center text-white font-medium">一</div>
+                <div class="text-center text-white font-medium">二</div>
+                <div class="text-center text-white font-medium">三</div>
+                <div class="text-center text-white font-medium">四</div>
+                <div class="text-center text-white font-medium">五</div>
+                <div class="text-center text-white font-medium">六</div>
+            </div>
+            
+            <!-- 日历网格 -->
+            <div id="calendar-grid" class="grid grid-cols-7 gap-1">
+                <!-- 日历内容将通过JavaScript动态生成 -->
+            </div>
+            
+            <!-- 今天日期显示 -->
+            <div class="mt-4 text-right text-white/90 text-sm md:text-base">
+                今天 <span id="current-date">2025年8月23日16点</span>
+            </div>
         </div>
     </div>
 
-    <!-- 提示弹窗 -->
-    <div id="notificationModal" class="modal">
-        <div class="modal-content max-w-md w-full mx-4">
-            <p class="text-2xl font-bold text-gray-800 mb-4">原来是这样的啊，不错哦 🎉</p>
-            <button id="closeModal" class="bg-green-500 hover:bg-green-600 text-white font-bold px-6 py-2 rounded-lg transition-all">
-                走
-            </button>
-        </div>
-    </div>
+    <!-- 红气球容器 -->
+    <div id="balloons-container"></div>
 
     <script>
-        // 音乐控制功能
-        function setupMusicControl() {
-            const music = document.getElementById('backgroundMusic');
-            const controlBtn = document.getElementById('musicControl');
-            const icon = controlBtn.querySelector('i');
+        document.addEventListener('DOMContentLoaded', function() {
+            // 创建背景气泡
+            createBackgroundBubbles();
             
-            // 尝试自动播放（现代浏览器通常会阻止）
-            music.play().catch(e => {
-                console.log('自动播放被阻止，需要用户交互后才能播放');
-            });
+            // 日历初始化 - 8月(索引7)
+            let currentMonth = 7;
+            generateCalendar(currentMonth);
             
-            // 点击控制按钮切换播放/暂停
-            controlBtn.addEventListener('click', () => {
-                if (music.paused) {
-                    music.play().then(() => {
-                        icon.classList.remove('fa-music');
-                        icon.classList.add('fa-pause');
-                    }).catch(e => {
-                        console.log('播放失败:', e);
-                    });
-                } else {
-                    music.pause();
-                    icon.classList.remove('fa-pause');
-                    icon.classList.add('fa-music');
+            // 月份切换事件 - 使用双重绑定确保可靠性
+            const prevBtn = document.getElementById('prev-month');
+            const nextBtn = document.getElementById('next-month');
+            
+            // 方法1: onclick绑定
+            prevBtn.onclick = function() {
+                console.log('上月按钮点击 (onclick)');
+                if (currentMonth > 7) {
+                    currentMonth--;
+                    generateCalendar(currentMonth);
+                }
+            };
+            
+            nextBtn.onclick = function() {
+                console.log('下月按钮点击 (onclick)');
+                if (currentMonth < 9) {
+                    currentMonth++;
+                    generateCalendar(currentMonth);
+                }
+            };
+            
+            // 方法2: addEventListener绑定作为备份
+            prevBtn.addEventListener('click', function() {
+                console.log('上月按钮点击 (addEventListener)');
+                if (currentMonth > 7) {
+                    currentMonth--;
+                    generateCalendar(currentMonth);
                 }
             });
             
-            // 监听播放状态变化
-            music.addEventListener('play', () => {
-                icon.classList.remove('fa-music');
-                icon.classList.add('fa-pause');
+            nextBtn.addEventListener('click', function() {
+                console.log('下月按钮点击 (addEventListener)');
+                if (currentMonth < 9) {
+                    currentMonth++;
+                    generateCalendar(currentMonth);
+                }
             });
             
-            music.addEventListener('pause', () => {
-                icon.classList.remove('fa-pause');
-                icon.classList.add('fa-music');
+            // 创建红气球并确保可点击
+            createBalloons();
+            
+            // 设置当前日期
+            const now = new Date(2025, 7, 23, 16, 0);
+            document.getElementById('current-date').textContent = 
+                `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日${now.getHours()}点`;
+                
+            // 日历日期点击事件
+            document.getElementById('calendar-grid').addEventListener('click', function(e) {
+                if (e.target.classList.contains('calendar-day') && !e.target.classList.contains('marked')) {
+                    document.querySelectorAll('.calendar-day.selected').forEach(el => {
+                        el.classList.remove('selected');
+                    });
+                    e.target.classList.add('selected');
+                }
             });
-        }
+        });
 
-        // 创建背景气泡（非emoji装饰）
-        function createBubbles() {
-            const container = document.getElementById('bubbles-container');
-            const bubbleCount = 30;
-            
-            for (let i = 0; i < bubbleCount; i++) {
+        // ---------------------- 音乐控制核心代码 ----------------------
+const audio = document.getElementById('backgroundMusic');
+const musicBtn = document.getElementById('musicControl');
+const musicIcon = document.getElementById('musicIcon');
+let isPlaying = false;
+
+// 本地音频加载失败时，自动切备用链接
+audio.onerror = function() {
+    audio.src = 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_9f9d89277b.mp3?filename=soft-piano-102063.mp3';
+    audio.load();
+};
+
+// 点击按钮切换播放/暂停
+musicBtn.onclick = function() {
+    if (isPlaying) {
+        audio.pause();
+        musicIcon.classList = 'fa fa-play text-xl'; // 图标变“播放”
+    } else {
+        // 解决浏览器自动播放限制
+        audio.play().then(() => {
+            musicIcon.classList = 'fa fa-pause text-xl'; // 图标变“暂停”
+        }).catch(() => {
+            alert('先点击页面任意位置，再点音乐按钮~');
+        });
+    }
+    isPlaying = !isPlaying;
+};
+
+// 页面首次点击时，自动尝试播放（符合浏览器规则）
+document.addEventListener('click', function firstPlay() {
+    if (!isPlaying) {
+        audio.play().then(() => {
+            isPlaying = true;
+            musicIcon.classList = 'fa fa-pause text-xl';
+        });
+    }
+    document.removeEventListener('click', firstPlay); // 只执行一次
+}, { once: true });
+// -------------------------------------------------------------
+        
+
+        // 创建背景气泡
+        function createBackgroundBubbles() {
+            const container = document.getElementById('background-bubbles');
+            for (let i = 0; i < 20; i++) {
                 const bubble = document.createElement('div');
-                bubble.classList.add('bubble');
-                
-                // 随机大小和位置
-                const size = Math.random() * 80 + 20;
-                bubble.style.width = `${size}px`;
-                bubble.style.height = `${size}px`;
-                bubble.style.left = `${Math.random() * 100}vw`;
-                bubble.style.top = `${Math.random() * 100}vh`;
-                bubble.style.animationDuration = `${Math.random() * 15 + 10}s`;
-                bubble.style.animationDelay = `${Math.random() * 5}s`;
-                bubble.style.opacity = Math.random() * 0.4 + 0.1;
-                
-                // 随机浅绿色或浅黄色半透明气泡
-                const isGreen = Math.random() > 0.5;
-                bubble.style.backgroundColor = isGreen 
-                    ? 'rgba(195, 230, 203, 0.3)' 
-                    : 'rgba(255, 238, 186, 0.3)';
-                
+                bubble.className = 'bubble';
+                const size = Math.random() * 100 + 30;
+                bubble.style.cssText = `
+                    width: ${size}px;
+                    height: ${size}px;
+                    left: ${Math.random() * 100}%;
+                    top: ${Math.random() * 100}%;
+                    background-color: hsla(${Math.random() * 360}, 80%, 70%, 0.3);
+                    animation-delay: ${Math.random() * 5}s;
+                    animation-duration: ${Math.random() * 10 + 5}s;
+                `;
                 container.appendChild(bubble);
             }
         }
 
-        // 创建掉落的小星星
-        function createFallingStars() {
-            const container = document.getElementById('stars-container');
-            const totalStars = 30;
+        // 生成日历
+        function generateCalendar(month) {
+            const months = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月'];
+            const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31];
+            const grid = document.getElementById('calendar-grid');
+            grid.innerHTML = '';
+            document.getElementById('current-month').textContent = months[month];
             
-            // 定时创建新星星
-            const starInterval = setInterval(() => {
-                const star = document.createElement('div');
-                star.classList.add('star');
-                
-                // 随机大小
-                const size = Math.random() * 4 + 1;
-                star.style.width = `${size}px`;
-                star.style.height = `${size}px`;
-                
-                // 随机水平位置
-                star.style.left = `${Math.random() * 100}vw`;
-                star.style.top = '-20px';
-                
-                // 随机下落时间和延迟
-                const duration = Math.random() * 5 + 3;
-                star.style.animationDuration = `${duration}s`;
-                
-                container.appendChild(star);
-                
-                // 动画结束后移除星星元素
-                setTimeout(() => {
-                    star.remove();
-                }, duration * 1000);
-            }, 500);
+            const firstDay = new Date(2025, month, 1).getDay();
             
-            // 初始创建一批星星
-            for (let i = 0; i < 5; i++) {
-                setTimeout(() => {
-                    const event = new Event('interval');
-                    starInterval.dispatchEvent(event);
-                }, i * 300);
+            // 添加上月占位
+            for (let i = 0; i < firstDay; i++) {
+                const empty = document.createElement('div');
+                empty.className = 'calendar-day h-10 flex items-center justify-center rounded-full';
+                grid.appendChild(empty);
+            }
+            
+            // 添加日期
+            const days = daysInMonth[month];
+            for (let i = 1; i <= days; i++) {
+                const dayEl = document.createElement('div');
+                dayEl.className = 'calendar-day h-10 flex items-center justify-center rounded-full text-white font-medium';
+                dayEl.textContent = i;
+                dayEl.dataset.day = i;
+                
+                if (month === 7 && i >= 15 && i <= 23) {
+                    dayEl.classList.add('marked');
+                    dayEl.textContent = '';
+                }
+                
+                grid.appendChild(dayEl);
+            }
+            
+            // 默认选中今天
+            if (month === 7) {
+                const todayEl = grid.querySelector('[data-day="23"]');
+                if (todayEl && !todayEl.classList.contains('marked')) {
+                    todayEl.classList.add('selected');
+                }
             }
         }
 
-        // 选项点击效果
-        function setupOptionCards() {
-            const cards = document.querySelectorAll('.option-card');
-            const emojis = {
-                '工作中': ['💼', '📊', '💻'],
-                '在度假': ['🏖️', '🌴', '☀️'],
-                '准备考试': ['📚', '✏️', '📝'],
-                '掉线中': ['📴', '🌙', '😴']
-            };
+        // 创建红气球 - 确保可点击
+        function createBalloons() {
+            const container = document.getElementById('balloons-container');
             
-            cards.forEach(card => {
-                card.addEventListener('click', function() {
-                    // 播放音乐（如果尚未播放）
-                    const music = document.getElementById('backgroundMusic');
-                    if (music.paused) {
-                        music.play().catch(e => console.log('播放失败:', e));
-                    }
-                    
-                    // 添加点击动画
-                    this.classList.add('scale-95');
+            for (let i = 0; i < 5; i++) {
+                const balloon = document.createElement('div');
+                balloon.className = 'balloon';
+                balloon.style.cssText = `
+                    left: ${Math.random() * 80 + 10}%;
+                    top: -${Math.random() * 200 + 100}px;
+                    animation-delay: ${Math.random() * 10}s;
+                    animation-duration: ${Math.random() * 10 + 15}s;
+                `;
+                
+                // 双重绑定点击事件确保可靠性
+                balloon.onclick = function() {
+                    console.log('气球被点击 (onclick)');
+                    this.classList.add('pop');
                     setTimeout(() => {
-                        this.classList.remove('scale-95');
-                    }, 200);
-                    
-                    // 获取选项文本
-                    const optionText = this.querySelector('h2').textContent;
-                    showNotification(`原来你在${optionText}呀，行嘛`);
-                    
-                    // 生成相关emoji漂浮效果
-                    createFloatingEmojis(emojis[optionText], this);
-                    
-                    // 点击时额外生成一些星星
-                    createExtraStarsOnClick();
+                        window.location.href = 'a.html';
+                    }, 500);
+                };
+                
+                balloon.addEventListener('click', function() {
+                    console.log('气球被点击 (addEventListener)');
+                    this.classList.add('pop');
+                    setTimeout(() => {
+                        window.location.href = 'a.html';
+                    }, 500);
                 });
-            });
-        }
-
-        // 点击时额外生成星星
-        function createExtraStarsOnClick() {
-            const container = document.getElementById('stars-container');
-            const count = 10;
-            
-            for (let i = 0; i < count; i++) {
-                const star = document.createElement('div');
-                star.classList.add('star');
                 
-                const size = Math.random() * 4 + 1;
-                star.style.width = `${size}px`;
-                star.style.height = `${size}px`;
-                star.style.left = `${Math.random() * 100}vw`;
-                star.style.top = '-20px';
-                star.style.animationDuration = `${Math.random() * 3 + 2}s`;
-                
-                container.appendChild(star);
-                
-                setTimeout(() => {
-                    star.remove();
-                }, 5000);
+                container.appendChild(balloon);
             }
         }
-
-        // 创建漂浮的emoji（仅在点击时出现，非背景装饰）
-        function createFloatingEmojis(emojiList, sourceElement) {
-            const rect = sourceElement.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
-            
-            for (let i = 0; i < 5; i++) {
-                const emoji = document.createElement('div');
-                emoji.textContent = emojiList[Math.floor(Math.random() * emojiList.length)];
-                emoji.classList.add('floating-emoji');
-                emoji.style.left = `${centerX}px`;
-                emoji.style.top = `${centerY}px`;
-                emoji.style.fontSize = `${Math.random() * 16 + 16}px`;
-                emoji.style.animationDuration = `${Math.random() * 1 + 1}s`;
-                emoji.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 360}deg)`;
-                
-                document.body.appendChild(emoji);
-                
-                // 自动移除元素
-                setTimeout(() => {
-                    emoji.remove();
-                }, 1000);
-            }
-        }
-
-        // 自定义输入提交
-        function setupCustomInput() {
-            const input = document.getElementById('customInput');
-            const submitBtn = document.getElementById('submitBtn');
-            const modal = document.getElementById('notificationModal');
-            const closeBtn = document.getElementById('closeModal');
-            
-            // 提交按钮点击
-            submitBtn.addEventListener('click', () => {
-                if (input.value.trim()) {
-                    // 播放音乐（如果尚未播放）
-                    const music = document.getElementById('backgroundMusic');
-                    if (music.paused) {
-                        music.play().catch(e => console.log('播放失败:', e));
-                    }
-                    
-                    modal.classList.add('active');
-                    createConfetti(); // 显示庆祝效果
-                    createExtraStarsOnClick(); // 提交时也生成额外星星
-                    input.value = '';
-                }
-            });
-            
-            // 回车键提交
-            input.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter' && input.value.trim()) {
-                    // 播放音乐（如果尚未播放）
-                    const music = document.getElementById('backgroundMusic');
-                    if (music.paused) {
-                        music.play().catch(e => console.log('播放失败:', e));
-                    }
-                    
-                    modal.classList.add('active');
-                    createConfetti(); // 显示庆祝效果
-                    createExtraStarsOnClick(); // 提交时也生成额外星星
-                    input.value = '';
-                }
-            });
-            
-            // 关闭弹窗
-            closeBtn.addEventListener('click', () => {
-                modal.classList.remove('active');
-            });
-        }
-
-        // 创建庆祝彩屑
-        function createConfetti() {
-            const container = document.querySelector('.modal-content');
-            const colors = ['#c3e6cb', '#ffeeba', '#d1ecf1', '#f8d7da', '#d4edda'];
-            const count = 50;
-            
-            // 清除之前的彩屑
-            document.querySelectorAll('.confetti').forEach(c => c.remove());
-            
-            for (let i = 0; i < count; i++) {
-                const confetti = document.createElement('div');
-                confetti.classList.add('confetti');
-                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                confetti.style.width = `${Math.random() * 8 + 4}px`;
-                confetti.style.height = `${Math.random() * 8 + 4}px`;
-                confetti.style.left = `${Math.random() * 100}%`;
-                confetti.style.top = `-10px`;
-                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
-                confetti.style.animation = `float-up ${Math.random() * 2 + 2}s ease-out forwards`;
-                confetti.style.animationDelay = `${Math.random() * 0.5}s`;
-                
-                container.appendChild(confetti);
-            }
-        }
-
-        // 显示通知
-        function showNotification(message) {
-            // 创建通知元素
-            const notification = document.createElement('div');
-            notification.className = 'fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-white px-6 py-3 rounded-full shadow-xl z-50 fade-in';
-            notification.textContent = message;
-            
-            // 添加到页面
-            document.body.appendChild(notification);
-            
-            // 3秒后移除
-            setTimeout(() => {
-                notification.style.opacity = '0';
-                notification.style.transition = 'opacity 0.3s ease';
-                setTimeout(() => {
-                    notification.remove();
-                }, 300);
-            }, 3000);
-        }
-
-        // 页面加载完成后初始化
-        document.addEventListener('DOMContentLoaded', () => {
-            setupMusicControl(); // 初始化音乐控制
-            createBubbles();
-            createFallingStars(); // 初始化掉落星星
-            setupOptionCards();
-            setupCustomInput();
-            
-            // 卡片淡入效果
-            const cards = document.querySelectorAll('.option-card');
-            cards.forEach((card, index) => {
-                card.style.opacity = '0';
-                setTimeout(() => {
-                    card.classList.add('fade-in');
-                }, 100 * index);
-            });
-        });
     </script>
 </body>
 </html>
-    
