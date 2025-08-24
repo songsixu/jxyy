@@ -281,12 +281,12 @@
             background-color: rgba(255, 255, 255, 0.3);
         }
         
-        /* 火柴人样式 - 双腿为两条直线 */
+        /* 火柴人样式 - 确保腿部在横线之上 */
         .stickman {
             position: absolute;
             width: 20px;
             height: 45px;
-            bottom: 30px; /* 统一在同一水平线上 */
+            bottom: 45px; /* 提高位置，确保腿部在横线之上 */
             left: -50px;
             opacity: 0; /* 初始隐藏 */
             transition: opacity 0.3s ease;
@@ -336,7 +336,7 @@
             transform-origin: left center;
         }
         
-        /* 双腿为两条简单直线 */
+        /* 双腿为两条简单直线 - 确保在横线之上 */
         .stickman-leg {
             width: 2px;
             height: 14px;
@@ -375,17 +375,17 @@
             width: 100%;
             height: 2px;
             background-color: #555;
-            bottom: 30px;
+            bottom: 30px; /* 横线位置在火柴人脚下 */
             z-index: 0;
         }
         
-        /* 晚上场景元素 */
+        /* 晚上场景元素 - 增加间距 */
         .houses-container {
             position: absolute;
             bottom: 30px;
             right: 30px;
             display: flex;
-            gap: 40px; /* 增加间距，避免火柴人重叠 */
+            gap: 60px; /* 增加房屋间距，使火柴人间隔更大 */
             z-index: 4; /* 确保在所有火柴人前面 */
         }
         
@@ -479,7 +479,7 @@
         
         @keyframes moveToHouse1 {
             from { left: -50px; opacity: 1; }
-            to { left: calc(100% - 230px); opacity: 1; }
+            to { left: calc(100% - 250px); opacity: 1; }
         }
         
         @keyframes moveToHouse2 {
@@ -489,7 +489,7 @@
         
         @keyframes moveToHouse3 {
             from { left: -50px; opacity: 1; }
-            to { left: calc(100% - 110px); opacity: 1; }
+            to { left: calc(100% - 90px); opacity: 1; }
         }
         
         .walking .stickman-arm.left,
@@ -587,7 +587,7 @@
                     <!-- 早上动画区域 -->
                     <div class="animation-container">
                         <div class="road"></div>
-                        <div class="office">公司</div>
+                        <div class="office" id="office-building">公司</div>
                         <!-- 三个火柴人，同一水平线，通过z-index区分前后 -->
                         <div class="stickman layer-1" id="morning-stickman-1">
                             <div class="stickman-head"></div>
@@ -651,19 +651,19 @@
                     <div class="animation-container">
                         <div class="road"></div>
                         <div class="houses-container">
-                            <div class="house">
+                            <div class="house" id="house-1">
                                 <div class="house-roof"></div>
                                 <div class="house-body">
                                     <div class="house-window" id="window-1"></div>
                                 </div>
                             </div>
-                            <div class="house">
+                            <div class="house" id="house-2">
                                 <div class="house-roof"></div>
                                 <div class="house-body">
                                     <div class="house-window" id="window-2"></div>
                                 </div>
                             </div>
-                            <div class="house">
+                            <div class="house" id="house-3">
                                 <div class="house-roof"></div>
                                 <div class="house-body">
                                     <div class="house-window" id="window-3"></div>
@@ -729,6 +729,12 @@
             const bgPattern = document.getElementById('bgPattern');
             const topRightElements = document.getElementById('topRightElements');
             const lightContainer = document.getElementById('lightContainer');
+            const officeBuilding = document.getElementById('office-building');
+            const houses = [
+                document.getElementById('house-1'),
+                document.getElementById('house-2'),
+                document.getElementById('house-3')
+            ];
             
             // 动画元素 - 早上的三个火柴人
             const morningStickmen = [
@@ -799,9 +805,28 @@
                 stickman.classList.remove('walking', 'moving-right', 'moving-to-house-1', 'moving-to-house-2', 'moving-to-house-3');
                 stickman.style.left = '-50px';
                 stickman.style.opacity = '0';
+                stickman.style.transform = 'scale(1)';
             }
 
-            // 单个火柴人上班动画 - 3秒循环，靠近公司自动消失
+            // 检查两个元素的碰撞/靠近
+            function isNear(element1, element2, threshold = 30) {
+                const rect1 = element1.getBoundingClientRect();
+                const rect2 = element2.getBoundingClientRect();
+                const containerRect = element1.parentElement.getBoundingClientRect();
+                
+                // 计算相对于容器的位置
+                const x1 = rect1.left - containerRect.left + rect1.width / 2;
+                const y1 = rect1.top - containerRect.top + rect1.height / 2;
+                const x2 = rect2.left - containerRect.left + rect2.width / 2;
+                const y2 = rect2.top - containerRect.top + rect2.height / 2;
+                
+                // 计算距离
+                const distance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+                
+                return distance < threshold;
+            }
+
+            // 单个火柴人上班动画 - 靠近公司自动消失
             function animateStickmanToWork(stickman, delay) {
                 return new Promise(resolve => {
                     setTimeout(() => {
@@ -809,107 +834,118 @@
                         stickman.classList.add('walking', 'moving-right');
                         stickman.style.opacity = '1';
                         
-                        // 动画过程中检查位置，靠近公司时消失
-                        let checkPosition = () => {
+                        // 动画过程中检查是否靠近公司
+                        let checkProximity = () => {
                             if (!stickman.classList.contains('moving-right')) return;
                             
-                            const stickmanLeft = parseFloat(stickman.style.left) || -50;
-                            const containerWidth = stickman.parentElement.offsetWidth;
-                            const officePosition = containerWidth - 110; // 公司左侧位置
-                            
-                            // 当火柴人靠近公司（距离120px内）时开始消失
-                            if (stickmanLeft > officePosition) {
-                                const distance = stickmanLeft - officePosition;
-                                const opacity = 1 - (distance / 120);
-                                stickman.style.opacity = opacity > 0 ? opacity : 0;
+                            // 检查是否靠近公司
+                            if (isNear(stickman, officeBuilding, 40)) {
+                                // 开始消失动画
+                                stickman.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                                stickman.style.opacity = '0';
+                                stickman.style.transform = 'scale(0.5)';
+                                
+                                // 移除动画类以停止移动
+                                setTimeout(() => {
+                                    stickman.classList.remove('walking', 'moving-right');
+                                    resolve();
+                                }, 500);
+                                return;
                             }
                             
-                            animationFrameIds.push(requestAnimationFrame(checkPosition));
+                            animationFrameIds.push(requestAnimationFrame(checkProximity));
                         };
                         
-                        checkPosition();
+                        checkProximity();
                         
-                        // 动画结束后重置，准备下一次循环
+                        // 防止动画卡住的超时处理
                         setTimeout(() => {
-                            resetStickman(stickman);
-                            resolve();
-                        }, 3000); // 3秒动画
+                            if (stickman.classList.contains('moving-right')) {
+                                resetStickman(stickman);
+                                resolve();
+                            }
+                        }, 3500); // 比动画时间长一点
                     }, delay);
                 });
             }
 
-            // 早上所有火柴人循环动画 - 错开时间避免重叠
+            // 早上所有火柴人循环动画
             async function startMorningLoop() {
-                // 错开时间启动三个火柴人的动画，避免重叠
                 while (isMorning) {
                     await Promise.all([
                         animateStickmanToWork(morningStickmen[0], 0),
-                        animateStickmanToWork(morningStickmen[1], 1000), // 延迟1秒
-                        animateStickmanToWork(morningStickmen[2], 2000)  // 延迟2秒
+                        animateStickmanToWork(morningStickmen[1], 1200),
+                        animateStickmanToWork(morningStickmen[2], 2400)
                     ]);
                     
-                    // 所有火柴人到达终点后稍等再开始下一轮
                     await new Promise(resolve => setTimeout(resolve, 500));
                 }
             }
 
-            // 单个火柴人回家动画 - 走到房子才开灯
-            function animateStickmanToHouse(stickman, window, animationClass, delay) {
+            // 单个火柴人回家动画 - 靠近房子自动消失
+            function animateStickmanToHouse(stickman, house, window, animationClass, delay) {
                 return new Promise(resolve => {
+                    // 确保灯在火柴人来之前是关闭的
+                    window.classList.remove('lit');
+                    
                     setTimeout(() => {
                         resetStickman(stickman);
                         stickman.classList.add('walking', animationClass);
                         stickman.style.opacity = '1';
+                        stickman.style.transition = ''; // 重置过渡效果
                         
-                        // 动画过程中检查位置，到达房子时开灯
-                        let checkPosition = () => {
+                        // 动画过程中检查是否靠近房子
+                        let checkProximity = () => {
                             if (!stickman.classList.contains(animationClass)) return;
                             
-                            // 检查是否到达目标位置
-                            const computedStyle = getComputedStyle(stickman);
-                            const isAtDestination = computedStyle.animationPlayState === 'paused' || 
-                                                  computedStyle.left === stickman.style.left;
-                            
-                            // 当火柴人到达房子前10px或动画即将结束时开灯
-                            if (isAtDestination) {
+                            // 检查是否靠近房子
+                            if (isNear(stickman, house, 30)) {
+                                // 开灯
                                 window.classList.add('lit');
+                                
+                                // 开始消失动画
+                                stickman.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                                stickman.style.opacity = '0';
+                                stickman.style.transform = 'scale(0.5)';
+                                
+                                // 移除动画类以停止移动
+                                setTimeout(() => {
+                                    stickman.classList.remove('walking', animationClass);
+                                    resolve();
+                                }, 500);
+                                return;
                             }
                             
-                            animationFrameIds.push(requestAnimationFrame(checkPosition));
+                            animationFrameIds.push(requestAnimationFrame(checkProximity));
                         };
                         
-                        checkPosition();
+                        checkProximity();
                         
-                        // 动画结束后保持在房子前，短暂停留后重置
+                        // 防止动画卡住的超时处理
                         setTimeout(() => {
-                            stickman.classList.remove('walking', animationClass);
-                            
-                            // 停留1秒后重置
-                            setTimeout(() => {
-                                window.classList.remove('lit');
+                            if (stickman.classList.contains(animationClass)) {
+                                window.classList.add('lit'); // 确保灯还是会亮
                                 resetStickman(stickman);
                                 resolve();
-                            }, 1000);
-                        }, 3000); // 3秒动画
+                            }
+                        }, 3500); // 比动画时间长一点
                     }, delay);
                 });
             }
 
             // 晚上所有火柴人循环动画
             async function startNightLoop() {
-                // 确保窗户初始是暗的
+                // 确保所有窗户初始是暗的
                 windows.forEach(window => window.classList.remove('lit'));
                 
-                // 错开时间启动三个火柴人的动画
                 while (!isMorning) {
                     await Promise.all([
-                        animateStickmanToHouse(nightStickmen[0], windows[0], 'moving-to-house-1', 0),
-                        animateStickmanToHouse(nightStickmen[1], windows[1], 'moving-to-house-2', 1000), // 延迟1秒
-                        animateStickmanToHouse(nightStickmen[2], windows[2], 'moving-to-house-3', 2000)  // 延迟2秒
+                        animateStickmanToHouse(nightStickmen[0], houses[0], windows[0], 'moving-to-house-1', 0),
+                        animateStickmanToHouse(nightStickmen[1], houses[1], windows[1], 'moving-to-house-2', 1500),
+                        animateStickmanToHouse(nightStickmen[2], houses[2], windows[2], 'moving-to-house-3', 3000)
                     ]);
                     
-                    // 所有火柴人完成动画后稍等再开始下一轮
-                    await new Promise(resolve => setTimeout(resolve, 500));
+                    await new Promise(resolve => setTimeout(resolve, 1000));
                 }
             }
 
@@ -1130,3 +1166,4 @@
     </script>
 </body>
 </html>
+    
