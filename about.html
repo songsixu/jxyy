@@ -78,6 +78,16 @@
             opacity: 0; /* 初始隐藏 */
         }
         
+        /* 早晨卡片添加呼吸放大动画 */
+        .card-morning.visible {
+            animation: morning-pulse 4s ease-in-out infinite;
+        }
+        
+        @keyframes morning-pulse {
+            0%, 100% { transform: rotate(-2deg) scale(1); }
+            50% { transform: rotate(-2deg) scale(1.03); }
+        }
+        
         /* 卡片显示状态 */
         .card.visible {
             opacity: 1;
@@ -105,10 +115,12 @@
         
         .card-morning {
             animation: border-shimmer 3s linear infinite;
+            border-image: linear-gradient(135deg, #FFD580, #FFA000, #FFD580) 1;
         }
         
         .card-night {
             animation: border-shimmer-night 3s linear infinite;
+            border-image: linear-gradient(135deg, #90CAF9, #1565C0, #90CAF9) 1;
         }
         
         @keyframes border-shimmer-night {
@@ -665,4 +677,3 @@
     </script>
 </body>
 </html>
-    
