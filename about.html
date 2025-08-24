@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>记得今天要过得开心哦</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <style>
         body {
             transition: background-color 1s ease;
@@ -63,7 +64,29 @@
             50% { opacity: 0.9; }
         }
 
-        /* 卡片样式 - 恢复原始大小 */
+        /* 月光效果 - 仅晚安模式有 */
+        .moonlight {
+            position: absolute;
+            top: -20%;
+            left: -10%;
+            width: 80%;
+            height: 80%;
+            background: radial-gradient(circle, rgba(220,230,255,0.3) 0%, rgba(220,230,255,0.1) 40%, rgba(220,230,255,0) 70%);
+            z-index: 0;
+            opacity: 0;
+            transition: opacity 1.5s ease;
+            filter: blur(20px);
+            animation: moonlight-pulse 8s infinite;
+        }
+        .moonlight.active {
+            opacity: 1;
+        }
+        @keyframes moonlight-pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 0.8; }
+        }
+
+        /* 卡片样式 */
         .card {
             transform: rotate(-2deg) translateY(20px);
             transition: all 1s ease;
@@ -83,9 +106,19 @@
             animation: morning-pulse 4s ease-in-out infinite;
         }
         
+        /* 夜晚卡片添加微妙浮动动画 */
+        .card-night.visible {
+            animation: night-float 6s ease-in-out infinite;
+        }
+        
         @keyframes morning-pulse {
             0%, 100% { transform: rotate(-2deg) scale(1); }
             50% { transform: rotate(-2deg) scale(1.03); }
+        }
+        
+        @keyframes night-float {
+            0%, 100% { transform: rotate(-2deg) translateY(0); }
+            50% { transform: rotate(-2deg) translateY(-10px); }
         }
         
         /* 卡片显示状态 */
@@ -193,7 +226,7 @@
             background: linear-gradient(135deg, #FFE0B2, #FFCC80);
         }
         .bg-night {
-            background: linear-gradient(135deg, #1A237E, #283593);
+            background: linear-gradient(135deg, #0F172A, #1E293B);
         }
 
         /* 卡片背景 */
@@ -201,7 +234,7 @@
             background: linear-gradient(135deg, #FFF9E6, #FFEFD5);
         }
         .card-night {
-            background: linear-gradient(135deg, #E3F2FD, #BBDEFB);
+            background: linear-gradient(135deg, #E0E7FF, #BFDBFE);
         }
 
         /* 星星样式 */
@@ -211,9 +244,23 @@
             opacity: 0;
             animation: twinkle 3s infinite;
         }
+        .shooting-star {
+            position: absolute;
+            background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 100%);
+            width: 100px;
+            height: 2px;
+            opacity: 0;
+            z-index: 1;
+        }
         @keyframes twinkle {
             0%, 100% { opacity: 0.6; }
             50% { opacity: 1; }
+        }
+        @keyframes shoot {
+            0% { transform: translateX(0) rotate(-30deg); opacity: 0; }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { transform: translateX(-200px) rotate(-30deg); opacity: 0; }
         }
 
         /* 装饰元素 */
@@ -285,6 +332,14 @@
             opacity: 0;
         }
         
+        /* 夜晚烟花效果不同 */
+        .firework-night {
+            background-color: #90CAF9 !important;
+        }
+        .firework-particle-night {
+            background-color: #90CAF9 !important;
+        }
+        
         /* 右上角元素的渐入效果 */
         .top-right-elements {
             opacity: 0;
@@ -323,6 +378,9 @@
     
     <!-- 阳光效果 -->
     <div class="sunlight active" id="sunlight"></div>
+    
+    <!-- 月光效果 -->
+    <div class="moonlight" id="moonlight"></div>
     
     <!-- 动态星星 -->
     <div id="stars-container" class="fixed inset-0 pointer-events-none z-0"></div>
@@ -422,13 +480,15 @@
             const starsContainer = document.getElementById('stars-container');
             const nextBtn = document.getElementById('next-btn');
             const sunlight = document.getElementById('sunlight');
+            const moonlight = document.getElementById('moonlight'); // 新增月光元素
             const fireworkContainer = document.getElementById('fireworkContainer');
             const bgPattern = document.getElementById('bgPattern');
             const topRightElements = document.getElementById('topRightElements');
-            const lightContainer = document.getElementById('lightContainer'); // 明暗切换容器
+            const lightContainer = document.getElementById('lightContainer');
             
             let isMorning = true;
             let fireworksInterval;
+            let shootingStarInterval; // 流星定时器
             
             // 配置两种模式的差异内容
             const configs = {
@@ -470,20 +530,67 @@
                 }, 900);
             }
 
-            // 创建星星
+            // 创建星星和流星
             function createStars() {
                 starsContainer.innerHTML = '';
-                const starCount = 40;
+                const starCount = 60; // 增加星星数量
                 
+                // 创建静态星星
                 for (let i = 0; i < starCount; i++) {
                     const star = document.createElement('div');
                     star.className = 'star';
-                    star.textContent = '⭐';
+                    
+                    // 随机星星样式
+                    const starTypes = ['⭐', '✨', '💫'];
+                    star.textContent = starTypes[Math.floor(Math.random() * starTypes.length)];
+                    
                     star.style.left = (Math.random() * 100) + 'vw';
                     star.style.top = (Math.random() * 100) + 'vh';
-                    star.style.fontSize = (Math.random() * 12 + 10) + 'px';
+                    star.style.fontSize = (Math.random() * 12 + 8) + 'px';
                     star.style.animationDelay = (Math.random() * 3) + 's';
+                    star.style.animationDuration = (Math.random() * 2 + 2) + 's'; // 不同闪烁速度
                     starsContainer.appendChild(star);
+                }
+                
+                // 开始流星效果
+                startShootingStars();
+            }
+            
+            // 创建流星
+            function createShootingStar() {
+                const shootingStar = document.createElement('div');
+                shootingStar.className = 'shooting-star';
+                
+                // 随机位置
+                const startX = window.innerWidth * 0.8 + Math.random() * window.innerWidth * 0.2;
+                const startY = Math.random() * window.innerHeight * 0.5;
+                
+                shootingStar.style.left = startX + 'px';
+                shootingStar.style.top = startY + 'px';
+                shootingStar.style.animation = 'shoot 1.5s forwards';
+                shootingStar.style.animationDelay = (Math.random() * 0.5) + 's';
+                
+                starsContainer.appendChild(shootingStar);
+                
+                // 动画结束后移除
+                setTimeout(() => {
+                    shootingStar.remove();
+                }, 2000);
+            }
+            
+            // 定时创建流星
+            function startShootingStars() {
+                stopShootingStars();
+                shootingStarInterval = setInterval(() => {
+                    createShootingStar();
+                }, 5000 + Math.random() * 5000); // 5-10秒出现一次流星
+            }
+            
+            // 停止流星
+            function stopShootingStars() {
+                if (shootingStarInterval) {
+                    clearInterval(shootingStarInterval);
+                    shootingStarInterval = null;
                 }
             }
 
@@ -495,12 +602,19 @@
                 
                 // 创建烟花发射体
                 const firework = document.createElement('div');
-                firework.className = 'firework';
+                firework.className = `firework ${!isMorning ? 'firework-night' : ''}`;
                 
-                // 随机颜色
-                const colors = ['#FF5252', '#FFEB3B', '#4CAF50', '#2196F3', '#E91E63', '#9C27B0'];
+                // 随机颜色 - 夜晚模式颜色更冷
+                let colors;
+                if (isMorning) {
+                    colors = ['#FF5252', '#FFEB3B', '#FF9800', '#FF5722', '#FFB74D'];
+                } else {
+                    colors = ['#90CAF9', '#64B5F6', '#42A5F5', '#2196F3', '#1976D2'];
+                }
                 const color = colors[Math.floor(Math.random() * colors.length)];
-                firework.style.backgroundColor = color;
+                if (isMorning) { // 只有白天模式需要设置颜色，夜晚模式用类定义
+                    firework.style.backgroundColor = color;
+                }
                 
                 firework.style.left = startX + 'px';
                 firework.style.top = startY + 'px';
@@ -537,8 +651,12 @@
                 
                 for (let i = 0; i < particleCount; i++) {
                     const particle = document.createElement('div');
-                    particle.className = 'firework-particle';
-                    particle.style.backgroundColor = color;
+                    particle.className = `firework-particle ${!isMorning ? 'firework-particle-night' : ''}`;
+                    
+                    if (isMorning) { // 只有白天模式需要设置颜色
+                        particle.style.backgroundColor = color;
+                    }
+                    
                     particle.style.left = x + 'px';
                     particle.style.top = y + 'px';
                     fireworkContainer.appendChild(particle);
@@ -583,15 +701,17 @@
                 }
             }
 
-            // 定时发射烟花
+            // 定时发射烟花 - 夜晚模式烟花频率降低
             function startFireworks() {
                 stopFireworks(); // 先停止已有定时器
+                const interval = isMorning ? 3000 : 8000; // 白天3秒一次，夜晚8秒一次
                 fireworksInterval = setInterval(() => {
-                    // 一次发射5个烟花
-                    for (let i = 0; i < 5; i++) {
-                        setTimeout(createFirework, i * 300); // 错开发射时间
+                    // 一次发射数量也不同
+                    const count = isMorning ? 5 : 2;
+                    for (let i = 0; i < count; i++) {
+                        setTimeout(createFirework, i * 300);
                     }
-                }, 3000);
+                }, interval);
             }
 
             // 停止烟花
@@ -610,7 +730,7 @@
                 morningCard.classList.remove('visible');
                 nightCard.classList.remove('visible');
                 
-                // 触发"开灯/关灯"效果 - 模拟时间的瞬间变化
+                // 触发"开灯/关灯"效果
                 lightContainer.style.opacity = isMorning ? '0.8' : '0.4';
                 setTimeout(() => {
                     lightContainer.style.opacity = '0';
@@ -635,16 +755,21 @@
                     // 更新点状背景
                     bgPattern.style.backgroundImage = `url("${config.pattern}")`;
                     
-                    // 显示/隐藏阳光效果
+                    // 显示/隐藏阳光和月光效果
                     sunlight.classList.toggle('active', isMorning);
+                    moonlight.classList.toggle('active', !isMorning);
                     
-                    // 显示/隐藏星星
+                    // 显示/隐藏星星和流星
                     if (!isMorning) {
                         createStars();
                         starsContainer.style.opacity = '1';
                     } else {
                         starsContainer.style.opacity = '0';
+                        stopShootingStars();
                     }
+                    
+                    // 重启烟花，适应新模式
+                    startFireworks();
                     
                     // 显示对应的卡片
                     setTimeout(() => {
@@ -654,7 +779,7 @@
                             nightCard.classList.add('visible');
                         }
                     }, 200);
-                }, 150); // 更短暂的闪光效果，增强时间残酷感
+                }, 150);
             }
 
             // 切换按钮事件
@@ -664,8 +789,12 @@
             document.addEventListener('visibilitychange', function() {
                 if (document.hidden) {
                     stopFireworks();
+                    stopShootingStars();
                 } else {
                     startFireworks();
+                    if (!isMorning) {
+                        startShootingStars();
+                    }
                 }
             });
 
