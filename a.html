@@ -390,7 +390,7 @@
             const emojis = {
                 '工作中': ['💼', '📊', '💻'],
                 '在度假': ['🏖️', '🌴', '☀️'],
-                '准备考试': ['📚', '✏️', '📝'],
+                '上学中': ['📚', '✏️', '📝'],
                 '掉线中': ['📴', '🌙', '😴']
             };
             
@@ -410,7 +410,7 @@
                     
                     // 获取选项文本
                     const optionText = this.querySelector('h2').textContent;
-                    showNotification(`原来你在${optionText}呀，行嘛`);
+                    showNotification(`原来你在${optionText}啊，行嘛`);
                     
                     // 生成相关emoji漂浮效果
                     createFloatingEmojis(emojis[optionText], this);
